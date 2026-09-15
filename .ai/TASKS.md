@@ -2,7 +2,8 @@
 
 ## Active
 
-- Phase 2 (partial) — `infrastructure/modules/vpc` implemented (adopt/create, configured subnets, reusable IGW/NAT, always-created route tables). Validated with `terraform fmt` and `terraform validate`. Environment root and EKS/IAM modules pending.
+- Phase 1 complete — FastAPI app (`/`, `/health`), tests, multi-stage Dockerfile, and Helm chart implemented; validated with pytest, `docker build`, a container smoke test, `helm lint`, and `helm template`.
+- Phase 2 in progress — `infrastructure/modules/vpc` implemented and validated; `environments/dev` root and `modules/eks`/`modules/iam` pending. CI (Phase 6) not started.
 
 ## Roadmap
 
@@ -80,3 +81,5 @@ Resolved: subnet CIDRs (ADR-019), registry (ADR-014, parameterizable GHCR/Docker
 - Recorded the flexible VPC module requirement (ADR-013) during planning.
 - Recorded registry/DNS/ingress decisions (ADR-014/015/016) and AWS decisions (ADR-012/017/018/019): S3 state, adopt VPC/IGW/NAT, ALB + ACM, Cloudflare `crilsen.com`, EKS latest + 1 `t3.small` node, subnets `10.11.21.0/24` onward, region `us-east-1`.
 - Implemented and validated `infrastructure/modules/vpc` (`terraform fmt`, `terraform validate`).
+- Implemented Phase 1: FastAPI application (`/`, `/health`), tests, multi-stage Dockerfile (non-root), and Helm chart with probes/resources/optional ALB Ingress. Validated with pytest, `docker build`, container smoke test, `helm lint`, `helm template`.
+- Decided the application stack (Python + FastAPI, ADR-020) and the ALB controller identity (EKS Pod Identity, ADR-011).

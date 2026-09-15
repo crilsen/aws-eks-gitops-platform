@@ -1,0 +1,6 @@
+apiVersion: v2
+name: aws-eks-gitops-platform
+description: Example FastAPI application for the aws-eks-gitops-platform GitOps lab.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

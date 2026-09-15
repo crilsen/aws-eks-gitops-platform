@@ -1,0 +1,63 @@
+replicaCount: 1
+
+image:
+  # Registry is parameterizable (ADR-014): ghcr.io (default) or docker.io.
+  registry: ghcr.io
+  repository: crilsen/aws-eks-gitops-platform
+  # Empty means the chart appVersion is used. CI sets the immutable commit SHA.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: http
+
+containerPort: 8000
+
+# Sized for a single t3.small node running Argo CD and the ALB controller.
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
+probes:
+  readiness:
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 20
+
+env: {}
+
+ingress:
+  enabled: false
+  className: alb
+  annotations: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+podLabels: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -173,22 +173,22 @@ Consequences:
 - Access is by the ALB DNS name only; no TLS in this lab.
 - Teardown must confirm the ALB and its security groups are gone.
 
-## ADR-011 — ALB controller identity: EKS Pod Identity (proposed)
+## ADR-011 — ALB controller identity: EKS Pod Identity
 
-Status: Proposed
+Status: Accepted
 
 Context:
 The brief allows IRSA or EKS Pod Identity for the AWS Load Balancer Controller. EKS Pod Identity is the current AWS-recommended mechanism and is simpler to operate.
 
-Decision (proposed):
-Use EKS Pod Identity for the controller, unless the chosen EKS version or a concrete constraint rules it out; fall back to IRSA in that case.
+Decision:
+Use EKS Pod Identity for the AWS Load Balancer Controller. Terraform creates the Pod Identity association; the EKS Pod Identity agent runs on the nodes. IRSA is the fallback only if a concrete constraint rules Pod Identity out.
 
 Reasoning:
-Fewer moving parts than OIDC/IRSA trust wiring and aligns with current AWS guidance.
+Fewer moving parts than IRSA trust wiring and aligns with current AWS guidance.
 
 Consequences:
 - Requires the EKS Pod Identity agent on nodes and a Pod Identity association in Terraform.
-- Must be confirmed against the chosen EKS version before implementation.
+- The EKS add-on/agent must be available for the chosen EKS version.
 
 ## ADR-012 — Adopt the existing network; reuse IGW and NAT for egress
 
@@ -342,6 +342,41 @@ Keeps subnets inside the VPC block and leaves room to grow; satisfies EKS and AL
 Consequences:
 - Must not overlap existing subnets in the adopted VPC; verify before apply.
 - The values are defaults in the environment root, not hardcoded in the module.
+
+## ADR-020 — Example application: Python + FastAPI
+
+Status: Accepted
+
+Context:
+The brief asks for a small example API with `/` and `/health`; the language was undecided.
+
+Decision:
+Implement the API in Python with FastAPI served by uvicorn. Ship a multi-stage Dockerfile (non-root runtime) and a Helm chart with readiness/liveness probes on `/health`, plus `requests`/`limits`.
+
+Reasoning:
+FastAPI is small, quick to test, and produces a compact image suitable for a cost-limited single node; it is widely recognized in Cloud/DevOps portfolios.
+
+Consequences:
+- App dependencies are pinned in `requirements.txt`.
+- Tests use the FastAPI test client; CI runs them before building the image.
+- Image runs as a non-root user to satisfy the security baseline.
+
+## ADR-021 — GitHub Actions workflows live at the repository root
+
+Status: Accepted
+
+Context:
+The brief's sketch placed workflows under `application/.github/workflows/`, but GitHub Actions only reads workflows from the repository root `.github/workflows/`. Files elsewhere are never executed.
+
+Decision:
+Put workflows in the root `.github/workflows/`, scoped to the application path via `paths`/working directories. Keep `application/` for source, Dockerfile, and chart only.
+
+Reasoning:
+Root workflows are the only ones GitHub runs; this keeps the monorepo functional without duplicating pipelines.
+
+Consequences:
+- The directory layout deviates slightly from the brief's sketch, documented here.
+- Workflows must set explicit paths/working directories for the application.
 
 Use this ADR format for durable, meaningful decisions:
 

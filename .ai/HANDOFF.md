@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `infrastructure/modules/vpc` and updated `.ai/` (commit pending).
+- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `application/` (Phase 1) and updated `.ai/` (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
-- Last goal: Implement and validate `infrastructure/modules/vpc` per ADR-013/ADR-019.
-- Exact next action: Create `infrastructure/environments/dev` (wire the module with the confirmed CIDRs, S3 backend, mandatory tags) and the `modules/eks`/`modules/iam`; or start Phase 1 once the app language is chosen.
-- Blocked by: None for Phase 2. Phase 1 blocked on the application language/framework. AWS apply (Phase 3) blocked on explicit authorization.
+- Last goal: Implement Phase 1 — FastAPI app (`/`, `/health`), tests, Dockerfile, and Helm chart — and validate locally.
+- Exact next action: Create `infrastructure/environments/dev` (wire the VPC module with the confirmed CIDRs, S3 backend, mandatory tags) and the `modules/eks`/`modules/iam`, then wire the GitOps bootstrap; CI (Phase 6) follows.
+- Blocked by: None. AWS apply (Phase 3) blocked on explicit authorization; S3 bucket name/lock (ADR-017) and the exact EKS version must be confirmed first.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -17,21 +17,22 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc` exists and passes `terraform fmt`/`terraform validate`. No environment root, EKS/IAM module, application, or GitOps artifacts exist yet. Nothing has been provisioned on AWS.
+Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc` and the Phase 1 application (FastAPI app, tests, Dockerfile, Helm chart) exist and pass local validation. No environment root, EKS/IAM module, GitOps manifests, or CI exist yet. Nothing has been provisioned on AWS.
 
 ## What Was Done
 
 - Adopted `.ai/` context with real project facts and recorded the phased roadmap.
-- Recorded ADRs 004–019, including the flexible VPC module (ADR-013), adopted network (ADR-012), registry (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM (ADR-016), S3 state (ADR-017), EKS posture (ADR-018), and subnet scheme (ADR-019).
-- Implemented `infrastructure/modules/vpc` (create-or-adopt VPC, configured `/24` subnets, reusable IGW/NAT, always-created route tables) plus its README.
-- Validated the module with `terraform fmt -recursive` and `terraform validate` (AWS provider v6.64.0).
+- Recorded ADRs 004–021, including the flexible VPC module (ADR-013), adopted network (ADR-012), registry (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM (ADR-016), S3 state (ADR-017), EKS posture (ADR-018), subnet scheme (ADR-019), app stack (ADR-020), root workflows (ADR-021), and Pod Identity (ADR-011).
+- Implemented `infrastructure/modules/vpc` plus its README.
+- Implemented the Phase 1 application: `application/src/app/main.py`, tests, `Dockerfile`, and `application/helm/`.
+- Validated: `terraform fmt`/`validate`; pytest (2 passed), `docker build`, container smoke test (`/` and `/health`), `helm lint`, `helm template`.
 
 ## Files Changed
 
-- `infrastructure/modules/vpc/{versions,variables,main,outputs}.tf`, `infrastructure/modules/vpc/README.md` (new)
-- `.ai/PROJECT.md`, `.ai/ARCHITECTURE.md`, `.ai/CONVENTIONS.md`
-- `.ai/DECISIONS.md`, `.ai/TASKS.md`, `.ai/TOOLS.md`, `.ai/VALIDATION.md`, `.ai/HANDOFF.md`
-- `.gitignore`, `README.md` (project overview)
+- `infrastructure/modules/vpc/*` (new)
+- `application/src/app/*`, `application/tests/*`, `application/pytest.ini`, `application/requirements*.txt`, `application/Dockerfile`, `application/.dockerignore`, `application/helm/*` (new)
+- `.ai/PROJECT.md`, `.ai/ARCHITECTURE.md`, `.ai/CONVENTIONS.md`, `.ai/DECISIONS.md`, `.ai/TASKS.md`, `.ai/TOOLS.md`, `.ai/VALIDATION.md`, `.ai/HANDOFF.md`
+- `.gitignore`, `README.md`
 
 ## Decisions Made
 
@@ -42,6 +43,7 @@ Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc`
 - Immutable SHA image tags only (ADR-008).
 - `dev` auto-syncs with prune/selfHeal; `prod` is PR-gated (ADR-009).
 - Single temporary ALB via the controller (ADR-010, amended by ADR-016).
+- EKS Pod Identity for the ALB controller (ADR-011).
 - Adopt existing VPC/IGW/NAT; private egress via reused NAT (ADR-012).
 - Flexible create-or-adopt VPC module, always-created route tables (ADR-013).
 - Parameterizable registry, GHCR default, Docker Hub supported (ADR-014).
@@ -50,22 +52,25 @@ Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc`
 - S3 Terraform state (ADR-017).
 - EKS latest version, single `t3.small` node (ADR-018).
 - Subnets `/24` inside `10.11.0.0/16`, `10.11.21.0/24` onward (ADR-019).
-- Open: ALB controller identity Pod Identity vs IRSA (ADR-011).
+- Application stack: Python + FastAPI (ADR-020).
+- GitHub Actions workflows at the repository root (ADR-021).
 
 ## Problems / Risks
 
-- Open decisions remain: ALB controller identity (ADR-011), S3 bucket name/lock (ADR-017), Cloudflare record name, exact EKS version, and the app language (Phase 1).
 - AWS phases consume credits and require explicit authorization and a plan first; the EKS control plane is the dominant cost.
-- `tflint`, `checkov`, `trivy`, and `helm` are not installed locally, so those checks are pending.
+- `tflint`, `checkov`, and `trivy` are not installed, so those checks are pending.
+- Open inputs: S3 bucket name/lock (ADR-017), Cloudflare record name, and the exact EKS version.
 
 ## Validation Performed
 
-- `terraform fmt -recursive` — Validated (no changes needed).
-- `terraform validate` for `modules/vpc` — Validated (AWS provider v6.64.0).
-- `tflint`, `checkov`, app/Helm checks — Not validated (tools/artifacts absent).
+- `terraform fmt -recursive` and `terraform validate` (`modules/vpc`) — Validated.
+- `pytest` in `python:3.12-slim` — Validated (2 passed).
+- `docker build` + container smoke test for `/` and `/health` — Validated.
+- `helm lint` and `helm template` (container `alpine/helm:3.16.3`) — Validated.
+- `tflint`, `checkov`, `trivy` — Not validated (not installed).
 
 ## Next Actions
 
-- Confirm the app language/framework (Phase 1) and the ALB controller identity (ADR-011), S3 bucket name (ADR-017), Cloudflare record name, and EKS version.
 - Phase 2: create `infrastructure/environments/dev` and `modules/eks`/`modules/iam`; validate with `terraform fmt`/`validate`.
-- Phase 1: implement the example API, Dockerfile, and Helm chart.
+- Phase 4/5: add `gitops/` (Argo CD, App of Apps, dev/prod) and the Cloudflare record.
+- Phase 6: add CI workflows at the repository root.

@@ -12,10 +12,11 @@ aws-eks-gitops-platform/
 │   ├── modules/            # vpc, eks, ecr, iam
 │   └── environments/dev/   # lab environment root
 ├── application/
-│   ├── src/                # example API (/, /health)
+│   ├── src/                # FastAPI app (/, /health)
+│   ├── tests/
 │   ├── Dockerfile
-│   ├── helm/               # application chart
-│   └── .github/workflows/  # CI
+│   └── helm/               # application chart (optional ALB Ingress)
+├── .github/workflows/      # CI (root, per ADR-021)
 ├── gitops/
 │   ├── argocd/             # Argo CD install values
 │   ├── bootstrap/          # App of Apps entrypoint

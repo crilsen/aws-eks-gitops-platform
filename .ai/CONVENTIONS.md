@@ -27,12 +27,14 @@ No implementation artifacts exist yet, so no historical naming, Terraform, Kuber
 - Application containers define `readinessProbe`, `livenessProbe`, `requests`, and `limits`; the ALB health check targets `/health`.
 - Use `ingressClassName: alb`; DNS is managed in Cloudflare (no Route 53). ACM is allowed for ALB TLS.
 - `dev` uses `syncPolicy.automated` with `prune: true` and `selfHeal: true`; `prod` is not auto-synced and is promoted by PR.
+- Application is Python + FastAPI (ADR-020); the Helm chart in `application/helm` is the deploy unit and carries the optional ALB `Ingress`.
+- GitHub Actions workflows live in the repository root `.github/workflows/`, scoped to the application path (ADR-021).
 - Use Sync Waves to order dependent resources (namespace, secrets, ingress controller, application).
-- Images live in an external registry (GHCR proposed; ECR removed) and always use immutable commit-SHA tags; never deploy `latest`.
+- Images live in an external registry (GHCR default, Docker Hub supported; ADR-014) and always use immutable commit-SHA tags; never deploy `latest`.
 
 ## Quality and security
 
-- CI runs tests, lint, Trivy image scan, an immutable-tag build, and a registry push (GHCR proposed).
+- CI runs tests, lint, Trivy image scan, an immutable-tag build, and a registry push (GHCR default).
 - Document security trade-offs adopted for the lab rather than hiding them.
 
 ## Documentation

@@ -1,7 +1,7 @@
 # aws-eks-gitops-platform
 
 > **Status: Work in progress.**
-> This project is being built in phases and is **not yet functional**. It currently contains only the portable agent context (`.ai/`), conventions, and the plan. Implementation starts at Phase 1 and nothing has been provisioned on AWS yet.
+> Built in phases. So far: the VPC Terraform module and the Phase 1 application (FastAPI API with `/` and `/health`, Dockerfile, Helm chart). Nothing has been provisioned on AWS yet; the project is not yet functional end to end.
 
 Public portfolio project demonstrating **Platform Engineering, GitOps, Amazon EKS, Terraform, Kubernetes, Helm, Argo CD, CI/CD, security, and AWS cost control**.
 
