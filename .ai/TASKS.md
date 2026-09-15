@@ -3,7 +3,7 @@
 ## Active
 
 - Phase 1 complete — FastAPI app (`/`, `/health`), tests, multi-stage Dockerfile, and Helm chart implemented; validated with pytest, `docker build`, a container smoke test, `helm lint`, and `helm template`.
-- Phase 2 in progress — `modules/vpc`, `environments/dev` (S3 backend + adopted network), `modules/eks` (shared cluster 1.36, 1× `t3.small`, managed add-ons), and `modules/iam` (ALB controller Pod Identity) implemented and validated. `environments/prd` pending. Public API endpoint restricted to specific CIDRs via `terraform.tfvars`. GitHub OIDC deferred (ADR-023). CI (Phase 6) not started.
+- Phase 4/5 in progress — `gitops/` added: Argo CD values, App of Apps root, platform Application (AWS Load Balancer Controller), dev/prd workload Applications, and environment values with ALB Ingress. CI (Phase 6) and `environments/prd` not started.
 
 ## Roadmap
 
@@ -81,3 +81,4 @@ Resolved: ALB controller identity (ADR-011, EKS Pod Identity), S3 bucket `cn-ter
 - Created `infrastructure/environments/dev` (S3 backend `cn-terraform-state-us-east-1` key `aws-eks-gitops-platform/dev/terraform.tfstate`, adopted network, subnet CIDRs). Validated with `terraform fmt` and `terraform validate`.
 - Implemented `infrastructure/modules/eks` (shared cluster 1.36, managed node group 1× `t3.small`, core add-ons + pod identity agent) and wired it into `environments/dev`. Decided environment isolation (ADR-022: one cluster, `dev`/`prd` namespaces). Validated with `terraform fmt` and `terraform validate`.
 - Implemented `infrastructure/modules/iam` (ALB controller IAM policy + role + EKS Pod Identity association) and wired it into `environments/dev`. Restricted the public API endpoint to specific CIDRs required via `terraform.tfvars` (validation rejects `0.0.0.0/0`). Deferred GitHub OIDC (ADR-023). Validated with `terraform fmt` and `terraform validate`.
+- Implemented `gitops/` (Argo CD 10.9.1 values, App of Apps root, AWS Load Balancer Controller Application 3.5.0 with Pod Identity, dev/prd workload Applications, environment values with ALB Ingress on `app-dev.crilsen.com`/`app.crilsen.com`). Validated YAML parsing and `helm lint`/`template` with the dev values.

@@ -1,0 +1,75 @@
+# Argo CD Helm values (bootstrap install).
+#
+# Install (one-time, before the App of Apps):
+#   helm repo add argo https://argoproj.github.io/argo-helm
+#   helm repo update
+#   helm upgrade --install argocd argo/argo-cd \
+#     --namespace argocd --create-namespace \
+#     --version 10.9.1 \
+#     -f gitops/argocd/values.yaml
+#
+# The UI is not exposed through the ALB (single-ALB cost rule); use port-forward:
+#   kubectl -n argocd port-forward svc/argocd-server 8080:443
+
+# ALB/TLS terminates at the edge, so the Argo CD server runs without its own TLS.
+configs:
+  params:
+    server.insecure: "true"
+
+server:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: false
+
+# Keep the lab footprint small for a single t3.small node.
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+repoServer:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+server:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+applicationSet:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+redis:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi

@@ -1,0 +1,30 @@
+# prod workload: no automated sync. Promotion happens by reviewed Git change
+# (pull request) followed by a manual sync in Argo CD.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-prd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/crilsen/aws-eks-gitops-platform.git
+      targetRevision: dev
+      ref: values
+    - repoURL: https://github.com/crilsen/aws-eks-gitops-platform.git
+      targetRevision: dev
+      path: application/helm
+      helm:
+        releaseName: app
+        valueFiles:
+          - $values/gitops/environments/prd/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

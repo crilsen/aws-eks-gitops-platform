@@ -1,0 +1,37 @@
+# AWS Load Balancer Controller (platform). Installed via Helm from the AWS charts repo.
+# Identity comes from EKS Pod Identity (ADR-011): no IRSA role annotation here.
+# The service account name/namespace must match the Pod Identity association
+# created by infrastructure/modules/iam.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aws-load-balancer-controller
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://aws.github.io/eks-charts
+    chart: aws-load-balancer-controller
+    targetRevision: 3.5.0
+    helm:
+      releaseName: aws-load-balancer-controller
+      values: |
+        clusterName: aws-eks-gitops-platform
+        region: us-east-1
+        serviceAccount:
+          create: true
+          name: aws-load-balancer-controller
+          annotations: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

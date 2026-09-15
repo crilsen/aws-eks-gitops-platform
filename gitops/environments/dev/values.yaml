@@ -1,0 +1,25 @@
+# dev environment values for application/helm.
+# CI overwrites image.tag with the immutable commit SHA on every deploy.
+image:
+  registry: ghcr.io
+  repository: crilsen/aws-eks-gitops-platform
+  tag: "" # set by CI to the commit SHA
+
+env:
+  APP_VERSION: dev
+
+ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    # No certificate-arn: the controller discovers the ACM certificate for the host.
+  hosts:
+    - host: app-dev.crilsen.com
+      paths:
+        - path: /
+          pathType: Prefix

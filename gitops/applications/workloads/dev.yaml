@@ -1,0 +1,33 @@
+# dev workload: automated sync with prune + selfHeal (drift demo).
+# The image tag is updated by CI in gitops/environments/dev/values.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-dev
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/crilsen/aws-eks-gitops-platform.git
+      targetRevision: dev
+      ref: values
+    - repoURL: https://github.com/crilsen/aws-eks-gitops-platform.git
+      targetRevision: dev
+      path: application/helm
+      helm:
+        releaseName: app
+        valueFiles:
+          - $values/gitops/environments/dev/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
