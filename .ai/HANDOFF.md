@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, HEAD `5553e49`, clean and pushed to `origin/dev`.
+- Repo state: branch `dev`, synced with `origin/dev` (latest context commit `644c8b0`); working tree clean.
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
