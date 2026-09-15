@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; tree clean. Latest work committed at `f735f53` (VPC module + Phase 1 app).
+- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `infrastructure/environments/dev` and updated `.ai/` (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
-- Last goal: Implement Phase 1 — FastAPI app (`/`, `/health`), tests, Dockerfile, and Helm chart — and validate locally.
-- Exact next action: Create `infrastructure/environments/dev` (wire the VPC module with the confirmed CIDRs, S3 backend, mandatory tags) and the `modules/eks`/`modules/iam`, then wire the GitOps bootstrap; CI (Phase 6) follows.
-- Blocked by: None. AWS apply (Phase 3) blocked on explicit authorization; S3 bucket name/lock (ADR-017) and the exact EKS version must be confirmed first.
+- Last goal: Create `infrastructure/environments/dev` with the S3 backend (`cn-terraform-state-us-east-1`, key `aws-eks-gitops-platform/dev/terraform.tfstate`) adopting the existing network.
+- Exact next action: Build `modules/eks` (EKS 1.36, single `t3.small` node) and `modules/iam` (ALB controller Pod Identity + GitHub OIDC), wire them into `environments/dev`, then add `gitops/` and CI.
+- Blocked by: None for module work. `terraform apply` (Phase 3) blocked on explicit authorization and a cost review.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -17,22 +17,23 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc` and the Phase 1 application (FastAPI app, tests, Dockerfile, Helm chart) exist and pass local validation. No environment root, EKS/IAM module, GitOps manifests, or CI exist yet. Nothing has been provisioned on AWS.
+All planning inputs are resolved. `infrastructure/modules/vpc`, `infrastructure/environments/dev`, and the Phase 1 application (FastAPI app, tests, Dockerfile, Helm chart) exist and pass local validation. No EKS/IAM module, GitOps manifests, or CI exist yet. Nothing has been provisioned on AWS.
 
 ## What Was Done
 
 - Adopted `.ai/` context with real project facts and recorded the phased roadmap.
-- Recorded ADRs 004–021, including the flexible VPC module (ADR-013), adopted network (ADR-012), registry (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM (ADR-016), S3 state (ADR-017), EKS posture (ADR-018), subnet scheme (ADR-019), app stack (ADR-020), root workflows (ADR-021), and Pod Identity (ADR-011).
+- Recorded ADRs 004–021; resolved all open inputs: EKS Pod Identity (ADR-011), S3 bucket `cn-terraform-state-us-east-1` with `dev`/`prd` folders and native locking (ADR-017), hostnames `app-dev.crilsen.com`/`app.crilsen.com` (ADR-016), EKS 1.36 (ADR-018), Python + FastAPI (ADR-020), root workflows (ADR-021).
 - Implemented `infrastructure/modules/vpc` plus its README.
-- Implemented the Phase 1 application: `application/src/app/main.py`, tests, `Dockerfile`, and `application/helm/`.
-- Validated: `terraform fmt`/`validate`; pytest (2 passed), `docker build`, container smoke test (`/` and `/health`), `helm lint`, `helm template`.
+- Implemented the Phase 1 application.
+- Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, adopted network via the module).
+- Validated: `terraform fmt`/`validate` (module and dev root); pytest (2 passed), `docker build`, container smoke test, `helm lint`, `helm template`.
 
 ## Files Changed
 
 - `infrastructure/modules/vpc/*` (new)
-- `application/src/app/*`, `application/tests/*`, `application/pytest.ini`, `application/requirements*.txt`, `application/Dockerfile`, `application/.dockerignore`, `application/helm/*` (new)
-- `.ai/PROJECT.md`, `.ai/ARCHITECTURE.md`, `.ai/CONVENTIONS.md`, `.ai/DECISIONS.md`, `.ai/TASKS.md`, `.ai/TOOLS.md`, `.ai/VALIDATION.md`, `.ai/HANDOFF.md`
-- `.gitignore`, `README.md`
+- `infrastructure/environments/dev/*` (new: backend, provider, variables, module call, outputs, `terraform.tfvars.example`, README, `terraform.lock.hcl`)
+- `application/*` (new)
+- `.ai/*`, `.gitignore`, `README.md`
 
 ## Decisions Made
 
@@ -59,18 +60,19 @@ Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc`
 
 - AWS phases consume credits and require explicit authorization and a plan first; the EKS control plane is the dominant cost.
 - `tflint`, `checkov`, and `trivy` are not installed, so those checks are pending.
-- Open inputs: S3 bucket name/lock (ADR-017), Cloudflare record name, and the exact EKS version.
+- The adopted VPC/IGW/NAT/ids are private inputs (`terraform.tfvars`, gitignored); the subnet CIDRs must not overlap existing subnets.
+- `dev` and `prd` are namespaces in one cluster; `prd` (state folder) will mirror `dev` later.
 
 ## Validation Performed
 
-- `terraform fmt -recursive` and `terraform validate` (`modules/vpc`) — Validated.
+- `terraform fmt -recursive` and `terraform validate` (`modules/vpc`, `environments/dev`) — Validated.
 - `pytest` in `python:3.12-slim` — Validated (2 passed).
 - `docker build` + container smoke test for `/` and `/health` — Validated.
-- `helm lint` and `helm template` (container `alpine/helm:3.16.3`) — Validated.
-- `tflint`, `checkov`, `trivy` — Not validated (not installed).
+- `helm lint` and `helm template` — Validated.
+- `tflint`, `checkov`, `trivy`, `terraform plan` — Not validated (tools absent / plan needs authorization).
 
 ## Next Actions
 
-- Phase 2: create `infrastructure/environments/dev` and `modules/eks`/`modules/iam`; validate with `terraform fmt`/`validate`.
-- Phase 4/5: add `gitops/` (Argo CD, App of Apps, dev/prod) and the Cloudflare record.
+- Phase 2: build `modules/eks` (EKS 1.36, single `t3.small` node) and `modules/iam` (ALB controller Pod Identity + GitHub OIDC); wire into `environments/dev`.
+- Phase 4/5: add `gitops/` (Argo CD, App of Apps, dev/prd) and the Cloudflare CNAMEs.
 - Phase 6: add CI workflows at the repository root.

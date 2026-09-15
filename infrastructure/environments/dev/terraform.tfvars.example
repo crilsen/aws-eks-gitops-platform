@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars (gitignored) and fill with the private lab values.
+# Never commit real ids.
+
+vpc_id              = "vpc-xxxxxxxxxxxxxxxxx"
+internet_gateway_id = "igw-xxxxxxxxxxxxxxxxx"
+nat_gateway_id      = "nat-xxxxxxxxxxxxxxxxx"

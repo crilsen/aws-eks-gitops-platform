@@ -62,24 +62,20 @@ Each phase is small and independently verifiable. AWS phases require explicit au
 
 ## Open decisions (must resolve before the dependent phase)
 
-1. **ALB controller identity (ADR-011) — blocking Phase 2/4.** Pod Identity vs IRSA.
-2. **S3 bucket name + lock mechanism (ADR-017) — blocking Phase 3.**
-3. **Cloudflare record name** (zone is `crilsen.com`) — blocking Phase 5.
-4. **Exact EKS version** — confirm at plan time (use the latest supported).
-5. **Application language/framework** for the example API — blocking Phase 1.
+- None blocking. All previously open inputs are resolved (see below).
 
-Resolved: subnet CIDRs (ADR-019), registry (ADR-014, parameterizable GHCR/Docker Hub), node instance type (ADR-018, `t3.small`).
+Resolved: ALB controller identity (ADR-011, EKS Pod Identity), S3 bucket `cn-terraform-state-us-east-1` + S3 native lock with `dev`/`prd` folders (ADR-017), Cloudflare hostnames `app-dev.crilsen.com` (dev) and `app.crilsen.com` (prod) (ADR-016), EKS version 1.36 (ADR-018), application stack Python + FastAPI (ADR-020), subnet CIDRs (ADR-019), registry (ADR-014), node `t3.small` (ADR-018).
 
 ## Blocked
 
-- AWS apply phases are blocked on explicit authorization and on the open decisions above.
-- Phase 1 is blocked on the application language/framework choice.
+- AWS apply/destroy (Phase 3+) remains blocked only on explicit authorization and a cost review.
 
 ## Completed
 
 - Adopted `.ai/` context from the approved project brief (2026-09-15).
 - Recorded the flexible VPC module requirement (ADR-013) during planning.
-- Recorded registry/DNS/ingress decisions (ADR-014/015/016) and AWS decisions (ADR-012/017/018/019): S3 state, adopt VPC/IGW/NAT, ALB + ACM, Cloudflare `crilsen.com`, EKS latest + 1 `t3.small` node, subnets `10.11.21.0/24` onward, region `us-east-1`.
+- Recorded registry/DNS/ingress decisions (ADR-014/015/016) and AWS decisions (ADR-012/017/018/019): S3 state, adopt VPC/IGW/NAT, ALB + ACM, Cloudflare `crilsen.com`, EKS 1.36 + 1 `t3.small` node, subnets `10.11.21.0/24` onward, region `us-east-1`.
 - Implemented and validated `infrastructure/modules/vpc` (`terraform fmt`, `terraform validate`).
 - Implemented Phase 1: FastAPI application (`/`, `/health`), tests, multi-stage Dockerfile (non-root), and Helm chart with probes/resources/optional ALB Ingress. Validated with pytest, `docker build`, container smoke test, `helm lint`, `helm template`.
 - Decided the application stack (Python + FastAPI, ADR-020) and the ALB controller identity (EKS Pod Identity, ADR-011).
+- Created `infrastructure/environments/dev` (S3 backend `cn-terraform-state-us-east-1` key `aws-eks-gitops-platform/dev/terraform.tfstate`, adopted network, subnet CIDRs). Validated with `terraform fmt` and `terraform validate`.

@@ -47,9 +47,9 @@ AWS (account supplied privately, us-east-1)
 
 External
 ├── container registry        - images with immutable SHA tags (ECR removed; GHCR proposed)
-└── Cloudflare DNS (crilsen.com) - record pointing to the ALB; ACM DNS validation
+└── Cloudflare DNS (crilsen.com) - CNAME app-dev.crilsen.com (dev) and app.crilsen.com (prod); ACM DNS validation
 
-Terraform state: S3 backend (bucket name/region supplied privately; lock file per state).
+Terraform state: S3 `cn-terraform-state-us-east-1`, keys `aws-eks-gitops-platform/<env>/terraform.tfstate` with native S3 locking.
 ```
 
 ## Decisions already made (from the author)
@@ -58,8 +58,8 @@ Terraform state: S3 backend (bucket name/region supplied privately; lock file pe
 - Subnets are `/24` inside `10.11.0.0/16`: public `10.11.21.0/24` and `10.11.22.0/24`, private `10.11.23.0/24` and `10.11.24.0/24` (ADR-019).
 - Container registry is a parameter (ADR-014): GHCR default, Docker Hub supported.
 - Terraform state in S3.
-- Ingress via ALB; TLS via ACM; DNS zone `crilsen.com` on Cloudflare.
-- EKS: latest supported version, a single `t3.small` managed node (ADR-018).
+- Ingress via ALB; TLS via ACM; DNS zone `crilsen.com` on Cloudflare (dev `app-dev.crilsen.com`, prod `app.crilsen.com`).
+- EKS: 1.36 (latest), a single `t3.small` managed node (ADR-018).
 
 ## GitOps flow
 

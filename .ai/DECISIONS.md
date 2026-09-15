@@ -276,14 +276,14 @@ Context:
 The author will manage DNS in Cloudflare for the zone `crilsen.com`, replacing the earlier "no domain / no Route 53" scope, and wants TLS via ACM.
 
 Decision:
-Point a Cloudflare record in `crilsen.com` at the ALB. Use an ACM certificate (free, region `us-east-1`) for the ALB HTTPS listener, validated by a DNS CNAME added in Cloudflare. Route 53 is not used.
+Point Cloudflare CNAME records in `crilsen.com` at the ALB: `app-dev.crilsen.com` for `dev` and `app.crilsen.com` for prod. Use an ACM certificate (free, region `us-east-1`) for the ALB HTTPS listener, validated by DNS CNAMEs added in Cloudflare. Route 53 is not used.
 
 Reasoning:
 Cloudflare is the author's DNS provider and adds no AWS cost; ACM keeps TLS free.
 
 Consequences:
-- The Cloudflare zone is `crilsen.com`; the record/subdomain name is still an open input (not invented).
-- ACM DNS validation requires adding a CNAME to Cloudflare; document the exact records.
+- Hostnames: `app-dev.crilsen.com` (dev) and `app.crilsen.com` (prod), both CNAMEs to the ALB.
+- ACM DNS validation requires adding the validation CNAMEs to Cloudflare; document the exact records.
 - ADR-010's single-ALB and no-extra-LB rules still apply.
 
 ## ADR-017 — Terraform state in S3
@@ -294,15 +294,15 @@ Context:
 The author chose an S3 backend for Terraform state instead of local state.
 
 Decision:
-Use an S3 bucket in `us-east-1` with per-state keys for remote state (and a lock mechanism, e.g., S3 lockfile or DynamoDB, to be confirmed). The bucket name and any credentials are supplied privately and are not versioned.
+Use the existing S3 bucket `cn-terraform-state-us-east-1` in `us-east-1` (author-provided). Keys are namespaced per environment folder: `aws-eks-gitops-platform/<env>/terraform.tfstate` (`dev`, `prd`). Use native S3 state locking via `use_lockfile = true` (Terraform >= 1.10) instead of DynamoDB. The backend block is committed; secret values are not.
 
 Reasoning:
-Remote state is durable, shareable, and enables locking and CI use.
+Remote state is durable, shareable, and enables locking and CI use; native S3 locking removes an extra service.
 
 Consequences:
-- A bucket must exist before the first `init`; confirm its name.
-- Account id and bucket name stay in private config/backend files, not in `.ai/`.
-- Backend is configured per environment root.
+- The bucket must exist before the first `init`.
+- Each environment root sets its own key (`dev` or `prd`) in the committed backend block.
+- The account id stays out of versioned files; the bucket name is not sensitive.
 
 ## ADR-018 — EKS: latest version, single small managed node
 
@@ -312,7 +312,7 @@ Context:
 The author wants the newest EKS version with a single node on the smallest viable instance, within cost limits.
 
 Decision:
-Use the latest supported EKS version and one managed node group with a single `t3.small` node (2 vCPU / 2 GiB), confirmed by the author as the practical minimum for Argo CD plus the AWS Load Balancer Controller. Document the size and cost.
+Use EKS **1.36** (latest supported in `us-east-1`, confirmed via `aws eks describe-cluster-versions`) and one managed node group with a single `t3.small` node (2 vCPU / 2 GiB), confirmed by the author as the practical minimum for Argo CD plus the AWS Load Balancer Controller. Document the size and cost.
 
 Reasoning:
 Keeps the lab minimal and current while remaining functional; free-tier `t3.micro` (~1 GiB) is too small.
@@ -320,7 +320,7 @@ Keeps the lab minimal and current while remaining functional; free-tier `t3.micr
 Consequences:
 - `t3.small` is not free-tier eligible (~US$ 0.0208/hour on-demand in `us-east-1`).
 - The EKS control plane is the dominant cost (~US$ 0.10/hour); destroy promptly after the demo.
-- Confirm the exact EKS version at plan time rather than assuming.
+- Re-confirm the latest version at apply time; `cluster_version` remains a variable.
 
 ## ADR-019 — Subnet CIDR scheme (/24 inside 10.11.0.0/16)
 
