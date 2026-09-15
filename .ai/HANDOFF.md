@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `application/` (Phase 1) and updated `.ai/` (commit pending).
+- Repo state: branch `dev`, synced with `origin/dev`; tree clean. Latest work committed at `f735f53` (VPC module + Phase 1 app).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
