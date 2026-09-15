@@ -44,3 +44,15 @@ variable "private_subnet_cidrs" {
   type        = list(string)
   default     = ["10.11.23.0/24", "10.11.24.0/24"]
 }
+
+variable "cluster_version" {
+  description = "EKS Kubernetes version."
+  type        = string
+  default     = "1.36"
+}
+
+variable "public_access_cidrs" {
+  description = "CIDRs allowed to reach the Kubernetes API public endpoint. Restrict to trusted addresses where possible."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}

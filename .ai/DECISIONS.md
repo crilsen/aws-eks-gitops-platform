@@ -378,6 +378,24 @@ Consequences:
 - The directory layout deviates slightly from the brief's sketch, documented here.
 - Workflows must set explicit paths/working directories for the application.
 
+## ADR-022 — Environment isolation: one shared cluster, `dev` and `prd` namespaces
+
+Status: Accepted
+
+Context:
+The author asked what the best practice is and confirmed the choice: keep a single EKS cluster and separate environments by namespace. Full production isolation would use separate AWS accounts and/or clusters, which roughly doubles the control-plane and node cost and does not fit the US$ 100 budget.
+
+Decision:
+Use one shared EKS cluster for the lab. `dev` and `prd` are separate namespaces. The `dev` environment root also owns the shared platform infrastructure (network subnets and the EKS cluster); `prd` reuses that cluster and adds only namespace-scoped resources. Harden the shared cluster: per-namespace Argo CD RBAC, `ResourceQuota`/`LimitRange`, `NetworkPolicy`, and Pod Identity/IRSA scoped per service account.
+
+Reasoning:
+Matches the brief, controls cost, and still demonstrates environment separation, promotion, and GitOps. Documented explicitly so the limitation is not hidden.
+
+Consequences:
+- Namespace isolation is soft multi-tenancy, not a security boundary; documented as a lab trade-off.
+- Shared control plane, CRDs, and upgrade cadence across both environments; a cluster-wide failure affects both.
+- The monorepo structure keeps an easy path to split into separate clusters/accounts later by changing the environment roots and Argo CD targets.
+
 Use this ADR format for durable, meaningful decisions:
 
 ```text

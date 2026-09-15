@@ -3,7 +3,7 @@
 ## Active
 
 - Phase 1 complete — FastAPI app (`/`, `/health`), tests, multi-stage Dockerfile, and Helm chart implemented; validated with pytest, `docker build`, a container smoke test, `helm lint`, and `helm template`.
-- Phase 2 in progress — `infrastructure/modules/vpc` implemented and validated; `environments/dev` root and `modules/eks`/`modules/iam` pending. CI (Phase 6) not started.
+- Phase 2 in progress — `modules/vpc`, `environments/dev` (S3 backend + adopted network), and `modules/eks` (shared cluster 1.36, 1× `t3.small`, managed add-ons) implemented and validated. `modules/iam` (ALB controller Pod Identity + GitHub OIDC) and `environments/prd` pending. CI (Phase 6) not started.
 
 ## Roadmap
 
@@ -79,3 +79,4 @@ Resolved: ALB controller identity (ADR-011, EKS Pod Identity), S3 bucket `cn-ter
 - Implemented Phase 1: FastAPI application (`/`, `/health`), tests, multi-stage Dockerfile (non-root), and Helm chart with probes/resources/optional ALB Ingress. Validated with pytest, `docker build`, container smoke test, `helm lint`, `helm template`.
 - Decided the application stack (Python + FastAPI, ADR-020) and the ALB controller identity (EKS Pod Identity, ADR-011).
 - Created `infrastructure/environments/dev` (S3 backend `cn-terraform-state-us-east-1` key `aws-eks-gitops-platform/dev/terraform.tfstate`, adopted network, subnet CIDRs). Validated with `terraform fmt` and `terraform validate`.
+- Implemented `infrastructure/modules/eks` (shared cluster 1.36, managed node group 1× `t3.small`, core add-ons + pod identity agent) and wired it into `environments/dev`. Decided environment isolation (ADR-022: one cluster, `dev`/`prd` namespaces). Validated with `terraform fmt` and `terraform validate`.
