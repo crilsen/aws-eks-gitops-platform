@@ -54,10 +54,11 @@ Terraform state: S3 backend (bucket name/region supplied privately; lock file pe
 ## Decisions already made (from the author)
 
 - Adopt the existing VPC, IGW, and NAT (IDs supplied privately, not versioned).
-- Subnets are /24 and start from the agreed base (`10.21`, interpretation pending).
+- Subnets are `/24` inside `10.11.0.0/16`: public `10.11.21.0/24` and `10.11.22.0/24`, private `10.11.23.0/24` and `10.11.24.0/24` (ADR-019).
+- Container registry is a parameter (ADR-014): GHCR default, Docker Hub supported.
 - Terraform state in S3.
 - Ingress via ALB; TLS via ACM; DNS zone `crilsen.com` on Cloudflare.
-- EKS: latest supported version, a single small managed node.
+- EKS: latest supported version, a single `t3.small` managed node (ADR-018).
 
 ## GitOps flow
 
@@ -93,4 +94,4 @@ The `infrastructure/modules/vpc` module must be usable in both a fresh lab accou
 
 ## Open architectural decisions
 
-Tracked in `TASKS.md` and `DECISIONS.md`: the exact subnet CIDRs (ADR-019), container registry confirmation (ADR-014), ALB controller identity IRSA vs Pod Identity (ADR-011), the EKS version/nodes posture (ADR-018), the S3 bucket name (ADR-017), the Cloudflare record name, and TLS confirmation. Decided: adopt existing VPC/IGW/NAT (ADR-012), flexible VPC module (ADR-013), ALB ingress (ADR-015), Cloudflare DNS zone `crilsen.com` (ADR-016), S3 state (ADR-017), EKS latest + 1 small node (ADR-018). Region `us-east-1` and the account are known to the author; ids stay in private config.
+Tracked in `TASKS.md` and `DECISIONS.md`: ALB controller identity IRSA vs Pod Identity (ADR-011), the S3 bucket name (ADR-017), the Cloudflare record name, and the exact EKS version. Decided: adopt existing VPC/IGW/NAT (ADR-012), flexible VPC module (ADR-013), registry parameterizable with GHCR default (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM (ADR-016), S3 state (ADR-017), EKS latest + 1 `t3.small` node (ADR-018), subnet scheme (ADR-019). Region `us-east-1` and the account are known to the author; ids stay in private config.

@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev` (latest context commit `644c8b0`); working tree clean.
+- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `infrastructure/modules/vpc` and updated `.ai/` (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
-- Last goal: Record the AWS decisions (S3 state, adopt existing VPC/IGW/NAT, ALB + ACM, Cloudflare `crilsen.com`, EKS latest + 1 small node).
-- Exact next action: Get the subnet CIDR interpretation (ADR-019: `10.11.21.0/24` onward vs literal `10.21.0.0/24`) and the registry confirmation (GHCR vs Docker Hub, ADR-014); then start Phase 1 or Phase 2. No code written yet.
-- Blocked by: Subnet CIDR (ADR-019) blocks Phase 2. AWS phases (3+) blocked on explicit authorization.
+- Last goal: Implement and validate `infrastructure/modules/vpc` per ADR-013/ADR-019.
+- Exact next action: Create `infrastructure/environments/dev` (wire the module with the confirmed CIDRs, S3 backend, mandatory tags) and the `modules/eks`/`modules/iam`; or start Phase 1 once the app language is chosen.
+- Blocked by: None for Phase 2. Phase 1 blocked on the application language/framework. AWS apply (Phase 3) blocked on explicit authorization.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -17,49 +17,55 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-Context adopted from the approved brief. No application, infrastructure, or GitOps artifacts exist yet. The repository currently holds `README.md` (marked under development), `AGENTS.md`, `.gitignore`, and `.ai/`, committed and pushed on `dev`.
+Planning is complete for the AWS/network decisions. `infrastructure/modules/vpc` exists and passes `terraform fmt`/`terraform validate`. No environment root, EKS/IAM module, application, or GitOps artifacts exist yet. Nothing has been provisioned on AWS.
 
 ## What Was Done
 
-- Adopted `.ai/PROJECT.md`, `.ai/ARCHITECTURE.md`, `.ai/CONVENTIONS.md` with real project facts.
-- Recorded project ADRs 004–012 in `.ai/DECISIONS.md` (monorepo, namespaces, cost guardrails, OIDC, immutable tags, sync policy, ALB, proposed identity/network decisions).
-- Wrote the phased roadmap and open decisions in `.ai/TASKS.md`.
-- Recorded the flexible VPC module requirement as ADR-013 and reflected it in `ARCHITECTURE.md`, `CONVENTIONS.md`, `TASKS.md` (no module code written yet).
-- Recorded registry/DNS/ingress decisions: ECR removed and GHCR proposed (ADR-014), ALB ingress proposed (ADR-015), Cloudflare DNS accepted (ADR-016); region set to `us-east-1`.
-- Initialized this Resume block.
+- Adopted `.ai/` context with real project facts and recorded the phased roadmap.
+- Recorded ADRs 004–019, including the flexible VPC module (ADR-013), adopted network (ADR-012), registry (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM (ADR-016), S3 state (ADR-017), EKS posture (ADR-018), and subnet scheme (ADR-019).
+- Implemented `infrastructure/modules/vpc` (create-or-adopt VPC, configured `/24` subnets, reusable IGW/NAT, always-created route tables) plus its README.
+- Validated the module with `terraform fmt -recursive` and `terraform validate` (AWS provider v6.64.0).
 
 ## Files Changed
 
+- `infrastructure/modules/vpc/{versions,variables,main,outputs}.tf`, `infrastructure/modules/vpc/README.md` (new)
 - `.ai/PROJECT.md`, `.ai/ARCHITECTURE.md`, `.ai/CONVENTIONS.md`
-- `.ai/DECISIONS.md`, `.ai/TASKS.md`, `.ai/TOOLS.md`, `.ai/VALIDATION.md`
-- `.ai/HANDOFF.md`
+- `.ai/DECISIONS.md`, `.ai/TASKS.md`, `.ai/TOOLS.md`, `.ai/VALIDATION.md`, `.ai/HANDOFF.md`
 - `.gitignore`, `README.md` (project overview)
 
 ## Decisions Made
 
 - Single monorepo with area-separated directories (ADR-004).
 - `dev` and `prod` as namespaces in one temporary cluster (ADR-005).
-- No NAT Gateway or secondary managed services (ADR-006).
+- No NAT Gateway creation or secondary managed services (ADR-006); reused NAT is allowed.
 - GitHub OIDC instead of static credentials (ADR-007).
 - Immutable SHA image tags only (ADR-008).
 - `dev` auto-syncs with prune/selfHeal; `prod` is PR-gated (ADR-009).
-- One temporary ALB via the controller, native DNS only (ADR-010).
-- Proposed: EKS Pod Identity for the controller (ADR-011); NAT-free network egress (ADR-012).
-- Accepted: flexible create-or-adopt VPC module (ADR-013); Cloudflare DNS + ACM TLS (ADR-016); adopt existing VPC/IGW/NAT with private egress via reused NAT (ADR-012); ALB ingress (ADR-015); S3 state (ADR-017); EKS latest + 1 small node (ADR-018); subnet CIDR scheme (ADR-019, interpretation pending).
-- Proposed/open: registry outside AWS — GHCR recommended (ADR-014); ALB controller identity Pod Identity vs IRSA (ADR-011).
+- Single temporary ALB via the controller (ADR-010, amended by ADR-016).
+- Adopt existing VPC/IGW/NAT; private egress via reused NAT (ADR-012).
+- Flexible create-or-adopt VPC module, always-created route tables (ADR-013).
+- Parameterizable registry, GHCR default, Docker Hub supported (ADR-014).
+- Ingress via AWS Load Balancer Controller + ALB (ADR-015).
+- Cloudflare DNS zone `crilsen.com` + ACM TLS (ADR-016).
+- S3 Terraform state (ADR-017).
+- EKS latest version, single `t3.small` node (ADR-018).
+- Subnets `/24` inside `10.11.0.0/16`, `10.11.21.0/24` onward (ADR-019).
+- Open: ALB controller identity Pod Identity vs IRSA (ADR-011).
 
 ## Problems / Risks
 
-- Open decisions (region/account, network egress, controller identity, EKS version/node size, state backend) must be resolved before the dependent phases.
-- AWS phases consume credits and require explicit authorization and a plan first.
-- No tooling is installed/verified yet, so validation is limited to structure review.
+- Open decisions remain: ALB controller identity (ADR-011), S3 bucket name/lock (ADR-017), Cloudflare record name, exact EKS version, and the app language (Phase 1).
+- AWS phases consume credits and require explicit authorization and a plan first; the EKS control plane is the dominant cost.
+- `tflint`, `checkov`, `trivy`, and `helm` are not installed locally, so those checks are pending.
 
 ## Validation Performed
 
-- Structure review only; no build/test/lint tooling exists yet. Nothing else validated.
+- `terraform fmt -recursive` — Validated (no changes needed).
+- `terraform validate` for `modules/vpc` — Validated (AWS provider v6.64.0).
+- `tflint`, `checkov`, app/Helm checks — Not validated (tools/artifacts absent).
 
 ## Next Actions
 
-- Confirm the subnet CIDRs (ADR-019) and the registry (ADR-014: GHCR vs Docker Hub); confirm the node instance type (ADR-018), the S3 bucket name (ADR-017), the controller identity (ADR-011), and the Cloudflare record name.
-- Phase 1: implement the example API, Dockerfile, and Helm chart; run local tests, `docker build`, `helm lint`, `helm template`.
-- Phase 2: implement `modules/vpc` (adopt existing VPC/IGW/NAT, `/24` subnets, always-created route tables) and `modules/eks`/`iam`; validate with `terraform fmt -recursive` / `terraform validate`.
+- Confirm the app language/framework (Phase 1) and the ALB controller identity (ADR-011), S3 bucket name (ADR-017), Cloudflare record name, and EKS version.
+- Phase 2: create `infrastructure/environments/dev` and `modules/eks`/`modules/iam`; validate with `terraform fmt`/`validate`.
+- Phase 1: implement the example API, Dockerfile, and Helm chart.

@@ -231,24 +231,24 @@ Consequences:
 - Without a NAT or VPC endpoints, private subnets have no egress; ADR-012 still governs the final egress choice.
 - Input validation is required (`create_vpc` vs `vpc_id`, CIDR/AZ alignment, NAT/IGW optionality).
 
-## ADR-014 — Container registry outside AWS (GHCR proposed)
+## ADR-014 — Parameterizable container registry (GHCR default, Docker Hub supported)
 
-Status: Proposed
+Status: Accepted
 
 Context:
-The author decided ECR is not needed, so images must live elsewhere. The repository is public, which favors a registry with free public images and native CI authentication.
+The author decided ECR is not needed and asked for the registry to be parameterizable between GitHub (GHCR) and Docker Hub. The repository is public, which favors free public images and native CI authentication.
 
-Decision (proposed):
-Use GitHub Container Registry (GHCR) with immutable commit-SHA tags. CI authenticates with the workflow `GITHUB_TOKEN`; no AWS credentials are required to push. If the package is public, the cluster pulls without an image pull secret. ECR is removed from scope and from Terraform.
+Decision:
+Make the registry a parameter. The Helm chart exposes `image.registry`/`image.repository` and the CI derives the image path from a configurable value; the default is GHCR (`ghcr.io`), with Docker Hub supported as an alternative. Images always use immutable commit-SHA tags. ECR is removed from scope and from Terraform.
 
 Reasoning:
-GHCR is free for public repos, integrates with GitHub Actions, avoids storing AWS credentials for image push, and removes an AWS dependency.
+GHCR needs no AWS credentials (uses the workflow `GITHUB_TOKEN`) and is free for public repos; parameterizing keeps Docker Hub viable without code changes.
 
 Consequences:
-- Terraform no longer includes an ECR module.
-- CI no longer needs AWS OIDC for the image push (OIDC remains relevant only if CI itself runs AWS operations).
-- If the package is private, an image pull secret and additional setup are needed; keep it public for the lab.
-- Docker Hub is the fallback if GHCR is not acceptable.
+- Terraform has no ECR module.
+- CI needs no AWS OIDC for the image push (OIDC remains relevant only if CI runs AWS operations).
+- If the chosen repository/package is private, an image pull secret is required; keep it public for the lab.
+- The default registry value must be documented in the chart and workflow.
 
 ## ADR-015 — Ingress via AWS Load Balancer Controller and ALB
 
@@ -312,32 +312,36 @@ Context:
 The author wants the newest EKS version with a single node on the smallest viable instance, within cost limits.
 
 Decision:
-Use the latest supported EKS version and one managed node group with a single node. Start from the smallest instance and, if Argo CD plus the AWS Load Balancer Controller do not fit, step up to the next size; document the choice and cost.
+Use the latest supported EKS version and one managed node group with a single `t3.small` node (2 vCPU / 2 GiB), confirmed by the author as the practical minimum for Argo CD plus the AWS Load Balancer Controller. Document the size and cost.
 
 Reasoning:
-Keeps the lab minimal and current while remaining functional.
+Keeps the lab minimal and current while remaining functional; free-tier `t3.micro` (~1 GiB) is too small.
 
 Consequences:
-- Free-tier instances (e.g., `t3.micro`, ~1 GiB RAM) are likely too small for Argo CD + controller; a `t3.small`+ may be required. Confirm the instance type.
+- `t3.small` is not free-tier eligible (~US$ 0.0208/hour on-demand in `us-east-1`).
 - The EKS control plane is the dominant cost (~US$ 0.10/hour); destroy promptly after the demo.
 - Confirm the exact EKS version at plan time rather than assuming.
 
-## ADR-019 — Subnet CIDR scheme (/24 from the given base)
+## ADR-019 — Subnet CIDR scheme (/24 inside 10.11.0.0/16)
 
-Status: Accepted (interpretation to confirm)
+Status: Accepted
 
 Context:
-The author specified a VPC block of `10.11.0.0/16`, `/24` subnets, "starting at `10.21`".
+The author specified a VPC block of `10.11.0.0/16`, `/24` subnets "starting at `10.21`", and confirmed the intended reading: `10.11.21.0/24` onward, inside the adopted VPC.
 
 Decision:
-Create `/24` subnets inside the adopted VPC, starting from the base `10.21` as specified. The precise mapping (e.g., `10.11.21.0/24` onward, or a literal `10.21.0.0/24`) must be confirmed because `10.21.0.0/24` is outside a `10.11.0.0/16` VPC.
+Create `/24` subnets inside the adopted VPC starting at `10.11.21.0/24`. Two AZs are required (EKS needs at least two; the ALB needs two public subnets). Initial allocation:
+- public: `10.11.21.0/24`, `10.11.22.0/24`
+- private: `10.11.23.0/24`, `10.11.24.0/24`
+
+CIDRs remain variables so the environment can override them.
 
 Reasoning:
-Avoid inventing an overlapping or out-of-range CIDR; the VPC is adopted, so subnet CIDRs must not overlap existing subnets.
+Keeps subnets inside the VPC block and leaves room to grow; satisfies EKS and ALB multi-AZ requirements.
 
 Consequences:
-- Implementation is blocked until the CIDR interpretation is confirmed.
-- Provide at least one public and one private `/24`, sized for one node plus the ALB.
+- Must not overlap existing subnets in the adopted VPC; verify before apply.
+- The values are defaults in the environment root, not hardcoded in the module.
 
 Use this ADR format for durable, meaningful decisions:
 
