@@ -1,9 +1,7 @@
 # aws-eks-gitops-platform
 
-> **Status: Em desenvolvimento / Work in progress.**
-> Este projeto está sendo construído em fases e **ainda não está funcional**. No momento contém apenas o contexto portátil de agentes (`.ai/`), convenções e o planejamento. A implementação começa na Fase 1 e nada foi provisionado na AWS.
->
-> This project is under active development and is **not yet functional**; it currently contains only the portable agent context (`.ai/`), conventions, and the plan.
+> **Status: Work in progress.**
+> This project is being built in phases and is **not yet functional**. It currently contains only the portable agent context (`.ai/`), conventions, and the plan. Implementation starts at Phase 1 and nothing has been provisioned on AWS yet.
 
 Public portfolio project demonstrating **Platform Engineering, GitOps, Amazon EKS, Terraform, Kubernetes, Helm, Argo CD, CI/CD, security, and AWS cost control**.
 

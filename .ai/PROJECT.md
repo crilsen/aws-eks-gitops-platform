@@ -47,4 +47,4 @@
 
 ## Status
 
-**Em desenvolvimento / work in progress — not functional.** Context adopted from an approved project brief (2026-09-15). No application, infrastructure, or GitOps artifacts exist yet. AWS region is `us-east-1`; the AWS account id is known to the author but must stay out of versioned context and be supplied privately. Repository owner is not invented. Open decisions are tracked in `TASKS.md`.
+**Work in progress — not functional.** Context adopted from an approved project brief (2026-09-15). No application, infrastructure, or GitOps artifacts exist yet. AWS region is `us-east-1`; the AWS account id is known to the author but must stay out of versioned context and be supplied privately. Repository owner is not invented. Open decisions are tracked in `TASKS.md`.
