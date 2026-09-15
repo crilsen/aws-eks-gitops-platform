@@ -6,9 +6,9 @@
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
-- Last goal: Record the registry (ECR removed), Cloudflare DNS, ingress, and account/region decisions in the plan.
-- Exact next action: Confirm the open decisions (GHCR vs Docker Hub; Cloudflare zone/record; ALB ingress; TLS), then start Phase 1 (app/Docker/Helm) and Phase 2 `modules/vpc` per ADR-013. No code written yet; the user asked to update the plan only.
-- Blocked by: None. VPC module implementation is paused only by the user's "plan only, no code yet" instruction. AWS phases (3+) blocked on explicit authorization and the open decisions in `TASKS.md`.
+- Last goal: Record the AWS decisions (S3 state, adopt existing VPC/IGW/NAT, ALB + ACM, Cloudflare `crilsen.com`, EKS latest + 1 small node).
+- Exact next action: Get the subnet CIDR interpretation (ADR-019: `10.11.21.0/24` onward vs literal `10.21.0.0/24`) and the registry confirmation (GHCR vs Docker Hub, ADR-014); then start Phase 1 or Phase 2. No code written yet.
+- Blocked by: Subnet CIDR (ADR-019) blocks Phase 2. AWS phases (3+) blocked on explicit authorization.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -45,8 +45,8 @@ Context adopted from the approved brief. No application, infrastructure, or GitO
 - `dev` auto-syncs with prune/selfHeal; `prod` is PR-gated (ADR-009).
 - One temporary ALB via the controller, native DNS only (ADR-010).
 - Proposed: EKS Pod Identity for the controller (ADR-011); NAT-free network egress (ADR-012).
-- Accepted: flexible create-or-adopt VPC module with supplied IGW/NAT and always-created route tables (ADR-013); Cloudflare DNS (ADR-016).
-- Proposed: registry outside AWS, GHCR (ADR-014); ingress via AWS Load Balancer Controller/ALB (ADR-015).
+- Accepted: flexible create-or-adopt VPC module (ADR-013); Cloudflare DNS + ACM TLS (ADR-016); adopt existing VPC/IGW/NAT with private egress via reused NAT (ADR-012); ALB ingress (ADR-015); S3 state (ADR-017); EKS latest + 1 small node (ADR-018); subnet CIDR scheme (ADR-019, interpretation pending).
+- Proposed/open: registry outside AWS — GHCR recommended (ADR-014); ALB controller identity Pod Identity vs IRSA (ADR-011).
 
 ## Problems / Risks
 
@@ -60,6 +60,6 @@ Context adopted from the approved brief. No application, infrastructure, or GitO
 
 ## Next Actions
 
-- Confirm open decisions: registry (GHCR vs Docker Hub, public/private), Cloudflare zone + record name, ALB ingress, TLS via ACM vs HTTP-only, EKS version/node size, network egress, state backend.
+- Confirm the subnet CIDRs (ADR-019) and the registry (ADR-014: GHCR vs Docker Hub); confirm the node instance type (ADR-018), the S3 bucket name (ADR-017), the controller identity (ADR-011), and the Cloudflare record name.
 - Phase 1: implement the example API, Dockerfile, and Helm chart; run local tests, `docker build`, `helm lint`, `helm template`.
-- Phase 2: implement `modules/vpc` per ADR-013 and validate with `terraform fmt -recursive` / `terraform validate`.
+- Phase 2: implement `modules/vpc` (adopt existing VPC/IGW/NAT, `/24` subnets, always-created route tables) and `modules/eks`/`iam`; validate with `terraform fmt -recursive` / `terraform validate`.

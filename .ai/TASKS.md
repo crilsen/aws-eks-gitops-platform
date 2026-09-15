@@ -2,7 +2,7 @@
 
 ## Active
 
-- Planning update — record the registry (ECR removed), Cloudflare DNS, ingress, and account/region decisions. No implementation started; the user asked not to write code yet.
+- Planning update — recorded AWS decisions: S3 state, adopt existing VPC/IGW/NAT, ACM + Cloudflare `crilsen.com`, ALB ingress, EKS latest + 1 small node. One clarification pending: subnet CIDR interpretation. No implementation started.
 
 ## Roadmap
 
@@ -21,15 +21,15 @@ Each phase is small and independently verifiable. AWS phases require explicit au
 - Validation: app tests, `docker build`, `helm lint`, `helm template`.
 
 ### Phase 2 — Terraform modules and root (no apply)
-- `modules/vpc` per ADR-013: create-or-adopt VPC (`vpc_cidr` or `vpc_id`), configurable `public_subnet_cidrs`/`private_subnet_cidrs` + `azs`, supplied `internet_gateway_id`/`nat_gateway_id` with optional creation, and route tables always created/owned with associations and routes.
-- `modules/eks`, `modules/iam` (no ECR module).
-- `environments/dev` root with the mandatory tags.
+- `modules/vpc` per ADR-013, adopting the existing VPC/IGW/NAT (ids supplied privately), creating `/24` subnets per the agreed scheme, and always creating route tables (public -> IGW, private -> NAT).
+- `modules/eks` (latest version, 1 small node) and `modules/iam` (ALB controller + OIDC). No ECR module.
+- `environments/dev` root with the mandatory tags and the S3 backend (ADR-017).
 - Decide/implement the OIDC role for GitHub Actions and the ALB controller identity.
 - Validation: `terraform fmt -recursive`, `terraform validate`, `tflint`, Checkov; `plan` only with authorization.
 
 ### Phase 3 — Provision AWS (requires authorization + credits)
 - Present plan, resources, and qualitative cost estimate first.
-- `apply` VPC, EKS, IAM (registry is external; no ECR); configure `kubectl`.
+- `init` with the S3 backend, then `apply` EKS, IAM, subnets/route tables (registry is external; no ECR); configure `kubectl`.
 - Validation: cluster reachable; `terraform output` values captured.
 
 ### Phase 4 — Platform add-ons (GitOps)
@@ -61,21 +61,21 @@ Each phase is small and independently verifiable. AWS phases require explicit au
 
 ## Open decisions (must resolve before the dependent phase)
 
-1. Repository owner/GitHub org and the Cloudflare zone + record name — supplied by the author (never invented). AWS region (`us-east-1`) and account are known; the account id stays in private config, not versioned files.
-2. Network egress path for private subnets without NAT (ADR-012). The VPC module shape is decided (ADR-013: create-or-adopt, configurable subnets, supplied IGW/NAT, always-create route tables); the remaining choice is public subnets vs private subnets + VPC endpoints. Needed before Phase 2.
-3. Container registry: GHCR vs Docker Hub, and public vs private package (ADR-014). Needed before Phase 1/6.
-4. Ingress implementation confirmed as AWS ALB vs Envoy (ADR-015). Needed before Phase 4/5.
-5. ALB controller identity: EKS Pod Identity vs IRSA (ADR-011). Needed before Phase 2/4.
-6. EKS version and node group size (smallest that runs Argo CD + controller). Needed before Phase 2.
-7. Terraform state backend: local vs S3 + lock. Needed before Phase 3.
-8. TLS: ACM certificate for the ALB vs HTTP-only (ADR-016). Needed before Phase 5.
+1. **Subnet CIDRs (ADR-019) — blocking Phase 2.** Confirm whether `10.21` means `10.11.21.0/24` onward inside the `10.11.0.0/16` VPC, or a literal `10.21.0.0/24` (out of range).
+2. **Container registry (ADR-014) — blocking Phase 1/6.** GHCR vs Docker Hub, public vs private. The author asked for an explanation; GHCR (public) is recommended.
+3. **EKS node instance type (ADR-018) — blocking Phase 2.** Free-tier `t3.micro` (~1 GiB) is likely too small for Argo CD + controller; `t3.small` recommended.
+4. **S3 bucket name + lock mechanism (ADR-017) — blocking Phase 3.**
+5. **ALB controller identity (ADR-011) — blocking Phase 2/4.** Pod Identity vs IRSA.
+6. **Cloudflare record name** (zone is `crilsen.com`) and confirmation of the ACM flow — blocking Phase 5.
+7. **EKS version** confirmed at plan time (latest supported).
 
 ## Blocked
 
-- AWS-facing phases are blocked on explicit authorization and on the open decisions above.
+- Phase 2 is blocked on the subnet CIDR interpretation (ADR-019).
+- Other AWS-facing phases are blocked on explicit authorization and the remaining open decisions.
 
 ## Completed
 
 - Adopted `.ai/` context from the approved project brief (2026-09-15).
 - Recorded the flexible VPC module requirement (ADR-013) during planning.
-- Recorded registry/DNS/ingress decisions: ECR removed, GHCR proposed (ADR-014), ALB proposed (ADR-015), Cloudflare DNS (ADR-016); region `us-east-1`.
+- Recorded registry/DNS/ingress decisions (ADR-014/015/016) and AWS decisions (ADR-012/017/018/019): S3 state, adopt VPC/IGW/NAT, ALB + ACM, Cloudflare `crilsen.com`, EKS latest + 1 node, region `us-east-1`.

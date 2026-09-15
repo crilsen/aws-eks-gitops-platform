@@ -14,6 +14,7 @@ No implementation artifacts exist yet, so no historical naming, Terraform, Kuber
 
 - Tag every taggable resource with: `Project = aws-eks-gitops-platform`, `Environment`, `Owner = Cristiano`, `ManagedBy = Terraform`, `AutoDelete = true`.
 - The VPC module must support creating or adopting a VPC, configurable subnet CIDRs, supplied IGW/NAT, and must always create and own its route tables (ADR-013).
+- Terraform state lives in S3 with per-state keys (ADR-017); adopted resource ids (VPC/IGW/NAT/subnets) and the bucket name are supplied privately and never versioned.
 - Apply least privilege in IAM; never create long-lived access keys for CI (use GitHub OIDC).
 - Pin Terraform providers, modules, and Helm chart versions; avoid floating ranges.
 - Keep account id, region, credentials, and other sensitive values out of docs and context; use `.tfvars`/`.example` files.

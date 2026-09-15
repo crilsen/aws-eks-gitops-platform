@@ -190,23 +190,23 @@ Consequences:
 - Requires the EKS Pod Identity agent on nodes and a Pod Identity association in Terraform.
 - Must be confirmed against the chosen EKS version before implementation.
 
-## ADR-012 — Network egress without a NAT Gateway (proposed)
+## ADR-012 — Adopt the existing network; reuse IGW and NAT for egress
 
-Status: Proposed
+Status: Accepted
 
 Context:
-Workloads and nodes need egress to pull images from the external registry (ADR-014) and, for Argo CD, to reach GitHub, but NAT is prohibited by ADR-006. With ECR removed, AWS-service VPC endpoints no longer cover the registry path.
+The author supplies an existing VPC, an existing Internet Gateway, and an existing NAT Gateway in `us-east-1`. NAT creation is prohibited by ADR-006, but reusing an already-provisioned NAT is allowed and removes the egress problem that the ECR removal introduced (image registry and GitHub are internet destinations).
 
-Decision (proposed):
-Prefer a small node group in public subnets with an Internet Gateway as the primary egress path, since the registry (GHCR) and GitHub are internet destinations that VPC endpoints cannot serve without NAT. Private subnets with VPC endpoints remain an option only for AWS-service traffic; document the trade-off.
+Decision:
+Adopt the existing VPC/IGW/NAT (ids supplied privately, not versioned). The node group runs in private subnets and egresses through the reused NAT; public subnets host the ALB. The module still creates and owns all route tables (ADR-013) and creates the subnets from the agreed CIDR scheme (ADR-019).
 
 Reasoning:
-Preserves the no-NAT constraint while keeping the platform functional for image pulls and GitOps sync.
+Reusing existing networking satisfies the no-new-NAT cost rule while keeping private nodes, image pulls, and GitOps sync functional.
 
 Consequences:
-- Nodes get public IPs (`map_public_ip_on_launch`); document this trade-off.
-- Security groups and the ALB must not rely on nodes being private.
-- This decision must be resolved before Terraform implementation of the network.
+- No NAT or IGW is created; both are inputs.
+- Private-subnet egress depends on the reused NAT remaining available.
+- If the NAT is removed, the no-egress scenario returns; document this dependency.
 
 ## ADR-013 — Flexible create-or-adopt VPC module
 
@@ -252,12 +252,12 @@ Consequences:
 
 ## ADR-015 — Ingress via AWS Load Balancer Controller and ALB
 
-Status: Proposed
+Status: Accepted
 
 Context:
 The author asked whether ingress should use Envoy or AWS. The project is an AWS-focused portfolio and already requires an ALB demonstration.
 
-Decision (proposed):
+Decision:
 Use the AWS Load Balancer Controller with a Kubernetes `Ingress` (`ingressClassName: alb`) and a single ALB. Do not run Envoy Gateway or ingress-nginx as the primary ingress.
 
 Reasoning:
@@ -268,23 +268,76 @@ Consequences:
 - Cloudflare points its DNS record at the ALB.
 - Gateway API/Envoy is out of scope for this lab.
 
-## ADR-016 — DNS via Cloudflare
+## ADR-016 — DNS via Cloudflare with ACM TLS
 
 Status: Accepted
 
 Context:
-The author will manage DNS in Cloudflare, replacing the earlier "no domain / no Route 53" scope.
+The author will manage DNS in Cloudflare for the zone `crilsen.com`, replacing the earlier "no domain / no Route 53" scope, and wants TLS via ACM.
 
 Decision:
-Use a Cloudflare-managed hostname for the application. Route 53 is not used. Add an ACM certificate (free) for the ALB HTTPS listener with DNS validation via Cloudflare, or document HTTP-only if TLS is intentionally skipped.
+Point a Cloudflare record in `crilsen.com` at the ALB. Use an ACM certificate (free, region `us-east-1`) for the ALB HTTPS listener, validated by a DNS CNAME added in Cloudflare. Route 53 is not used.
 
 Reasoning:
-Cloudflare is the author's chosen DNS provider and introduces no AWS cost; ACM keeps TLS free.
+Cloudflare is the author's DNS provider and adds no AWS cost; ACM keeps TLS free.
 
 Consequences:
-- The Cloudflare zone and record name are inputs, not invented (open decision).
-- The ALB listener/TLS setup depends on whether ACM is used.
+- The Cloudflare zone is `crilsen.com`; the record/subdomain name is still an open input (not invented).
+- ACM DNS validation requires adding a CNAME to Cloudflare; document the exact records.
 - ADR-010's single-ALB and no-extra-LB rules still apply.
+
+## ADR-017 — Terraform state in S3
+
+Status: Accepted
+
+Context:
+The author chose an S3 backend for Terraform state instead of local state.
+
+Decision:
+Use an S3 bucket in `us-east-1` with per-state keys for remote state (and a lock mechanism, e.g., S3 lockfile or DynamoDB, to be confirmed). The bucket name and any credentials are supplied privately and are not versioned.
+
+Reasoning:
+Remote state is durable, shareable, and enables locking and CI use.
+
+Consequences:
+- A bucket must exist before the first `init`; confirm its name.
+- Account id and bucket name stay in private config/backend files, not in `.ai/`.
+- Backend is configured per environment root.
+
+## ADR-018 — EKS: latest version, single small managed node
+
+Status: Accepted
+
+Context:
+The author wants the newest EKS version with a single node on the smallest viable instance, within cost limits.
+
+Decision:
+Use the latest supported EKS version and one managed node group with a single node. Start from the smallest instance and, if Argo CD plus the AWS Load Balancer Controller do not fit, step up to the next size; document the choice and cost.
+
+Reasoning:
+Keeps the lab minimal and current while remaining functional.
+
+Consequences:
+- Free-tier instances (e.g., `t3.micro`, ~1 GiB RAM) are likely too small for Argo CD + controller; a `t3.small`+ may be required. Confirm the instance type.
+- The EKS control plane is the dominant cost (~US$ 0.10/hour); destroy promptly after the demo.
+- Confirm the exact EKS version at plan time rather than assuming.
+
+## ADR-019 — Subnet CIDR scheme (/24 from the given base)
+
+Status: Accepted (interpretation to confirm)
+
+Context:
+The author specified a VPC block of `10.11.0.0/16`, `/24` subnets, "starting at `10.21`".
+
+Decision:
+Create `/24` subnets inside the adopted VPC, starting from the base `10.21` as specified. The precise mapping (e.g., `10.11.21.0/24` onward, or a literal `10.21.0.0/24`) must be confirmed because `10.21.0.0/24` is outside a `10.11.0.0/16` VPC.
+
+Reasoning:
+Avoid inventing an overlapping or out-of-range CIDR; the VPC is adopted, so subnet CIDRs must not overlap existing subnets.
+
+Consequences:
+- Implementation is blocked until the CIDR interpretation is confirmed.
+- Provide at least one public and one private `/24`, sized for one node plus the ALB.
 
 Use this ADR format for durable, meaningful decisions:
 

@@ -31,21 +31,33 @@ aws-eks-gitops-platform/
 ## Target architecture
 
 ```text
-AWS (single lab account, us-east-1)
-└── VPC (cost-optimized; NAT only if supplied/existing)
-    ├── public subnets  (ALB + node group, subject to network decision)
-    ├── private subnets (when needed; egress via VPC endpoints)
-    ├── EKS cluster (small managed node group)
+AWS (account supplied privately, us-east-1)
+└── Existing VPC (adopted; VPC block 10.11.0.0/16)
+    ├── Existing Internet Gateway   - reused
+    ├── Existing NAT Gateway        - reused for private-subnet egress
+    ├── Created subnets /24         - public + private, from the agreed CIDR scheme
+    ├── Created route tables        - always module-owned (public -> IGW, private -> NAT)
+    ├── EKS cluster                 - latest version, single small managed node
     │   ├── namespace argocd  - Argo CD (Helm), App of Apps
     │   ├── namespace dev     - app + Ingress (ALB), automated prune/selfHeal
     │   └── namespace prod    - app + Ingress (ALB), PR-gated sync
     ├── IAM                   - least privilege; ALB controller via IRSA or EKS Pod Identity
-    └── ACM (optional)        - certificate for the ALB HTTPS listener, DNS-validated in Cloudflare
+    └── ACM                   - certificate for the ALB HTTPS listener, DNS-validated in Cloudflare
 
 External
 ├── container registry        - images with immutable SHA tags (ECR removed; GHCR proposed)
-└── Cloudflare DNS            - record pointing to the ALB; DNS validation for ACM
+└── Cloudflare DNS (crilsen.com) - record pointing to the ALB; ACM DNS validation
+
+Terraform state: S3 backend (bucket name/region supplied privately; lock file per state).
 ```
+
+## Decisions already made (from the author)
+
+- Adopt the existing VPC, IGW, and NAT (IDs supplied privately, not versioned).
+- Subnets are /24 and start from the agreed base (`10.21`, interpretation pending).
+- Terraform state in S3.
+- Ingress via ALB; TLS via ACM; DNS zone `crilsen.com` on Cloudflare.
+- EKS: latest supported version, a single small managed node.
 
 ## GitOps flow
 
@@ -81,4 +93,4 @@ The `infrastructure/modules/vpc` module must be usable in both a fresh lab accou
 
 ## Open architectural decisions
 
-Tracked in `TASKS.md` and `DECISIONS.md`: container registry choice (ADR-014, GHCR proposed), ingress implementation (ADR-015, ALB proposed), network egress for private subnets without NAT (ADR-012), IRSA vs EKS Pod Identity, EKS version, node group size, Terraform state backend, and the Cloudflare zone/record name. Region (`us-east-1`) and account are known to the author; the account id stays in private config. The VPC module shape is decided (ADR-013).
+Tracked in `TASKS.md` and `DECISIONS.md`: the exact subnet CIDRs (ADR-019), container registry confirmation (ADR-014), ALB controller identity IRSA vs Pod Identity (ADR-011), the EKS version/nodes posture (ADR-018), the S3 bucket name (ADR-017), the Cloudflare record name, and TLS confirmation. Decided: adopt existing VPC/IGW/NAT (ADR-012), flexible VPC module (ADR-013), ALB ingress (ADR-015), Cloudflare DNS zone `crilsen.com` (ADR-016), S3 state (ADR-017), EKS latest + 1 small node (ADR-018). Region `us-east-1` and the account are known to the author; ids stay in private config.
