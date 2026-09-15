@@ -2,12 +2,12 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `eeb9d35` (EKS module + shared cluster).
+- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `infrastructure/modules/iam` and dev wiring (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
-- Last goal: Add `modules/eks` (shared cluster 1.36, 1× `t3.small`) and wire it into `environments/dev` per ADR-022.
-- Exact next action: Build `modules/iam` — ALB controller Pod Identity (role + association) and the GitHub Actions OIDC role — and wire it into `environments/dev`; then `gitops/` and CI.
+- Last goal: Add `modules/iam` (ALB controller Pod Identity) and restrict the public API endpoint via `terraform.tfvars`.
+- Exact next action: Build `gitops/` (Argo CD Helm values, App of Apps, dev/prd Applications) and the CI workflow at the repository root; then prepare Phase 3 (apply) for authorization.
 - Blocked by: None for module work. `terraform apply` (Phase 3) blocked on explicit authorization and a cost review.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
@@ -17,23 +17,21 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-All planning inputs are resolved. `infrastructure/modules/vpc`, `infrastructure/modules/eks`, `infrastructure/environments/dev`, and the Phase 1 application exist and pass local validation. The shared EKS cluster is wired into `environments/dev`. No IAM module, GitOps manifests, or CI exist yet. Nothing has been provisioned on AWS.
+All planning inputs are resolved. `infrastructure/modules/vpc`, `infrastructure/modules/eks`, `infrastructure/modules/iam`, `infrastructure/environments/dev`, and the Phase 1 application exist and pass local validation. The shared EKS cluster and the ALB controller Pod Identity are wired into `environments/dev`; the public API endpoint is restricted via `terraform.tfvars`. No GitOps manifests or CI exist yet. Nothing has been provisioned on AWS.
 
 ## What Was Done
 
 - Adopted `.ai/` context with real project facts and recorded the phased roadmap.
-- Recorded ADRs 004–021; resolved all open inputs: EKS Pod Identity (ADR-011), S3 bucket `cn-terraform-state-us-east-1` with `dev`/`prd` folders and native locking (ADR-017), hostnames `app-dev.crilsen.com`/`app.crilsen.com` (ADR-016), EKS 1.36 (ADR-018), Python + FastAPI (ADR-020), root workflows (ADR-021).
-- Implemented `infrastructure/modules/vpc` plus its README.
-- Implemented `infrastructure/modules/eks` (shared cluster 1.36, 1× `t3.small` managed node group, vpc-cni/kube-proxy/coredns/pod-identity-agent add-ons) plus its README, wired into `environments/dev`.
+- Recorded ADRs 004–023; resolved all open inputs and deferred GitHub OIDC (ADR-023).
+- Implemented `infrastructure/modules/vpc`, `infrastructure/modules/eks`, and `infrastructure/modules/iam` (ALB controller policy + role + Pod Identity association) with READMEs.
 - Implemented the Phase 1 application.
-- Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, adopted network, subnet CIDRs, EKS module).
-- Validated: `terraform fmt`/`validate` (modules and dev root); pytest (2 passed), `docker build`, container smoke test, `helm lint`, `helm template`.
+- Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, adopted network, subnet CIDRs, EKS module, IAM module) and restricted the public API endpoint to specific CIDRs via `terraform.tfvars` (validation rejects `0.0.0.0/0`).
+- Validated: `terraform fmt`/`validate` (all modules and dev root); pytest (2 passed), `docker build`, container smoke test, `helm lint`, `helm template`.
 
 ## Files Changed
 
-- `infrastructure/modules/vpc/*` (new)
-- `infrastructure/modules/eks/*` (new)
-- `infrastructure/environments/dev/*` (new: backend, provider, variables, module calls, outputs, `terraform.tfvars.example`, README, `terraform.lock.hcl`)
+- `infrastructure/modules/vpc/*`, `infrastructure/modules/eks/*`, `infrastructure/modules/iam/*` (new)
+- `infrastructure/environments/dev/*` (new)
 - `application/*` (new)
 - `.ai/*`, `.gitignore`, `README.md`
 
@@ -58,6 +56,7 @@ All planning inputs are resolved. `infrastructure/modules/vpc`, `infrastructure/
 - Application stack: Python + FastAPI (ADR-020).
 - GitHub Actions workflows at the repository root (ADR-021).
 - Environment isolation: one shared cluster, `dev`/`prd` namespaces, documented trade-off (ADR-022).
+- GitHub Actions OIDC deferred until CI needs AWS (ADR-023).
 
 ## Problems / Risks
 
@@ -68,7 +67,7 @@ All planning inputs are resolved. `infrastructure/modules/vpc`, `infrastructure/
 
 ## Validation Performed
 
-- `terraform fmt -recursive` and `terraform validate` (`modules/vpc`, `modules/eks`, `environments/dev`) — Validated.
+- `terraform fmt -recursive` and `terraform validate` (`modules/vpc`, `modules/eks`, `modules/iam`, `environments/dev`) — Validated.
 - `pytest` in `python:3.12-slim` — Validated (2 passed).
 - `docker build` + container smoke test for `/` and `/health` — Validated.
 - `helm lint` and `helm template` — Validated.
@@ -76,6 +75,6 @@ All planning inputs are resolved. `infrastructure/modules/vpc`, `infrastructure/
 
 ## Next Actions
 
-- Phase 2: build `modules/iam` — ALB controller Pod Identity (role + association) and the GitHub Actions OIDC role — and wire into `environments/dev`.
-- Phase 4/5: add `gitops/` (Argo CD, App of Apps, dev/prd) and the Cloudflare CNAMEs.
-- Phase 6: add CI workflows at the repository root.
+- Phase 4/5: add `gitops/` (Argo CD Helm values, App of Apps, dev/prd Applications, ALB Ingress) and the Cloudflare CNAMEs.
+- Phase 6: add CI workflows at the repository root (GHCR push, GitOps tag update).
+- Phase 3: prepare the apply plan and cost estimate for authorization.

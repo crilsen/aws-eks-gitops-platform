@@ -4,3 +4,6 @@
 vpc_id              = "vpc-xxxxxxxxxxxxxxxxx"
 internet_gateway_id = "igw-xxxxxxxxxxxxxxxxx"
 nat_gateway_id      = "nat-xxxxxxxxxxxxxxxxx"
+
+# Replace with your own IP(s). Do not use 0.0.0.0/0.
+public_access_cidrs = ["203.0.113.10/32"]

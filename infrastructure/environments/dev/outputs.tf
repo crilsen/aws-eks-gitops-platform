@@ -42,3 +42,8 @@ output "node_role_arn" {
   description = "IAM role ARN assumed by the managed nodes."
   value       = module.eks.node_role_arn
 }
+
+output "alb_controller_role_arn" {
+  description = "IAM role ARN used by the AWS Load Balancer Controller (Pod Identity)."
+  value       = module.iam.alb_controller_role_arn
+}

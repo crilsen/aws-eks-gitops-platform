@@ -52,7 +52,11 @@ variable "cluster_version" {
 }
 
 variable "public_access_cidrs" {
-  description = "CIDRs allowed to reach the Kubernetes API public endpoint. Restrict to trusted addresses where possible."
+  description = "CIDRs allowed to reach the Kubernetes API public endpoint. Required; set your own IPs in terraform.tfvars (e.g. [\"203.0.113.10/32\"])."
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+
+  validation {
+    condition     = length(var.public_access_cidrs) > 0 && !contains(var.public_access_cidrs, "0.0.0.0/0")
+    error_message = "Set at least one specific CIDR; do not use 0.0.0.0/0 for the public API endpoint."
+  }
 }

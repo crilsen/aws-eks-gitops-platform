@@ -48,3 +48,13 @@ module "eks" {
 
   public_access_cidrs = var.public_access_cidrs
 }
+
+# AWS Load Balancer Controller identity via EKS Pod Identity (ADR-011).
+module "iam" {
+  source = "../../modules/iam"
+
+  name = "aws-eks-gitops-platform"
+  tags = local.tags
+
+  cluster_name = module.eks.cluster_name
+}

@@ -3,7 +3,7 @@
 ## Active
 
 - Phase 1 complete — FastAPI app (`/`, `/health`), tests, multi-stage Dockerfile, and Helm chart implemented; validated with pytest, `docker build`, a container smoke test, `helm lint`, and `helm template`.
-- Phase 2 in progress — `modules/vpc`, `environments/dev` (S3 backend + adopted network), and `modules/eks` (shared cluster 1.36, 1× `t3.small`, managed add-ons) implemented and validated. `modules/iam` (ALB controller Pod Identity + GitHub OIDC) and `environments/prd` pending. CI (Phase 6) not started.
+- Phase 2 in progress — `modules/vpc`, `environments/dev` (S3 backend + adopted network), `modules/eks` (shared cluster 1.36, 1× `t3.small`, managed add-ons), and `modules/iam` (ALB controller Pod Identity) implemented and validated. `environments/prd` pending. Public API endpoint restricted to specific CIDRs via `terraform.tfvars`. GitHub OIDC deferred (ADR-023). CI (Phase 6) not started.
 
 ## Roadmap
 
@@ -80,3 +80,4 @@ Resolved: ALB controller identity (ADR-011, EKS Pod Identity), S3 bucket `cn-ter
 - Decided the application stack (Python + FastAPI, ADR-020) and the ALB controller identity (EKS Pod Identity, ADR-011).
 - Created `infrastructure/environments/dev` (S3 backend `cn-terraform-state-us-east-1` key `aws-eks-gitops-platform/dev/terraform.tfstate`, adopted network, subnet CIDRs). Validated with `terraform fmt` and `terraform validate`.
 - Implemented `infrastructure/modules/eks` (shared cluster 1.36, managed node group 1× `t3.small`, core add-ons + pod identity agent) and wired it into `environments/dev`. Decided environment isolation (ADR-022: one cluster, `dev`/`prd` namespaces). Validated with `terraform fmt` and `terraform validate`.
+- Implemented `infrastructure/modules/iam` (ALB controller IAM policy + role + EKS Pod Identity association) and wired it into `environments/dev`. Restricted the public API endpoint to specific CIDRs required via `terraform.tfvars` (validation rejects `0.0.0.0/0`). Deferred GitHub OIDC (ADR-023). Validated with `terraform fmt` and `terraform validate`.

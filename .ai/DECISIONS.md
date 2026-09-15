@@ -396,6 +396,23 @@ Consequences:
 - Shared control plane, CRDs, and upgrade cadence across both environments; a cluster-wide failure affects both.
 - The monorepo structure keeps an easy path to split into separate clusters/accounts later by changing the environment roots and Argo CD targets.
 
+## ADR-023 — Defer the GitHub Actions OIDC role until CI needs AWS
+
+Status: Accepted
+
+Context:
+The brief required GitHub OIDC for "pipeline access to AWS", originally to push images to ECR. ECR was removed (ADR-014) and images now go to GHCR using the workflow `GITHUB_TOKEN`, so the pipeline performs no AWS operations today. Creating an OIDC provider and an unused role would add security surface with no consumer.
+
+Decision:
+Do not create the GitHub Actions OIDC provider/role yet. Keep OIDC as the chosen mechanism (ADR-007) and introduce it when a concrete CI job needs AWS (for example, CI running `terraform plan` or a post-deploy smoke test).
+
+Reasoning:
+Least privilege and least surface: no unused AWS trust or permissions. The decision is reversible and cheap to add later.
+
+Consequences:
+- CI (beyond infrastructure) stays AWS-free for now; the image flow is GHCR-only.
+- When added, the trust policy must be scoped to this repository/ref and the role must be least-privilege.
+
 Use this ADR format for durable, meaningful decisions:
 
 ```text
