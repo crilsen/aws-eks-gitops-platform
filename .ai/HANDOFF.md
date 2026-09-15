@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `infrastructure/modules/iam` and dev wiring (commit pending).
+- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `e4c4e77` (IAM module + Pod Identity).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
