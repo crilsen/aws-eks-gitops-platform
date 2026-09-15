@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, HEAD `89f6134`, working tree dirty (new `.ai/` context adopted, `AGENTS.md`, `.gitignore`, `README.md` pending commit).
+- Repo state: branch `dev`, HEAD `5553e49`, clean and pushed to `origin/dev`.
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
@@ -17,7 +17,7 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-Context adopted from the approved brief. No application, infrastructure, or GitOps artifacts exist yet. The repository currently holds only `README.md`, `AGENTS.md`, and `.ai/` plus a pending `.gitignore`.
+Context adopted from the approved brief. No application, infrastructure, or GitOps artifacts exist yet. The repository currently holds `README.md` (marked under development), `AGENTS.md`, `.gitignore`, and `.ai/`, committed and pushed on `dev`.
 
 ## What Was Done
 
