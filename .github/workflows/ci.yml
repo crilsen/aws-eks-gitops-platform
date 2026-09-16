@@ -1,0 +1,89 @@
+name: ci
+
+on:
+  push:
+    branches: [dev]
+    paths: ["application/**"]
+  pull_request:
+    branches: [dev]
+    paths: ["application/**"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: crilsen/aws-eks-gitops-platform
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r application/requirements-dev.txt
+
+      - name: Run tests
+        working-directory: application
+        run: pytest
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute image tag
+        id: meta
+        run: echo "tag=${GITHUB_SHA::8}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: docker build -t "$REGISTRY/$IMAGE_NAME:${{ steps.meta.outputs.tag }}" application/
+
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          format: table
+          exit-code: "1"
+          severity: CRITICAL,HIGH
+
+      - name: Push image
+        run: docker push "$REGISTRY/$IMAGE_NAME:${{ steps.meta.outputs.tag }}"
+
+  update-gitops:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update dev image tag
+        run: |
+          TAG="${{ needs.build.outputs.image_tag }}"
+          sed -i "s|tag: \".*\"|tag: \"${TAG}\"|" gitops/environments/dev/values.yaml
+
+      - name: Commit and push tag update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add gitops/environments/dev/values.yaml
+          git commit -m "chore(gitops): deploy dev image ${{ needs.build.outputs.image_tag }} [skip ci]"
+          git push

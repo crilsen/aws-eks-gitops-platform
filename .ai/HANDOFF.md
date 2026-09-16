@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `76b908b` (gitops).
+- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `.github/workflows/` (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
-- Last goal: Add `gitops/` (Argo CD values, App of Apps, platform and dev/prd Applications, environment values).
-- Exact next action: Add the CI workflow at the repository root (GHCR build/push with immutable SHA, update `gitops/environments/dev/values.yaml`), then prepare Phase 3 (apply) for authorization.
-- Blocked by: None for repo work. `terraform apply` (Phase 3) blocked on explicit authorization and a cost review.
+- Last goal: Add CI at the repository root (`ci.yml` + `promote.yml`) using GHCR with immutable SHA tags.
+- Exact next action: Prepare Phase 3 — present the Terraform plan, resources, and qualitative cost estimate, and request authorization to apply. After apply, install Argo CD and bootstrap the App of Apps.
+- Blocked by: `terraform apply` (Phase 3) blocked on explicit authorization and a cost review.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -17,7 +17,7 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root), the Phase 1 application, and the `gitops/` definitions (Argo CD values, App of Apps, platform and dev/prd Applications, environment values) exist and pass local validation. CI has not been added yet. Nothing has been provisioned on AWS.
+All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root), the Phase 1 application, the `gitops/` definitions, and the CI workflows exist and pass local validation. Registry chosen: GHCR. Nothing has been provisioned on AWS.
 
 ## What Was Done
 
@@ -27,7 +27,8 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 - Implemented the Phase 1 application.
 - Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, adopted network, subnet CIDRs, EKS module, IAM module) and restricted the public API endpoint to specific CIDRs via `terraform.tfvars` (validation rejects `0.0.0.0/0`).
 - Implemented `gitops/` (Argo CD 10.9.1 values, App of Apps root, AWS Load Balancer Controller 3.5.0 Application, `app-dev`/`app-prd` Applications, dev/prd values with ALB Ingress and Cloudflare hosts).
-- Validated: `terraform fmt`/`validate`; pytest (2 passed), `docker build`, container smoke test, `helm lint`/`template` (including with the dev values), and YAML parsing of the `gitops/` files.
+- Implemented CI at the repository root: `.github/workflows/ci.yml` (pytest, docker build, Trivy, GHCR push with immutable SHA, GitOps dev tag update) and `.github/workflows/promote.yml` (manual PR to promote to prd).
+- Validated: `terraform fmt`/`validate`; pytest (2 passed), `docker build`, container smoke test, `helm lint`/`template` (including with the dev values), YAML parsing of `gitops/`, and actionlint for the workflows.
 
 ## Files Changed
 
@@ -35,6 +36,7 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 - `infrastructure/environments/dev/*` (new)
 - `application/*` (new)
 - `gitops/*` (new)
+- `.github/workflows/*` (new)
 - `.ai/*`, `.gitignore`, `README.md`
 
 ## Decisions Made
@@ -74,10 +76,11 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 - `docker build` + container smoke test for `/` and `/health` — Validated.
 - `helm lint` and `helm template` (including with `gitops/environments/dev/values.yaml`) — Validated.
 - `gitops/` YAML parsing — Validated.
+- GitHub Actions workflows — Validated with actionlint.
 - `tflint`, `checkov`, `trivy`, `terraform plan` — Not validated (tools absent / plan needs authorization).
 
 ## Next Actions
 
-- Phase 6: add the CI workflow at the repository root (build/test, Trivy, GHCR push with immutable SHA, update `gitops/environments/dev/values.yaml`, prod promotion PR).
-- Phase 3: prepare the apply plan and cost estimate for authorization.
-- Phase 4/5: add the Cloudflare CNAMEs (manual) and verify Argo CD sync after apply.
+- Phase 3: prepare the apply plan and cost estimate, and request authorization.
+- Phase 4/5: after apply, install Argo CD, bootstrap the App of Apps, add the Cloudflare CNAMEs, and verify sync.
+- Phase 7/8: demonstrations (drift, promotion, rollback), teardown, and final README.

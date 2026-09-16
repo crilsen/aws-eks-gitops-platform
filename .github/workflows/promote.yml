@@ -1,0 +1,33 @@
+name: promote
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag (commit SHA) to promote to prd"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update prd image tag
+        run: |
+          sed -i "s|tag: \".*\"|tag: \"${{ inputs.image_tag }}\"|" gitops/environments/prd/values.yaml
+
+      - name: Create promotion Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/promote-prd-${{ inputs.image_tag }}
+          title: "chore(gitops): promote image ${{ inputs.image_tag }} to prd"
+          body: |
+            Promote the validated image `${{ inputs.image_tag }}` to prd.
+
+            After merge, sync `app-prd` manually in Argo CD.
+          commit-message: "chore(gitops): promote image ${{ inputs.image_tag }} to prd"
