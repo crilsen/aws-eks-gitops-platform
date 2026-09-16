@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; working tree dirty with the new `.github/workflows/` (commit pending).
+- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `b475f4b` (CI workflows).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-15
