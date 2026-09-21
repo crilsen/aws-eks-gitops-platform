@@ -10,21 +10,24 @@ variable "owner" {
   default     = "Cristiano"
 }
 
-# Adopted network — supplied privately (terraform.tfvars), never versioned.
+# VPC — create or adopt.
+
+variable "create_vpc" {
+  description = "Create a new VPC. When false, vpc_id must be provided."
+  type        = bool
+  default     = true
+}
 
 variable "vpc_id" {
-  description = "Existing VPC id to adopt."
+  description = "Existing VPC id to adopt when create_vpc is false."
   type        = string
+  default     = null
 }
 
-variable "internet_gateway_id" {
-  description = "Existing Internet Gateway id to reuse."
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC when create_vpc is true."
   type        = string
-}
-
-variable "nat_gateway_id" {
-  description = "Existing NAT Gateway id to reuse for private egress."
-  type        = string
+  default     = "10.12.0.0/16"
 }
 
 variable "azs" {
@@ -36,14 +39,44 @@ variable "azs" {
 variable "public_subnet_cidrs" {
   description = "CIDR blocks for the public subnets (one per AZ)."
   type        = list(string)
-  default     = ["10.11.21.0/24", "10.11.22.0/24"]
+  default     = ["10.12.21.0/24", "10.12.22.0/24"]
 }
 
 variable "private_subnet_cidrs" {
   description = "CIDR blocks for the private subnets (one per AZ)."
   type        = list(string)
-  default     = ["10.11.23.0/24", "10.11.24.0/24"]
+  default     = ["10.12.23.0/24", "10.12.24.0/24"]
 }
+
+# Internet Gateway — create or adopt.
+
+variable "create_igw" {
+  description = "Create an Internet Gateway when no internet_gateway_id is supplied."
+  type        = bool
+  default     = true
+}
+
+variable "internet_gateway_id" {
+  description = "Existing Internet Gateway id to reuse."
+  type        = string
+  default     = null
+}
+
+# NAT Gateway — create or adopt.
+
+variable "enable_nat_gateway" {
+  description = "Create a NAT Gateway when no nat_gateway_id is supplied."
+  type        = bool
+  default     = true
+}
+
+variable "nat_gateway_id" {
+  description = "Existing NAT Gateway id to reuse."
+  type        = string
+  default     = null
+}
+
+# EKS — shared cluster.
 
 variable "cluster_version" {
   description = "EKS Kubernetes version."

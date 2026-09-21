@@ -16,8 +16,13 @@ module "vpc" {
   name = "aws-eks-gitops-platform-${local.environment}"
   tags = local.tags
 
-  create_vpc = false
+  create_vpc = var.create_vpc
   vpc_id     = var.vpc_id
+  vpc_cidr   = var.vpc_cidr
+
+  create_igw = var.create_igw
+
+  enable_nat_gateway = var.enable_nat_gateway
 
   azs                  = var.azs
   public_subnet_cidrs  = var.public_subnet_cidrs
@@ -47,6 +52,7 @@ module "eks" {
   node_max_size       = 2
 
   public_access_cidrs = var.public_access_cidrs
+  app_port            = 8000
 }
 
 # AWS Load Balancer Controller identity via EKS Pod Identity (ADR-011).

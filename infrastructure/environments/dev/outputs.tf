@@ -47,3 +47,8 @@ output "alb_controller_role_arn" {
   description = "IAM role ARN used by the AWS Load Balancer Controller (Pod Identity)."
   value       = module.iam.alb_controller_role_arn
 }
+
+output "alb_security_group_id" {
+  description = "Security group id for the application ALB."
+  value       = module.eks.alb_security_group_id
+}

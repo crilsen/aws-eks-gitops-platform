@@ -64,8 +64,9 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = var.map_public_ip_on_launch
 
   tags = merge(var.tags, {
-    Name = "${var.name}-public-${each.value.az}"
-    Tier = "public"
+    Name                     = "${var.name}-public-${each.value.az}"
+    Tier                     = "public"
+    "kubernetes.io/role/elb" = "1"
   })
 }
 
@@ -77,8 +78,9 @@ resource "aws_subnet" "private" {
   availability_zone = each.value.az
 
   tags = merge(var.tags, {
-    Name = "${var.name}-private-${each.value.az}"
-    Tier = "private"
+    Name                              = "${var.name}-private-${each.value.az}"
+    Tier                              = "private"
+    "kubernetes.io/role/internal-elb" = "1"
   })
 }
 
@@ -108,7 +110,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route" "public_internet" {
-  count = local.igw_id != null ? 1 : 0
+  count = (var.internet_gateway_id != null || var.create_igw) ? 1 : 0
 
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
@@ -129,7 +131,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route" "private_nat" {
-  count = local.nat_id != null ? 1 : 0
+  count = (var.nat_gateway_id != null || var.enable_nat_gateway) ? 1 : 0
 
   route_table_id         = aws_route_table.private.id
   destination_cidr_block = "0.0.0.0/0"
@@ -141,4 +143,93 @@ resource "aws_route_table_association" "private" {
 
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
+}
+
+# --- Network ACLs ---
+
+resource "aws_network_acl" "public" {
+  vpc_id     = local.vpc_id
+  subnet_ids = [for s in aws_subnet.public : s.id]
+
+  tags = merge(var.tags, { Name = "${var.name}-public-nacl" })
+}
+
+resource "aws_network_acl_rule" "public_ingress_http" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 100
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 80
+  to_port        = 80
+}
+
+resource "aws_network_acl_rule" "public_ingress_https" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 110
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 443
+  to_port        = 443
+}
+
+resource "aws_network_acl_rule" "public_ingress_ephemeral" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 120
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "public_egress_all" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 100
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+}
+
+resource "aws_network_acl" "private" {
+  vpc_id     = local.vpc_id
+  subnet_ids = [for s in aws_subnet.private : s.id]
+
+  tags = merge(var.tags, { Name = "${var.name}-private-nacl" })
+}
+
+resource "aws_network_acl_rule" "private_ingress_https" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 100
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 443
+  to_port        = 443
+}
+
+resource "aws_network_acl_rule" "private_ingress_ephemeral" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 110
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "private_egress_all" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 100
+  egress         = true
+  protocol       = "-1"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
 }

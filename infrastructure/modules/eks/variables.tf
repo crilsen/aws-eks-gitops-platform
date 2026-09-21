@@ -95,3 +95,9 @@ variable "addons" {
   type        = list(string)
   default     = ["vpc-cni", "kube-proxy", "coredns", "eks-pod-identity-agent"]
 }
+
+variable "app_port" {
+  description = "Port exposed by the application and targeted by the ALB."
+  type        = number
+  default     = 8000
+}

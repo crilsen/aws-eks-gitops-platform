@@ -1,9 +1,15 @@
-# Copy to terraform.tfvars (gitignored) and fill with the private lab values.
-# Never commit real ids.
+# Copy to terraform.tfvars (gitignored) and fill with the lab values.
+#
+# Default: create_vpc = true, create_igw = true, enable_nat_gateway = true
+# Everything is created from scratch — no existing VPC/IGW/NAT needed.
+#
+# To use existing resources instead:
+#   create_vpc            = false
+#   vpc_id                = "vpc-xxxxxxxxxxxxxxxxx"
+#   internet_gateway_id   = "igw-xxxxxxxxxxxxxxxxx"
+#   nat_gateway_id        = "nat-xxxxxxxxxxxxxxxxx"
+#   enable_nat_gateway    = false  # reuse existing NAT
 
-vpc_id              = "vpc-xxxxxxxxxxxxxxxxx"
-internet_gateway_id = "igw-xxxxxxxxxxxxxxxxx"
-nat_gateway_id      = "nat-xxxxxxxxxxxxxxxxx"
-
-# Replace with your own IP(s). Do not use 0.0.0.0/0.
+# Required: your IP(s) for the Kubernetes API public endpoint.
+# Replace with your own IP. Do not use 0.0.0.0/0.
 public_access_cidrs = ["203.0.113.10/32"]
