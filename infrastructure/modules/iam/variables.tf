@@ -10,8 +10,9 @@ variable "tags" {
 }
 
 variable "cluster_name" {
-  description = "EKS cluster name for the Pod Identity association."
+  description = "EKS cluster name (used in Pod Identity association if enabled)."
   type        = string
+  default     = ""
 }
 
 variable "namespace" {
@@ -26,8 +27,14 @@ variable "service_account" {
   default     = "aws-load-balancer-controller"
 }
 
-variable "create_pod_identity_association" {
-  description = "Create the EKS Pod Identity association for the controller service account."
-  type        = bool
-  default     = true
+variable "oidc_provider_arn" {
+  description = "ARN of the OIDC provider for the EKS cluster (IRSA)."
+  type        = string
+  default     = ""
+}
+
+variable "oidc_provider_url" {
+  description = "URL of the OIDC issuer (without https:// prefix) for IRSA trust."
+  type        = string
+  default     = ""
 }

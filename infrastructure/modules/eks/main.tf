@@ -33,146 +33,19 @@ resource "aws_iam_role_policy_attachment" "cluster" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# --- Cluster security group ---
-
-resource "aws_security_group" "cluster" {
-  name        = "${var.name}-eks-cluster"
-  description = "Security group for EKS cluster control plane"
-  vpc_id      = var.vpc_id
-
-  tags = merge(var.tags, {
-    Name = "${var.name}-eks-cluster-sg"
-  })
-}
-
-resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.cluster.id
-  source_security_group_id = aws_security_group.node.id
-  description              = "Allow HTTPS from nodes to control plane (kubelet)"
-}
-
-resource "aws_security_group_rule" "cluster_egress_all" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  security_group_id = aws_security_group.cluster.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow all outbound from control plane"
-}
-
-# --- Node security group ---
-
-resource "aws_security_group" "node" {
-  name        = "${var.name}-eks-node"
-  description = "Security group for EKS managed nodes"
-  vpc_id      = var.vpc_id
-
-  tags = merge(var.tags, {
-    Name = "${var.name}-eks-node-sg"
-  })
-}
-
-resource "aws_security_group_rule" "node_ingress_self" {
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  security_group_id = aws_security_group.node.id
-  source_security_group_id = aws_security_group.node.id
-  description       = "Allow all traffic between nodes"
-}
-
-resource "aws_security_group_rule" "node_ingress_from_cluster" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.node.id
-  source_security_group_id = aws_security_group.cluster.id
-  description              = "Allow HTTPS from control plane to nodes (kubelet)"
-}
-
-resource "aws_security_group_rule" "node_ingress_from_alb" {
-  type                     = "ingress"
-  from_port                = var.app_port
-  to_port                  = var.app_port
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.node.id
-  source_security_group_id = aws_security_group.alb.id
-  description              = "Allow application traffic from ALB"
-}
-
-resource "aws_security_group_rule" "node_egress_all" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  security_group_id = aws_security_group.node.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow all outbound (image pulls, GitHub, GHCR)"
-}
-
-# --- ALB security group ---
-
-resource "aws_security_group" "alb" {
-  name        = "${var.name}-alb"
-  description = "Security group for the application ALB"
-  vpc_id      = var.vpc_id
-
-  tags = merge(var.tags, {
-    Name = "${var.name}-alb-sg"
-  })
-}
-
-resource "aws_security_group_rule" "alb_ingress_http" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  security_group_id = aws_security_group.alb.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow HTTP from internet"
-}
-
-resource "aws_security_group_rule" "alb_ingress_https" {
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.alb.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow HTTPS from internet"
-}
-
-resource "aws_security_group_rule" "alb_egress_to_nodes" {
-  type                     = "egress"
-  from_port                = var.app_port
-  to_port                  = var.app_port
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.alb.id
-  source_security_group_id = aws_security_group.node.id
-  description              = "Allow application traffic to nodes"
-}
-
-# --- EKS cluster ---
+# --- EKS cluster (EKS manages its own security groups) ---
 
 resource "aws_eks_cluster" "this" {
   name                          = var.name
   version                       = var.cluster_version
   role_arn                      = aws_iam_role.cluster.arn
-  bootstrap_self_managed_addons = false
+  bootstrap_self_managed_addons = true
 
   vpc_config {
     subnet_ids              = var.subnet_ids
     endpoint_private_access = var.endpoint_private_access
     endpoint_public_access  = var.endpoint_public_access
     public_access_cidrs     = var.endpoint_public_access ? var.public_access_cidrs : null
-    security_group_ids      = [aws_security_group.cluster.id]
   }
 
   access_config {
@@ -214,25 +87,25 @@ resource "aws_iam_role_policy_attachment" "node" {
   policy_arn = each.value
 }
 
-# --- Node launch template (tags instances and EBS volumes) ---
+# --- Node launch template (IMDS hop limit = 2 for IRSA) ---
 
 resource "aws_launch_template" "node" {
   name_prefix = "${var.name}-node-"
 
-  vpc_security_group_ids = [aws_security_group.node.id]
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+  }
 
   tag_specifications {
     resource_type = "instance"
-    tags = merge(var.tags, {
-      Name = "${var.name}-node"
-    })
+    tags = merge(var.tags, { Name = "${var.name}-node" })
   }
 
   tag_specifications {
     resource_type = "volume"
-    tags = merge(var.tags, {
-      Name = "${var.name}-node-volume"
-    })
+    tags = merge(var.tags, { Name = "${var.name}-node-volume" })
   }
 
   tags = merge(var.tags, { Name = "${var.name}-node-lt" })
@@ -242,7 +115,7 @@ resource "aws_launch_template" "node" {
   }
 }
 
-# --- Managed node group ---
+# --- Managed node group (EKS manages SGs; launch template sets IMDS) ---
 
 resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name

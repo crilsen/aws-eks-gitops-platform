@@ -52,15 +52,38 @@ module "eks" {
   node_max_size       = 2
 
   public_access_cidrs = var.public_access_cidrs
-  app_port            = 8000
 }
 
-# AWS Load Balancer Controller identity via EKS Pod Identity (ADR-011).
+# OIDC provider for IRSA (ADR-011).
+data "tls_certificate" "cluster" {
+  url = module.eks.cluster_oidc_issuer_url
+}
+
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.cluster.certificates[0].sha1_fingerprint]
+  url             = module.eks.cluster_oidc_issuer_url
+
+  tags = local.tags
+}
+
+# AWS Load Balancer Controller identity via IRSA (ADR-011).
 module "iam" {
   source = "../../modules/iam"
 
   name = "aws-eks-gitops-platform"
   tags = local.tags
 
-  cluster_name = module.eks.cluster_name
+  oidc_provider_arn = aws_iam_openid_connect_provider.cluster.arn
+  oidc_provider_url = module.eks.cluster_oidc_issuer_url
+}
+
+# Render the ALB controller ArgoCD Application with the role ARN (IaC-managed).
+resource "local_file" "alb_controller_app" {
+  filename = abspath("${path.module}/../../../gitops/applications/platform/aws-load-balancer-controller.yaml")
+  content = templatefile("${path.module}/templates/alb-controller-app.yaml.tftpl", {
+    role_arn = module.iam.alb_controller_role_arn
+  })
+
+  file_permission = "0644"
 }

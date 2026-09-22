@@ -91,9 +91,9 @@ variable "cluster_enabled_log_types" {
 }
 
 variable "addons" {
-  description = "Managed add-ons to install with the latest compatible version."
+  description = "Managed add-ons to install with the latest compatible version. vpc-cni, kube-proxy, and coredns are bootstrapped automatically."
   type        = list(string)
-  default     = ["vpc-cni", "kube-proxy", "coredns", "eks-pod-identity-agent"]
+  default     = ["eks-pod-identity-agent"]
 }
 
 variable "app_port" {

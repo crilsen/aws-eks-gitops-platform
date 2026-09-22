@@ -24,7 +24,7 @@ spec:
           create: true
           name: aws-load-balancer-controller
           annotations:
-            eks.amazonaws.com/role-arn: "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-alb-controller"
+            eks.amazonaws.com/role-arn: "${role_arn}"
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system

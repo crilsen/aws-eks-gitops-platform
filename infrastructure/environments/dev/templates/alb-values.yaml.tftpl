@@ -1,0 +1,9 @@
+# AWS Load Balancer Controller Helm values (rendered by Terraform).
+# Do not edit manually — the role ARN is managed by Terraform.
+clusterName: aws-eks-gitops-platform
+region: us-east-1
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: "${role_arn}"
