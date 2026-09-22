@@ -3,7 +3,7 @@
 image:
   registry: ghcr.io
   repository: crilsen/aws-eks-gitops-platform
-  tag: "" # set by CI to the commit SHA
+  tag: "4facd07" # set by CI to the commit SHA
 
 env:
   APP_VERSION: dev
