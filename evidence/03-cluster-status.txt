@@ -1,0 +1,24 @@
+=== 03-cluster-status ===
+------------------------------------------------------------------------------------------
+|                                     DescribeCluster                                    |
++----------+-----------------------------------------------------------------------------+
+|  endpoint|  https://4EF796F214A5286162560E371C668CEB.gr7.us-east-1.eks.amazonaws.com   |
+|  name    |  aws-eks-gitops-platform                                                    |
+|  status  |  ACTIVE                                                                     |
+|  version |  1.36                                                                       |
++----------+-----------------------------------------------------------------------------+
+NAME                           STATUS   ROLES    AGE   VERSION               INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                        KERNEL-VERSION                            CONTAINER-RUNTIME
+ip-10-12-24-245.ec2.internal   Ready    <none>   24m   v1.36.4-eks-a887778   10.12.24.245   <none>        Amazon Linux 2023.12.20260914   6.18.48-107.148.amzn2023.x86_64 (amd64)   containerd://2.2.7+unknown
+NAMESPACE     NAME                                                READY   STATUS    RESTARTS   AGE
+argocd        argocd-application-controller-0                     0/1     Pending   0          20m
+argocd        argocd-applicationset-controller-5cf7cfc64d-frv57   1/1     Running   0          20m
+argocd        argocd-redis-7dd8fcc7df-4tsmw                       1/1     Running   0          3m12s
+argocd        argocd-repo-server-767c886b7f-x9pvf                 1/1     Running   0          20m
+argocd        argocd-server-56c78f55b4-nml54                      1/1     Running   0          20m
+kube-system   aws-load-balancer-controller-79f67f7f9-2zqbv        1/1     Running   0          3m12s
+kube-system   aws-load-balancer-controller-79f67f7f9-jc9ms        1/1     Running   0          3m12s
+kube-system   aws-node-lrn76                                      2/2     Running   0          24m
+kube-system   coredns-b8cbb77dc-555wn                             1/1     Running   0          27m
+kube-system   coredns-b8cbb77dc-slr6w                             1/1     Running   0          27m
+kube-system   eks-pod-identity-agent-w9ss4                        1/1     Running   0          23m
+kube-system   kube-proxy-lglm7                                    1/1     Running   0          24m

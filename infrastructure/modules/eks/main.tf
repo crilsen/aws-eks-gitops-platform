@@ -5,7 +5,6 @@ locals {
 
 data "aws_eks_addon_version" "this" {
   for_each = local.addons
-
   addon_name         = each.value
   kubernetes_version = aws_eks_cluster.this.version
   most_recent        = true
@@ -15,7 +14,6 @@ data "aws_eks_addon_version" "this" {
 
 resource "aws_iam_role" "cluster" {
   name = "${var.name}-eks-cluster"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -24,7 +22,6 @@ resource "aws_iam_role" "cluster" {
       Action    = "sts:AssumeRole"
     }]
   })
-
   tags = merge(var.tags, { Name = "${var.name}-eks-cluster-role" })
 }
 
@@ -33,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "cluster" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# --- EKS cluster (EKS manages its own security groups) ---
+# --- EKS cluster (EKS manages its own SGs) ---
 
 resource "aws_eks_cluster" "this" {
   name                          = var.name
@@ -53,7 +50,6 @@ resource "aws_eks_cluster" "this" {
   }
 
   enabled_cluster_log_types = var.cluster_enabled_log_types
-
   tags = merge(var.tags, { Name = "${var.name}-eks-cluster" })
 
   depends_on = [aws_iam_role_policy_attachment.cluster]
@@ -63,7 +59,6 @@ resource "aws_eks_cluster" "this" {
 
 resource "aws_iam_role" "node" {
   name = "${var.name}-eks-node"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -72,7 +67,6 @@ resource "aws_iam_role" "node" {
       Action    = "sts:AssumeRole"
     }]
   })
-
   tags = merge(var.tags, { Name = "${var.name}-eks-node-role" })
 }
 
@@ -82,12 +76,11 @@ resource "aws_iam_role_policy_attachment" "node" {
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
   ])
-
   role       = aws_iam_role.node.name
   policy_arn = each.value
 }
 
-# --- Node launch template (IMDS hop limit = 2 for IRSA) ---
+# --- Launch template (IMDS hop limit 2 for IRSA + tags) ---
 
 resource "aws_launch_template" "node" {
   name_prefix = "${var.name}-node-"
@@ -110,21 +103,18 @@ resource "aws_launch_template" "node" {
 
   tags = merge(var.tags, { Name = "${var.name}-node-lt" })
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  lifecycle { create_before_destroy = true }
 }
 
-# --- Managed node group (EKS manages SGs; launch template sets IMDS) ---
+# --- Node group ---
 
 resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "${var.name}-default"
   node_role_arn   = aws_iam_role.node.arn
   subnet_ids      = local.node_subnet_ids
-
-  capacity_type  = var.node_capacity_type
-  instance_types = var.node_instance_types
+  capacity_type   = var.node_capacity_type
+  instance_types  = var.node_instance_types
 
   launch_template {
     id      = aws_launch_template.node.id
@@ -137,28 +127,20 @@ resource "aws_eks_node_group" "this" {
     max_size     = var.node_max_size
   }
 
-  update_config {
-    max_unavailable = 1
-  }
-
+  update_config { max_unavailable = 1 }
   tags = merge(var.tags, { Name = "${var.name}-node-group" })
-
   depends_on = [aws_iam_role_policy_attachment.node]
 }
 
-# --- Managed add-ons ---
+# --- Add-ons ---
 
 resource "aws_eks_addon" "this" {
   for_each = local.addons
-
   cluster_name  = aws_eks_cluster.this.name
   addon_name    = each.value
   addon_version = data.aws_eks_addon_version.this[each.key].version
-
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
-
   tags = merge(var.tags, { Name = "${var.name}-addon-${each.value}" })
-
   depends_on = [aws_eks_node_group.this]
 }

@@ -1,0 +1,816 @@
+module.vpc.terraform_data.validate: Refreshing state... [id=58ffe518-899d-92b2-7773-50404bc22c0a]
+module.eks.aws_iam_role.node: Refreshing state... [id=aws-eks-gitops-platform-eks-node]
+module.iam.aws_iam_role.alb_controller: Refreshing state... [id=aws-eks-gitops-platform-alb-controller]
+module.vpc.aws_eip.nat[0]: Refreshing state... [id=eipalloc-06eb1118a383d4c85]
+module.eks.aws_iam_role.cluster: Refreshing state... [id=aws-eks-gitops-platform-eks-cluster]
+module.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-0695ff2da6134d1ba]
+module.iam.aws_iam_policy.alb_controller: Refreshing state... [id=arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller]
+module.eks.aws_iam_role_policy_attachment.cluster: Refreshing state... [id=aws-eks-gitops-platform-eks-cluster/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy]
+module.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Refreshing state... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly]
+module.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Refreshing state... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy]
+module.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Refreshing state... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy]
+module.iam.aws_iam_role_policy_attachment.alb_controller: Refreshing state... [id=aws-eks-gitops-platform-alb-controller/arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller]
+module.vpc.aws_route_table.private: Refreshing state... [id=rtb-0d37b6cae5e301224]
+module.vpc.aws_internet_gateway.this[0]: Refreshing state... [id=igw-0e2759167863d03d4]
+module.vpc.aws_route_table.public: Refreshing state... [id=rtb-0bd5b9f4734ee4082]
+module.vpc.aws_subnet.private["0"]: Refreshing state... [id=subnet-0ead8b8cbb846cccc]
+module.vpc.aws_subnet.private["1"]: Refreshing state... [id=subnet-0a650ea0d5b785709]
+module.vpc.aws_subnet.public["1"]: Refreshing state... [id=subnet-02fce02cb4d99ba6d]
+module.vpc.aws_subnet.public["0"]: Refreshing state... [id=subnet-0834f0f062fc645cb]
+module.vpc.aws_route.public_internet[0]: Refreshing state... [id=r-rtb-0bd5b9f4734ee40821080289494]
+module.vpc.aws_route_table_association.private["0"]: Refreshing state... [id=rtbassoc-0a62d73229dc02ba3]
+module.vpc.aws_route_table_association.private["1"]: Refreshing state... [id=rtbassoc-0526689727ad61533]
+module.eks.aws_eks_cluster.this: Refreshing state... [id=aws-eks-gitops-platform]
+module.vpc.aws_route_table_association.public["1"]: Refreshing state... [id=rtbassoc-095c514291019ad40]
+module.vpc.aws_route_table_association.public["0"]: Refreshing state... [id=rtbassoc-05afb2a13765b9175]
+module.vpc.aws_nat_gateway.this[0]: Refreshing state... [id=nat-03bca8009e3be7321]
+module.vpc.aws_route.private_nat[0]: Refreshing state... [id=r-rtb-0d37b6cae5e3012241080289494]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # module.eks.data.aws_eks_addon_version.this["coredns"] will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "aws_eks_addon_version" "this" {
+      + addon_name         = "coredns"
+      + id                 = (known after apply)
+      + kubernetes_version = "1.36"
+      + most_recent        = true
+      + region             = (known after apply)
+      + version            = (known after apply)
+    }
+
+  # module.eks.data.aws_eks_addon_version.this["eks-pod-identity-agent"] will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "aws_eks_addon_version" "this" {
+      + addon_name         = "eks-pod-identity-agent"
+      + id                 = (known after apply)
+      + kubernetes_version = "1.36"
+      + most_recent        = true
+      + region             = (known after apply)
+      + version            = (known after apply)
+    }
+
+  # module.eks.data.aws_eks_addon_version.this["kube-proxy"] will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "aws_eks_addon_version" "this" {
+      + addon_name         = "kube-proxy"
+      + id                 = (known after apply)
+      + kubernetes_version = "1.36"
+      + most_recent        = true
+      + region             = (known after apply)
+      + version            = (known after apply)
+    }
+
+  # module.eks.data.aws_eks_addon_version.this["vpc-cni"] will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "aws_eks_addon_version" "this" {
+      + addon_name         = "vpc-cni"
+      + id                 = (known after apply)
+      + kubernetes_version = "1.36"
+      + most_recent        = true
+      + region             = (known after apply)
+      + version            = (known after apply)
+    }
+
+  # module.eks.aws_eks_addon.this["coredns"] will be created
+  + resource "aws_eks_addon" "this" {
+      + addon_name                  = "coredns"
+      + addon_version               = (known after apply)
+      + arn                         = (known after apply)
+      + cluster_name                = "aws-eks-gitops-platform"
+      + configuration_values        = (known after apply)
+      + created_at                  = (known after apply)
+      + id                          = (known after apply)
+      + modified_at                 = (known after apply)
+      + region                      = "us-east-1"
+      + resolve_conflicts_on_create = "OVERWRITE"
+      + resolve_conflicts_on_update = "PRESERVE"
+      + tags                        = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-coredns"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all                    = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-coredns"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+
+      + namespace_config (known after apply)
+    }
+
+  # module.eks.aws_eks_addon.this["eks-pod-identity-agent"] will be created
+  + resource "aws_eks_addon" "this" {
+      + addon_name                  = "eks-pod-identity-agent"
+      + addon_version               = (known after apply)
+      + arn                         = (known after apply)
+      + cluster_name                = "aws-eks-gitops-platform"
+      + configuration_values        = (known after apply)
+      + created_at                  = (known after apply)
+      + id                          = (known after apply)
+      + modified_at                 = (known after apply)
+      + region                      = "us-east-1"
+      + resolve_conflicts_on_create = "OVERWRITE"
+      + resolve_conflicts_on_update = "PRESERVE"
+      + tags                        = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-eks-pod-identity-agent"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all                    = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-eks-pod-identity-agent"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+
+      + namespace_config (known after apply)
+    }
+
+  # module.eks.aws_eks_addon.this["kube-proxy"] will be created
+  + resource "aws_eks_addon" "this" {
+      + addon_name                  = "kube-proxy"
+      + addon_version               = (known after apply)
+      + arn                         = (known after apply)
+      + cluster_name                = "aws-eks-gitops-platform"
+      + configuration_values        = (known after apply)
+      + created_at                  = (known after apply)
+      + id                          = (known after apply)
+      + modified_at                 = (known after apply)
+      + region                      = "us-east-1"
+      + resolve_conflicts_on_create = "OVERWRITE"
+      + resolve_conflicts_on_update = "PRESERVE"
+      + tags                        = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-kube-proxy"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all                    = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-kube-proxy"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+
+      + namespace_config (known after apply)
+    }
+
+  # module.eks.aws_eks_addon.this["vpc-cni"] will be created
+  + resource "aws_eks_addon" "this" {
+      + addon_name                  = "vpc-cni"
+      + addon_version               = (known after apply)
+      + arn                         = (known after apply)
+      + cluster_name                = "aws-eks-gitops-platform"
+      + configuration_values        = (known after apply)
+      + created_at                  = (known after apply)
+      + id                          = (known after apply)
+      + modified_at                 = (known after apply)
+      + region                      = "us-east-1"
+      + resolve_conflicts_on_create = "OVERWRITE"
+      + resolve_conflicts_on_update = "PRESERVE"
+      + tags                        = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-vpc-cni"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all                    = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-addon-vpc-cni"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+
+      + namespace_config (known after apply)
+    }
+
+  # module.eks.aws_eks_cluster.this will be updated in-place
+  ~ resource "aws_eks_cluster" "this" {
+        id                            = "aws-eks-gitops-platform"
+        name                          = "aws-eks-gitops-platform"
+      ~ tags                          = {
+            "AutoDelete"  = "true"
+            "Environment" = "dev"
+            "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-cluster"
+            "Owner"       = "Cristiano"
+            "Project"     = "aws-eks-gitops-platform"
+        }
+      ~ tags_all                      = {
+          + "Name"        = "aws-eks-gitops-platform-eks-cluster"
+            # (5 unchanged elements hidden)
+        }
+        # (13 unchanged attributes hidden)
+
+      ~ vpc_config {
+          ~ security_group_ids        = [] -> (known after apply)
+            # (7 unchanged attributes hidden)
+        }
+
+        # (9 unchanged blocks hidden)
+    }
+
+  # module.eks.aws_eks_node_group.this will be created
+  + resource "aws_eks_node_group" "this" {
+      + ami_type               = (known after apply)
+      + arn                    = (known after apply)
+      + capacity_type          = "ON_DEMAND"
+      + cluster_name           = "aws-eks-gitops-platform"
+      + disk_size              = (known after apply)
+      + id                     = (known after apply)
+      + instance_types         = [
+          + "t3.small",
+        ]
+      + node_group_name        = "aws-eks-gitops-platform-default"
+      + node_group_name_prefix = (known after apply)
+      + node_role_arn          = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-node"
+      + region                 = "us-east-1"
+      + release_version        = (known after apply)
+      + resources              = (known after apply)
+      + status                 = (known after apply)
+      + subnet_ids             = [
+          + "subnet-0a650ea0d5b785709",
+          + "subnet-0ead8b8cbb846cccc",
+        ]
+      + tags                   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-node-group"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all               = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-node-group"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + version                = (known after apply)
+
+      + launch_template {
+          + id      = (known after apply)
+          + name    = (known after apply)
+          + version = (known after apply)
+        }
+
+      + node_repair_config (known after apply)
+
+      + scaling_config {
+          + desired_size = 1
+          + max_size     = 2
+          + min_size     = 1
+        }
+
+      + update_config {
+          + max_unavailable = 1
+        }
+    }
+
+  # module.eks.aws_iam_role.cluster will be updated in-place
+  ~ resource "aws_iam_role" "cluster" {
+        id                    = "aws-eks-gitops-platform-eks-cluster"
+        name                  = "aws-eks-gitops-platform-eks-cluster"
+      ~ tags                  = {
+            "AutoDelete"  = "true"
+            "Environment" = "dev"
+            "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-cluster-role"
+            "Owner"       = "Cristiano"
+            "Project"     = "aws-eks-gitops-platform"
+        }
+      ~ tags_all              = {
+          + "Name"        = "aws-eks-gitops-platform-eks-cluster-role"
+            # (5 unchanged elements hidden)
+        }
+        # (11 unchanged attributes hidden)
+    }
+
+  # module.eks.aws_iam_role.node will be updated in-place
+  ~ resource "aws_iam_role" "node" {
+        id                    = "aws-eks-gitops-platform-eks-node"
+        name                  = "aws-eks-gitops-platform-eks-node"
+      ~ tags                  = {
+            "AutoDelete"  = "true"
+            "Environment" = "dev"
+            "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-node-role"
+            "Owner"       = "Cristiano"
+            "Project"     = "aws-eks-gitops-platform"
+        }
+      ~ tags_all              = {
+          + "Name"        = "aws-eks-gitops-platform-eks-node-role"
+            # (5 unchanged elements hidden)
+        }
+        # (11 unchanged attributes hidden)
+    }
+
+  # module.eks.aws_launch_template.node will be created
+  + resource "aws_launch_template" "node" {
+      + arn                    = (known after apply)
+      + default_version        = (known after apply)
+      + id                     = (known after apply)
+      + latest_version         = (known after apply)
+      + name                   = (known after apply)
+      + name_prefix            = "aws-eks-gitops-platform-node-"
+      + region                 = "us-east-1"
+      + tags                   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-node-lt"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all               = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-node-lt"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + vpc_security_group_ids = (known after apply)
+
+      + metadata_options (known after apply)
+
+      + tag_specifications {
+          + resource_type = "instance"
+          + tags          = {
+              + "AutoDelete"  = "true"
+              + "Environment" = "dev"
+              + "ManagedBy"   = "Terraform"
+              + "Name"        = "aws-eks-gitops-platform-node"
+              + "Owner"       = "Cristiano"
+              + "Project"     = "aws-eks-gitops-platform"
+            }
+        }
+      + tag_specifications {
+          + resource_type = "volume"
+          + tags          = {
+              + "AutoDelete"  = "true"
+              + "Environment" = "dev"
+              + "ManagedBy"   = "Terraform"
+              + "Name"        = "aws-eks-gitops-platform-node-volume"
+              + "Owner"       = "Cristiano"
+              + "Project"     = "aws-eks-gitops-platform"
+            }
+        }
+    }
+
+  # module.eks.aws_security_group.alb will be created
+  + resource "aws_security_group" "alb" {
+      + arn                    = (known after apply)
+      + description            = "Security group for the application ALB"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "aws-eks-gitops-platform-alb"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-alb-sg"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all               = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-alb-sg"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + vpc_id                 = "vpc-0695ff2da6134d1ba"
+    }
+
+  # module.eks.aws_security_group.cluster will be created
+  + resource "aws_security_group" "cluster" {
+      + arn                    = (known after apply)
+      + description            = "Security group for EKS cluster control plane"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "aws-eks-gitops-platform-eks-cluster"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-cluster-sg"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all               = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-cluster-sg"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + vpc_id                 = "vpc-0695ff2da6134d1ba"
+    }
+
+  # module.eks.aws_security_group.node will be created
+  + resource "aws_security_group" "node" {
+      + arn                    = (known after apply)
+      + description            = "Security group for EKS managed nodes"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "aws-eks-gitops-platform-eks-node"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + region                 = "us-east-1"
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-node-sg"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all               = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-eks-node-sg"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + vpc_id                 = "vpc-0695ff2da6134d1ba"
+    }
+
+  # module.eks.aws_security_group_rule.alb_egress_to_nodes will be created
+  + resource "aws_security_group_rule" "alb_egress_to_nodes" {
+      + description              = "Allow application traffic to nodes"
+      + from_port                = 8000
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 8000
+      + type                     = "egress"
+    }
+
+  # module.eks.aws_security_group_rule.alb_ingress_http will be created
+  + resource "aws_security_group_rule" "alb_ingress_http" {
+      + cidr_blocks              = [
+          + "0.0.0.0/0",
+        ]
+      + description              = "Allow HTTP from internet"
+      + from_port                = 80
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 80
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.alb_ingress_https will be created
+  + resource "aws_security_group_rule" "alb_ingress_https" {
+      + cidr_blocks              = [
+          + "0.0.0.0/0",
+        ]
+      + description              = "Allow HTTPS from internet"
+      + from_port                = 443
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.cluster_egress_all will be created
+  + resource "aws_security_group_rule" "cluster_egress_all" {
+      + cidr_blocks              = [
+          + "0.0.0.0/0",
+        ]
+      + description              = "Allow all outbound from control plane"
+      + from_port                = 0
+      + id                       = (known after apply)
+      + protocol                 = "-1"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 0
+      + type                     = "egress"
+    }
+
+  # module.eks.aws_security_group_rule.cluster_ingress_from_nodes will be created
+  + resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
+      + description              = "Allow HTTPS from nodes to control plane (kubelet)"
+      + from_port                = 443
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node_egress_all will be created
+  + resource "aws_security_group_rule" "node_egress_all" {
+      + cidr_blocks              = [
+          + "0.0.0.0/0",
+        ]
+      + description              = "Allow all outbound (image pulls, GitHub, GHCR)"
+      + from_port                = 0
+      + id                       = (known after apply)
+      + protocol                 = "-1"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 0
+      + type                     = "egress"
+    }
+
+  # module.eks.aws_security_group_rule.node_ingress_from_alb will be created
+  + resource "aws_security_group_rule" "node_ingress_from_alb" {
+      + description              = "Allow application traffic from ALB"
+      + from_port                = 8000
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 8000
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node_ingress_from_cluster will be created
+  + resource "aws_security_group_rule" "node_ingress_from_cluster" {
+      + description              = "Allow HTTPS from control plane to nodes (kubelet)"
+      + from_port                = 443
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node_ingress_self will be created
+  + resource "aws_security_group_rule" "node_ingress_self" {
+      + description              = "Allow all traffic between nodes"
+      + from_port                = 0
+      + id                       = (known after apply)
+      + protocol                 = "-1"
+      + region                   = "us-east-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 0
+      + type                     = "ingress"
+    }
+
+  # module.iam.aws_eks_pod_identity_association.alb_controller[0] will be created
+  + resource "aws_eks_pod_identity_association" "alb_controller" {
+      + association_arn      = (known after apply)
+      + association_id       = (known after apply)
+      + cluster_name         = "aws-eks-gitops-platform"
+      + disable_session_tags = false
+      + external_id          = (known after apply)
+      + id                   = (known after apply)
+      + namespace            = "kube-system"
+      + region               = "us-east-1"
+      + role_arn             = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-alb-controller"
+      + service_account      = "aws-load-balancer-controller"
+      + tags_all             = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+    }
+
+  # module.vpc.aws_network_acl.private will be created
+  + resource "aws_network_acl" "private" {
+      + arn        = (known after apply)
+      + egress     = (known after apply)
+      + id         = (known after apply)
+      + ingress    = (known after apply)
+      + owner_id   = (known after apply)
+      + region     = "us-east-1"
+      + subnet_ids = [
+          + "subnet-0a650ea0d5b785709",
+          + "subnet-0ead8b8cbb846cccc",
+        ]
+      + tags       = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-dev-private-nacl"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-dev-private-nacl"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + vpc_id     = "vpc-0695ff2da6134d1ba"
+    }
+
+  # module.vpc.aws_network_acl.public will be created
+  + resource "aws_network_acl" "public" {
+      + arn        = (known after apply)
+      + egress     = (known after apply)
+      + id         = (known after apply)
+      + ingress    = (known after apply)
+      + owner_id   = (known after apply)
+      + region     = "us-east-1"
+      + subnet_ids = [
+          + "subnet-02fce02cb4d99ba6d",
+          + "subnet-0834f0f062fc645cb",
+        ]
+      + tags       = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-dev-public-nacl"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + tags_all   = {
+          + "AutoDelete"  = "true"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "aws-eks-gitops-platform-dev-public-nacl"
+          + "Owner"       = "Cristiano"
+          + "Project"     = "aws-eks-gitops-platform"
+        }
+      + vpc_id     = "vpc-0695ff2da6134d1ba"
+    }
+
+  # module.vpc.aws_network_acl_rule.private_egress_all will be created
+  + resource "aws_network_acl_rule" "private_egress_all" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = true
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "-1"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 100
+    }
+
+  # module.vpc.aws_network_acl_rule.private_ingress_ephemeral will be created
+  + resource "aws_network_acl_rule" "private_ingress_ephemeral" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = false
+      + from_port      = 1024
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 110
+      + to_port        = 65535
+    }
+
+  # module.vpc.aws_network_acl_rule.private_ingress_https will be created
+  + resource "aws_network_acl_rule" "private_ingress_https" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = false
+      + from_port      = 443
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 100
+      + to_port        = 443
+    }
+
+  # module.vpc.aws_network_acl_rule.public_egress_all will be created
+  + resource "aws_network_acl_rule" "public_egress_all" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = true
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "-1"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 100
+    }
+
+  # module.vpc.aws_network_acl_rule.public_ingress_ephemeral will be created
+  + resource "aws_network_acl_rule" "public_ingress_ephemeral" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = false
+      + from_port      = 1024
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 120
+      + to_port        = 65535
+    }
+
+  # module.vpc.aws_network_acl_rule.public_ingress_http will be created
+  + resource "aws_network_acl_rule" "public_ingress_http" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = false
+      + from_port      = 80
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 100
+      + to_port        = 80
+    }
+
+  # module.vpc.aws_network_acl_rule.public_ingress_https will be created
+  + resource "aws_network_acl_rule" "public_ingress_https" {
+      + cidr_block     = "0.0.0.0/0"
+      + egress         = false
+      + from_port      = 443
+      + id             = (known after apply)
+      + network_acl_id = (known after apply)
+      + protocol       = "tcp"
+      + region         = "us-east-1"
+      + rule_action    = "allow"
+      + rule_number    = 110
+      + to_port        = 443
+    }
+
+Plan: 28 to add, 3 to change, 0 to destroy.
+
+Changes to Outputs:
+  + alb_security_group_id   = (known after apply)
+  + cluster_endpoint        = "https://9A80E35D6B6211621B9B1EC56873A9EA.gr7.us-east-1.eks.amazonaws.com"
+
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+Releasing state lock. This may take a few moments...

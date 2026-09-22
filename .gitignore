@@ -42,3 +42,4 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+gitops/applications/platform/aws-load-balancer-controller.yaml

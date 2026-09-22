@@ -69,7 +69,7 @@ variable "node_capacity_type" {
 variable "node_desired_size" {
   description = "Desired node count."
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "node_min_size" {
@@ -81,7 +81,7 @@ variable "node_min_size" {
 variable "node_max_size" {
   description = "Maximum node count."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "cluster_enabled_log_types" {

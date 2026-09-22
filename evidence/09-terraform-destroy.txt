@@ -1,0 +1,1487 @@
+[0m[1mmodule.vpc.terraform_data.validate: Refreshing state... [id=58ffe518-899d-92b2-7773-50404bc22c0a][0m
+[0m[1mmodule.eks.aws_iam_role.cluster: Refreshing state... [id=aws-eks-gitops-platform-eks-cluster][0m
+[0m[1mmodule.eks.aws_iam_role.node: Refreshing state... [id=aws-eks-gitops-platform-eks-node][0m
+[0m[1mmodule.iam.aws_iam_policy.alb_controller: Refreshing state... [id=arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller][0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-0695ff2da6134d1ba][0m
+[0m[1mmodule.iam.aws_iam_role.alb_controller: Refreshing state... [id=aws-eks-gitops-platform-alb-controller][0m
+[0m[1mmodule.vpc.aws_eip.nat[0]: Refreshing state... [id=eipalloc-06eb1118a383d4c85][0m
+[0m[1mmodule.iam.aws_iam_role_policy_attachment.alb_controller: Refreshing state... [id=aws-eks-gitops-platform-alb-controller/arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller][0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Refreshing state... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy][0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Refreshing state... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy][0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Refreshing state... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly][0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.cluster: Refreshing state... [id=aws-eks-gitops-platform-eks-cluster/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy][0m
+[0m[1mmodule.vpc.aws_route_table.public: Refreshing state... [id=rtb-0bd5b9f4734ee4082][0m
+[0m[1mmodule.vpc.aws_route_table.private: Refreshing state... [id=rtb-0d37b6cae5e301224][0m
+[0m[1mmodule.vpc.aws_internet_gateway.this[0]: Refreshing state... [id=igw-0e2759167863d03d4][0m
+[0m[1mmodule.vpc.aws_subnet.public["0"]: Refreshing state... [id=subnet-0834f0f062fc645cb][0m
+[0m[1mmodule.vpc.aws_subnet.public["1"]: Refreshing state... [id=subnet-02fce02cb4d99ba6d][0m
+[0m[1mmodule.vpc.aws_subnet.private["1"]: Refreshing state... [id=subnet-0a650ea0d5b785709][0m
+[0m[1mmodule.vpc.aws_subnet.private["0"]: Refreshing state... [id=subnet-0ead8b8cbb846cccc][0m
+[0m[1mmodule.vpc.aws_route_table_association.public["1"]: Refreshing state... [id=rtbassoc-095c514291019ad40][0m
+[0m[1mmodule.vpc.aws_route_table_association.public["0"]: Refreshing state... [id=rtbassoc-05afb2a13765b9175][0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Refreshing state... [id=nat-03bca8009e3be7321][0m
+[0m[1mmodule.vpc.aws_route.public_internet[0]: Refreshing state... [id=r-rtb-0bd5b9f4734ee40821080289494][0m
+[0m[1mmodule.vpc.aws_route_table_association.private["1"]: Refreshing state... [id=rtbassoc-0526689727ad61533][0m
+[0m[1mmodule.vpc.aws_route_table_association.private["0"]: Refreshing state... [id=rtbassoc-0a62d73229dc02ba3][0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Refreshing state... [id=aws-eks-gitops-platform][0m
+[0m[1mmodule.vpc.aws_route.private_nat[0]: Refreshing state... [id=r-rtb-0d37b6cae5e3012241080289494][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [31m-[0m destroy[0m
+
+Terraform will perform the following actions:
+
+[1m  # module.eks.aws_eks_cluster.this[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_eks_cluster" "this" {
+      [31m-[0m[0m arn                           = "arn:aws:eks:us-east-1:934614086600:cluster/aws-eks-gitops-platform" [90m-> null[0m[0m
+      [31m-[0m[0m bootstrap_self_managed_addons = false [90m-> null[0m[0m
+      [31m-[0m[0m certificate_authority         = [
+          [31m-[0m[0m {
+              [31m-[0m[0m data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURNVENDQWhtZ0F3SUJBZ0lRVFVHRHVJR1pBc2puQ3d3WGFhMXMxakFOQmdrcWhraUc5dzBCQVFzRkFEQW4KTVJBd0RnWURWUVFLRXdkQlYxTWdSVXRUTVJNd0VRWURWUVFERXdwcmRXSmxjbTVsZEdWek1CNFhEVEkyTURreQpNVEUwTURJME1Wb1hEVE14TURreU1ERTBNREkwTVZvd0p6RVFNQTRHQTFVRUNoTUhRVmRUSUVWTFV6RVRNQkVHCkExVUVBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUIKQUx4T01XVkd2Sm52TFpXakQwL0ZYUTFXQWxhKzJkbUkyR1Z0eXFwakQ1SGNXQjBBclF2S0RxL3ZhMjAvRnFSMQpkeEpXYit3bWJ3RXZ0NVJkTUw2SEVYYlNqTVh4VWFPMnhYdjExeVRzQThkaWcrWU54U0hSdGh0RmJwRElEbExYCmhjUmc5ZzVpZm5JdVRLZUNlSGgxVHJSK0pQN0hUcEZVTGNlb1ZyNWt4eFh0czhJTTErcGUrUUVCQ2VvTHV4U3kKSkE3M0YxTlhGU0JWWjR4UEdXQ1IrM2JPWXI0M3pLNWtHWitlK2lkc2dIZXBSQTFBWEtabHFsSkQ2SW5lVi9HWAorUnNFeG1TTXFGVDg2VmQwMVdWM1JYYzRxVitVRTY5UDgyZzBieVZzcUdYblQ1R1g0eWh5VzRyTGNiNHlpMk44CkZpS3l3eERMcStnU2FVUExtdUNLMFlVQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWQKRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZMSGFTcXpqc0gxUDFBZUdYeWRUR1RyVVQ1SnRNQlVHQTFVZApFUVFPTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBTGx5ZXlzcVBNMm1YamJCCkY0eUNDN3RMT09Vb21uRThTVUs5Mjkvd0E2VjBsdWRJTDE2NWNDTmE1VGQ0eUIvQU10Tlluek5SSWV0Zi9ZckQKd290cGdPNmFyUGVSVGNibTlZczdFbDBReFpMZ3NMTXpYK25GajJzajhuY1RtUXdzSzdUejRLYVdBMXZFSjdTcApwcE9FNTlZMlhmVjltN01IdC8xOTJBZndBRW9od2hWQTVna1lMTnd6V0lCb3cza1B6ckt6dk5JUU8vRnZBaVJRClFxVm5ERFZWbkJIU1V3RGYrNk81YlpZTkViQjhIWVYyNVFZNnhTTEFOcVdWSzFHOE5oOS9EWGJWeXRxd1VaTXoKa1lNWlBTV0xpSWhlZDRMTzhOVWpPVVpiRytDMW4zbjNlZnZwQk91OVFDT200TzB2MnNPZ2tEMnVzN2Y3dlJUdQo5blJLaFRNPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m created_at                    = "2026-09-21T14:02:22Z" [90m-> null[0m[0m
+      [31m-[0m[0m deletion_protection           = false [90m-> null[0m[0m
+      [31m-[0m[0m enabled_cluster_log_types     = [] [90m-> null[0m[0m
+      [31m-[0m[0m endpoint                      = "https://9A80E35D6B6211621B9B1EC56873A9EA.gr7.us-east-1.eks.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m id                            = "aws-eks-gitops-platform" [90m-> null[0m[0m
+      [31m-[0m[0m identity                      = [
+          [31m-[0m[0m {
+              [31m-[0m[0m oidc = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m issuer = "https://oidc.eks.us-east-1.amazonaws.com/id/9A80E35D6B6211621B9B1EC56873A9EA"
+                    },
+                ]
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m name                          = "aws-eks-gitops-platform" [90m-> null[0m[0m
+      [31m-[0m[0m platform_version              = "eks.13" [90m-> null[0m[0m
+      [31m-[0m[0m region                        = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m role_arn                      = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m status                        = "ACTIVE" [90m-> null[0m[0m
+      [31m-[0m[0m tags                          = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                      = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m version                       = "1.36" [90m-> null[0m[0m
+
+      [31m-[0m[0m access_config {
+          [31m-[0m[0m authentication_mode                         = "API_AND_CONFIG_MAP" [90m-> null[0m[0m
+          [31m-[0m[0m bootstrap_cluster_creator_admin_permissions = false [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m compute_config {
+          [31m-[0m[0m enabled       = false [90m-> null[0m[0m
+          [31m-[0m[0m node_pools    = [] [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m control_plane_scaling_config {
+          [31m-[0m[0m tier = "standard" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m kube_api_server_config {
+          [31m-[0m[0m event_ttl = "60m" [90m-> null[0m[0m
+
+          [31m-[0m[0m service_node_port_range {
+              [31m-[0m[0m max_port = 32767 [90m-> null[0m[0m
+              [31m-[0m[0m min_port = 30000 [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m kube_controller_manager_config {
+          [31m-[0m[0m horizontal_pod_autoscaler_controller_config {
+              [31m-[0m[0m horizontal_pod_autoscaler_sync_period = "15s" [90m-> null[0m[0m
+            }
+          [31m-[0m[0m pod_gc_controller_config {
+              [31m-[0m[0m terminated_pod_gc_threshold = 12500 [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m kube_scheduler_config {
+          [31m-[0m[0m node_resources_fit {
+              [31m-[0m[0m scoring_strategy {
+                  [31m-[0m[0m type = "LeastAllocated" [90m-> null[0m[0m
+
+                  [31m-[0m[0m resource {
+                      [31m-[0m[0m name   = "cpu" [90m-> null[0m[0m
+                      [31m-[0m[0m weight = 1 [90m-> null[0m[0m
+                    }
+                  [31m-[0m[0m resource {
+                      [31m-[0m[0m name   = "memory" [90m-> null[0m[0m
+                      [31m-[0m[0m weight = 1 [90m-> null[0m[0m
+                    }
+                }
+            }
+        }
+
+      [31m-[0m[0m kubernetes_network_config {
+          [31m-[0m[0m ip_family         = "ipv4" [90m-> null[0m[0m
+          [31m-[0m[0m service_ipv4_cidr = "172.20.0.0/16" [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+
+          [31m-[0m[0m elastic_load_balancing {
+              [31m-[0m[0m enabled = false [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m storage_config {
+          [31m-[0m[0m block_storage {
+              [31m-[0m[0m enabled = false [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m upgrade_policy {
+          [31m-[0m[0m support_type = "EXTENDED" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m vpc_config {
+          [31m-[0m[0m cluster_security_group_id = "sg-0418dc3d780e874de" [90m-> null[0m[0m
+          [31m-[0m[0m control_plane_egress_mode = "AWS_MANAGED" [90m-> null[0m[0m
+          [31m-[0m[0m endpoint_private_access   = true [90m-> null[0m[0m
+          [31m-[0m[0m endpoint_public_access    = true [90m-> null[0m[0m
+          [31m-[0m[0m public_access_cidrs       = [
+              [31m-[0m[0m "179.222.235.62/32",
+            ] [90m-> null[0m[0m
+          [31m-[0m[0m security_group_ids        = [] [90m-> null[0m[0m
+          [31m-[0m[0m subnet_ids                = [
+              [31m-[0m[0m "subnet-0a650ea0d5b785709",
+              [31m-[0m[0m "subnet-0ead8b8cbb846cccc",
+            ] [90m-> null[0m[0m
+          [31m-[0m[0m vpc_id                    = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # module.eks.aws_iam_role.cluster[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role" "cluster" {
+      [31m-[0m[0m arn                   = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m assume_role_policy    = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = "sts:AssumeRole"
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Principal = {
+                          [31m-[0m[0m Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m create_date           = "2026-09-21T14:02:12Z" [90m-> null[0m[0m
+      [31m-[0m[0m force_detach_policies = false [90m-> null[0m[0m
+      [31m-[0m[0m id                    = "aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m managed_policy_arns   = [
+          [31m-[0m[0m "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m max_session_duration  = 3600 [90m-> null[0m[0m
+      [31m-[0m[0m name                  = "aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m path                  = "/" [90m-> null[0m[0m
+      [31m-[0m[0m tags                  = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all              = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m unique_id             = "AROA5TG2XGPEOHU3P7ARR" [90m-> null[0m[0m
+        [90m# (3 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.eks.aws_iam_role.node[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role" "node" {
+      [31m-[0m[0m arn                   = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+      [31m-[0m[0m assume_role_policy    = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = "sts:AssumeRole"
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Principal = {
+                          [31m-[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m create_date           = "2026-09-21T14:02:12Z" [90m-> null[0m[0m
+      [31m-[0m[0m force_detach_policies = false [90m-> null[0m[0m
+      [31m-[0m[0m id                    = "aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+      [31m-[0m[0m managed_policy_arns   = [
+          [31m-[0m[0m "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          [31m-[0m[0m "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+          [31m-[0m[0m "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m max_session_duration  = 3600 [90m-> null[0m[0m
+      [31m-[0m[0m name                  = "aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+      [31m-[0m[0m path                  = "/" [90m-> null[0m[0m
+      [31m-[0m[0m tags                  = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all              = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m unique_id             = "AROA5TG2XGPEIR45F6OC7" [90m-> null[0m[0m
+        [90m# (3 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.cluster[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "cluster" {
+      [31m-[0m[0m id         = "aws-eks-gitops-platform-eks-cluster/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "node" {
+      [31m-[0m[0m id         = "aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "node" {
+      [31m-[0m[0m id         = "aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "node" {
+      [31m-[0m[0m id         = "aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+    }
+
+[1m  # module.iam.aws_iam_policy.alb_controller[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_policy" "alb_controller" {
+      [31m-[0m[0m arn              = "arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m attachment_count = 1 [90m-> null[0m[0m
+      [31m-[0m[0m description      = "Permissions for the AWS Load Balancer Controller (EKS Pod Identity)." [90m-> null[0m[0m
+      [31m-[0m[0m id               = "arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m name             = "aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m path             = "/" [90m-> null[0m[0m
+      [31m-[0m[0m policy           = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "iam:CreateServiceLinkedRole",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m StringEquals = {
+                              [31m-[0m[0m "iam:AWSServiceName" = "elasticloadbalancing.amazonaws.com"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "ec2:DescribeAccountAttributes",
+                          [31m-[0m[0m "ec2:DescribeAddresses",
+                          [31m-[0m[0m "ec2:DescribeAvailabilityZones",
+                          [31m-[0m[0m "ec2:DescribeInternetGateways",
+                          [31m-[0m[0m "ec2:DescribeVpcs",
+                          [31m-[0m[0m "ec2:DescribeVpcPeeringConnections",
+                          [31m-[0m[0m "ec2:DescribeSubnets",
+                          [31m-[0m[0m "ec2:DescribeSecurityGroups",
+                          [31m-[0m[0m "ec2:DescribeInstances",
+                          [31m-[0m[0m "ec2:DescribeNetworkInterfaces",
+                          [31m-[0m[0m "ec2:DescribeTags",
+                          [31m-[0m[0m "ec2:GetCoipPoolUsage",
+                          [31m-[0m[0m "ec2:DescribeCoipPools",
+                          [31m-[0m[0m "ec2:GetSecurityGroupsForVpc",
+                          [31m-[0m[0m "ec2:DescribeIpamPools",
+                          [31m-[0m[0m "ec2:DescribeRouteTables",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeLoadBalancers",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeLoadBalancerAttributes",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeListeners",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeListenerCertificates",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeSSLPolicies",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeRules",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeTargetGroups",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeTargetGroupAttributes",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeTargetHealth",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeTags",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeTrustStores",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeListenerAttributes",
+                          [31m-[0m[0m "elasticloadbalancing:DescribeCapacityReservation",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "cognito-idp:DescribeUserPoolClient",
+                          [31m-[0m[0m "acm:ListCertificates",
+                          [31m-[0m[0m "acm:DescribeCertificate",
+                          [31m-[0m[0m "iam:ListServerCertificates",
+                          [31m-[0m[0m "iam:GetServerCertificate",
+                          [31m-[0m[0m "waf-regional:GetWebACL",
+                          [31m-[0m[0m "waf-regional:GetWebACLForResource",
+                          [31m-[0m[0m "waf-regional:AssociateWebACL",
+                          [31m-[0m[0m "waf-regional:DisassociateWebACL",
+                          [31m-[0m[0m "wafv2:GetWebACL",
+                          [31m-[0m[0m "wafv2:GetWebACLForResource",
+                          [31m-[0m[0m "wafv2:AssociateWebACL",
+                          [31m-[0m[0m "wafv2:DisassociateWebACL",
+                          [31m-[0m[0m "shield:GetSubscriptionState",
+                          [31m-[0m[0m "shield:DescribeProtection",
+                          [31m-[0m[0m "shield:CreateProtection",
+                          [31m-[0m[0m "shield:DeleteProtection",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "ec2:AuthorizeSecurityGroupIngress",
+                          [31m-[0m[0m "ec2:RevokeSecurityGroupIngress",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "ec2:CreateSecurityGroup",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "ec2:CreateTags",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null         = {
+                              [31m-[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                          [31m-[0m[0m StringEquals = {
+                              [31m-[0m[0m "ec2:CreateAction" = "CreateSecurityGroup"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "arn:aws:ec2:*:*:security-group/*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "ec2:CreateTags",
+                          [31m-[0m[0m "ec2:DeleteTags",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null = {
+                              [31m-[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true"
+                              [31m-[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "arn:aws:ec2:*:*:security-group/*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "ec2:AuthorizeSecurityGroupIngress",
+                          [31m-[0m[0m "ec2:RevokeSecurityGroupIngress",
+                          [31m-[0m[0m "ec2:DeleteSecurityGroup",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null = {
+                              [31m-[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "elasticloadbalancing:CreateLoadBalancer",
+                          [31m-[0m[0m "elasticloadbalancing:CreateTargetGroup",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null = {
+                              [31m-[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "elasticloadbalancing:CreateListener",
+                          [31m-[0m[0m "elasticloadbalancing:DeleteListener",
+                          [31m-[0m[0m "elasticloadbalancing:CreateRule",
+                          [31m-[0m[0m "elasticloadbalancing:DeleteRule",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "elasticloadbalancing:AddTags",
+                          [31m-[0m[0m "elasticloadbalancing:RemoveTags",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null = {
+                              [31m-[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true"
+                              [31m-[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = [
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*",
+                        ]
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "elasticloadbalancing:AddTags",
+                          [31m-[0m[0m "elasticloadbalancing:RemoveTags",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = [
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:listener-rule/net/*/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*",
+                        ]
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "elasticloadbalancing:ModifyLoadBalancerAttributes",
+                          [31m-[0m[0m "elasticloadbalancing:SetIpAddressType",
+                          [31m-[0m[0m "elasticloadbalancing:SetSecurityGroups",
+                          [31m-[0m[0m "elasticloadbalancing:SetSubnets",
+                          [31m-[0m[0m "elasticloadbalancing:DeleteLoadBalancer",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyTargetGroup",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyTargetGroupAttributes",
+                          [31m-[0m[0m "elasticloadbalancing:DeleteTargetGroup",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyListenerAttributes",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyCapacityReservation",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyIpPools",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null = {
+                              [31m-[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = "*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "elasticloadbalancing:AddTags",
+                        ]
+                      [31m-[0m[0m Condition = {
+                          [31m-[0m[0m Null         = {
+                              [31m-[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                          [31m-[0m[0m StringEquals = {
+                              [31m-[0m[0m "elasticloadbalancing:CreateAction" = [
+                                  [31m-[0m[0m "CreateTargetGroup",
+                                  [31m-[0m[0m "CreateLoadBalancer",
+                                ]
+                            }
+                        }
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Resource  = [
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
+                          [31m-[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*",
+                        ]
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "elasticloadbalancing:RegisterTargets",
+                          [31m-[0m[0m "elasticloadbalancing:DeregisterTargets",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*"
+                    },
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action   = [
+                          [31m-[0m[0m "elasticloadbalancing:SetWebAcl",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyListener",
+                          [31m-[0m[0m "elasticloadbalancing:AddListenerCertificates",
+                          [31m-[0m[0m "elasticloadbalancing:RemoveListenerCertificates",
+                          [31m-[0m[0m "elasticloadbalancing:ModifyRule",
+                          [31m-[0m[0m "elasticloadbalancing:SetRulePriorities",
+                        ]
+                      [31m-[0m[0m Effect   = "Allow"
+                      [31m-[0m[0m Resource = "*"
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m policy_id        = "ANPA5TG2XGPEDULEV5INS" [90m-> null[0m[0m
+      [31m-[0m[0m tags             = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all         = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # module.iam.aws_iam_role.alb_controller[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role" "alb_controller" {
+      [31m-[0m[0m arn                   = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m assume_role_policy    = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = [
+                          [31m-[0m[0m "sts:AssumeRole",
+                          [31m-[0m[0m "sts:TagSession",
+                        ]
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Principal = {
+                          [31m-[0m[0m Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m create_date           = "2026-09-21T14:02:12Z" [90m-> null[0m[0m
+      [31m-[0m[0m force_detach_policies = false [90m-> null[0m[0m
+      [31m-[0m[0m id                    = "aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m managed_policy_arns   = [
+          [31m-[0m[0m "arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m max_session_duration  = 3600 [90m-> null[0m[0m
+      [31m-[0m[0m name                  = "aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m path                  = "/" [90m-> null[0m[0m
+      [31m-[0m[0m tags                  = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all              = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m unique_id             = "AROA5TG2XGPEBBI5MELJP" [90m-> null[0m[0m
+        [90m# (3 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.iam.aws_iam_role_policy_attachment.alb_controller[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "alb_controller" {
+      [31m-[0m[0m id         = "aws-eks-gitops-platform-alb-controller/arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+    }
+
+[1m  # module.vpc.aws_eip.nat[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_eip" "nat" {
+      [31m-[0m[0m allocation_id            = "eipalloc-06eb1118a383d4c85" [90m-> null[0m[0m
+      [31m-[0m[0m arn                      = "arn:aws:ec2:us-east-1:934614086600:elastic-ip/eipalloc-06eb1118a383d4c85" [90m-> null[0m[0m
+      [31m-[0m[0m association_id           = "eipassoc-06e71ea92cd2d9b17" [90m-> null[0m[0m
+      [31m-[0m[0m domain                   = "vpc" [90m-> null[0m[0m
+      [31m-[0m[0m id                       = "eipalloc-06eb1118a383d4c85" [90m-> null[0m[0m
+      [31m-[0m[0m network_border_group     = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m network_interface        = "eni-09bd601edef93fa05" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns              = "ip-10-12-21-237.ec2.internal" [90m-> null[0m[0m
+      [31m-[0m[0m private_ip               = "10.12.21.237" [90m-> null[0m[0m
+      [31m-[0m[0m public_dns               = "ec2-3-234-6-55.compute-1.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m public_ip                = "3.234.6.55" [90m-> null[0m[0m
+      [31m-[0m[0m public_ipv4_pool         = "amazon" [90m-> null[0m[0m
+      [31m-[0m[0m region                   = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                     = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-nat-eip"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                 = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-nat-eip"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+        [90m# (6 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_internet_gateway.this[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_internet_gateway" "this" {
+      [31m-[0m[0m arn      = "arn:aws:ec2:us-east-1:934614086600:internet-gateway/igw-0e2759167863d03d4" [90m-> null[0m[0m
+      [31m-[0m[0m id       = "igw-0e2759167863d03d4" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m region   = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags     = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-igw"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-igw"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id   = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+    }
+
+[1m  # module.vpc.aws_nat_gateway.this[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_nat_gateway" "this" {
+      [31m-[0m[0m allocation_id                      = "eipalloc-06eb1118a383d4c85" [90m-> null[0m[0m
+      [31m-[0m[0m association_id                     = "eipassoc-06e71ea92cd2d9b17" [90m-> null[0m[0m
+      [31m-[0m[0m availability_mode                  = "zonal" [90m-> null[0m[0m
+      [31m-[0m[0m connectivity_type                  = "public" [90m-> null[0m[0m
+      [31m-[0m[0m id                                 = "nat-03bca8009e3be7321" [90m-> null[0m[0m
+      [31m-[0m[0m network_interface_id               = "eni-09bd601edef93fa05" [90m-> null[0m[0m
+      [31m-[0m[0m private_ip                         = "10.12.21.237" [90m-> null[0m[0m
+      [31m-[0m[0m public_ip                          = "3.234.6.55" [90m-> null[0m[0m
+      [31m-[0m[0m region                             = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m regional_nat_gateway_address       = [] [90m-> null[0m[0m
+      [31m-[0m[0m secondary_allocation_ids           = [] [90m-> null[0m[0m
+      [31m-[0m[0m secondary_private_ip_address_count = 0 [90m-> null[0m[0m
+      [31m-[0m[0m secondary_private_ip_addresses     = [] [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id                          = "subnet-0834f0f062fc645cb" [90m-> null[0m[0m
+      [31m-[0m[0m tags                               = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-nat"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                           = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-nat"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                             = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+    }
+
+[1m  # module.vpc.aws_route.private_nat[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route" "private_nat" {
+      [31m-[0m[0m destination_cidr_block      = "0.0.0.0/0" [90m-> null[0m[0m
+      [31m-[0m[0m id                          = "r-rtb-0d37b6cae5e3012241080289494" [90m-> null[0m[0m
+      [31m-[0m[0m nat_gateway_id              = "nat-03bca8009e3be7321" [90m-> null[0m[0m
+      [31m-[0m[0m origin                      = "CreateRoute" [90m-> null[0m[0m
+      [31m-[0m[0m region                      = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id              = "rtb-0d37b6cae5e301224" [90m-> null[0m[0m
+      [31m-[0m[0m state                       = "active" [90m-> null[0m[0m
+        [90m# (14 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_route.public_internet[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route" "public_internet" {
+      [31m-[0m[0m destination_cidr_block      = "0.0.0.0/0" [90m-> null[0m[0m
+      [31m-[0m[0m gateway_id                  = "igw-0e2759167863d03d4" [90m-> null[0m[0m
+      [31m-[0m[0m id                          = "r-rtb-0bd5b9f4734ee40821080289494" [90m-> null[0m[0m
+      [31m-[0m[0m origin                      = "CreateRoute" [90m-> null[0m[0m
+      [31m-[0m[0m region                      = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id              = "rtb-0bd5b9f4734ee4082" [90m-> null[0m[0m
+      [31m-[0m[0m state                       = "active" [90m-> null[0m[0m
+        [90m# (14 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_route_table.private[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table" "private" {
+      [31m-[0m[0m arn              = "arn:aws:ec2:us-east-1:934614086600:route-table/rtb-0d37b6cae5e301224" [90m-> null[0m[0m
+      [31m-[0m[0m id               = "rtb-0d37b6cae5e301224" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id         = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m propagating_vgws = [] [90m-> null[0m[0m
+      [31m-[0m[0m region           = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route            = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_block                 = "0.0.0.0/0"
+              [31m-[0m[0m nat_gateway_id             = "nat-03bca8009e3be7321"
+                [90m# (12 unchanged attributes hidden)[0m[0m
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m tags             = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-private-rt"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all         = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-private-rt"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id           = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+    }
+
+[1m  # module.vpc.aws_route_table.public[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table" "public" {
+      [31m-[0m[0m arn              = "arn:aws:ec2:us-east-1:934614086600:route-table/rtb-0bd5b9f4734ee4082" [90m-> null[0m[0m
+      [31m-[0m[0m id               = "rtb-0bd5b9f4734ee4082" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id         = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m propagating_vgws = [] [90m-> null[0m[0m
+      [31m-[0m[0m region           = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route            = [
+          [31m-[0m[0m {
+              [31m-[0m[0m cidr_block                 = "0.0.0.0/0"
+              [31m-[0m[0m gateway_id                 = "igw-0e2759167863d03d4"
+                [90m# (12 unchanged attributes hidden)[0m[0m
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m tags             = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-public-rt"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all         = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-public-rt"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id           = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+    }
+
+[1m  # module.vpc.aws_route_table_association.private["0"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "private" {
+      [31m-[0m[0m id             = "rtbassoc-0a62d73229dc02ba3" [90m-> null[0m[0m
+      [31m-[0m[0m region         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-0d37b6cae5e301224" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-0ead8b8cbb846cccc" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_route_table_association.private["1"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "private" {
+      [31m-[0m[0m id             = "rtbassoc-0526689727ad61533" [90m-> null[0m[0m
+      [31m-[0m[0m region         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-0d37b6cae5e301224" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-0a650ea0d5b785709" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_route_table_association.public["0"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "public" {
+      [31m-[0m[0m id             = "rtbassoc-05afb2a13765b9175" [90m-> null[0m[0m
+      [31m-[0m[0m region         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-0bd5b9f4734ee4082" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-0834f0f062fc645cb" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_route_table_association.public["1"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_route_table_association" "public" {
+      [31m-[0m[0m id             = "rtbassoc-095c514291019ad40" [90m-> null[0m[0m
+      [31m-[0m[0m region         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m route_table_id = "rtb-0bd5b9f4734ee4082" [90m-> null[0m[0m
+      [31m-[0m[0m subnet_id      = "subnet-02fce02cb4d99ba6d" [90m-> null[0m[0m
+        [90m# (1 unchanged attribute hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.private["0"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "private" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-1:934614086600:subnet/subnet-0ead8b8cbb846cccc" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-1a" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use1-az1" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.12.23.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-0ead8b8cbb846cccc" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = false [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m region                                         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1a"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1a"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.private["1"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "private" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-1:934614086600:subnet/subnet-0a650ea0d5b785709" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-1b" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use1-az2" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.12.24.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-0a650ea0d5b785709" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = false [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m region                                         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1b"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1b"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.public["0"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "public" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-1:934614086600:subnet/subnet-0834f0f062fc645cb" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-1a" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use1-az1" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.12.21.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-0834f0f062fc645cb" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = true [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m region                                         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "AutoDelete"             = "true"
+          [31m-[0m[0m "Environment"            = "dev"
+          [31m-[0m[0m "ManagedBy"              = "Terraform"
+          [31m-[0m[0m "Name"                   = "aws-eks-gitops-platform-dev-public-us-east-1a"
+          [31m-[0m[0m "Owner"                  = "Cristiano"
+          [31m-[0m[0m "Project"                = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                   = "public"
+          [31m-[0m[0m "kubernetes.io/role/elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "AutoDelete"             = "true"
+          [31m-[0m[0m "Environment"            = "dev"
+          [31m-[0m[0m "ManagedBy"              = "Terraform"
+          [31m-[0m[0m "Name"                   = "aws-eks-gitops-platform-dev-public-us-east-1a"
+          [31m-[0m[0m "Owner"                  = "Cristiano"
+          [31m-[0m[0m "Project"                = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                   = "public"
+          [31m-[0m[0m "kubernetes.io/role/elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.public["1"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "public" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-1:934614086600:subnet/subnet-02fce02cb4d99ba6d" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-1b" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use1-az2" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.12.22.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-02fce02cb4d99ba6d" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = true [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m region                                         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "AutoDelete"             = "true"
+          [31m-[0m[0m "Environment"            = "dev"
+          [31m-[0m[0m "ManagedBy"              = "Terraform"
+          [31m-[0m[0m "Name"                   = "aws-eks-gitops-platform-dev-public-us-east-1b"
+          [31m-[0m[0m "Owner"                  = "Cristiano"
+          [31m-[0m[0m "Project"                = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                   = "public"
+          [31m-[0m[0m "kubernetes.io/role/elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "AutoDelete"             = "true"
+          [31m-[0m[0m "Environment"            = "dev"
+          [31m-[0m[0m "ManagedBy"              = "Terraform"
+          [31m-[0m[0m "Name"                   = "aws-eks-gitops-platform-dev-public-us-east-1b"
+          [31m-[0m[0m "Owner"                  = "Cristiano"
+          [31m-[0m[0m "Project"                = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                   = "public"
+          [31m-[0m[0m "kubernetes.io/role/elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_vpc.this[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc" "this" {
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-1:934614086600:vpc/vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+      [31m-[0m[0m assign_generated_ipv6_cidr_block     = false [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                           = "10.12.0.0/16" [90m-> null[0m[0m
+      [31m-[0m[0m default_network_acl_id               = "acl-0e4fd9cc346cb0cdc" [90m-> null[0m[0m
+      [31m-[0m[0m default_route_table_id               = "rtb-07d876be199d4609a" [90m-> null[0m[0m
+      [31m-[0m[0m default_security_group_id            = "sg-0be720a4afe19543f" [90m-> null[0m[0m
+      [31m-[0m[0m dhcp_options_id                      = "dopt-0850acbd180c327f1" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns_hostnames                 = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns_support                   = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_network_address_usage_metrics = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+      [31m-[0m[0m instance_tenancy                     = "default" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_netmask_length                  = 0 [90m-> null[0m[0m
+      [31m-[0m[0m main_route_table_id                  = "rtb-07d876be199d4609a" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                             = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m region                               = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-vpc"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-vpc"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.terraform_data.validate[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "terraform_data" "validate" {
+      [31m-[0m[0m id = "58ffe518-899d-92b2-7773-50404bc22c0a" [90m-> null[0m[0m
+    }
+
+[1mPlan:[0m [0m0 to add, 0 to change, 27 to destroy.
+
+Changes to Outputs:
+  [31m-[0m[0m alb_controller_role_arn = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-alb-controller" [90m-> null[0m[0m
+  [31m-[0m[0m cluster_endpoint        = "https://9A80E35D6B6211621B9B1EC56873A9EA.gr7.us-east-1.eks.amazonaws.com" [90m-> null[0m[0m
+  [31m-[0m[0m cluster_name            = "aws-eks-gitops-platform" [90m-> null[0m[0m
+  [31m-[0m[0m cluster_version         = "1.36" [90m-> null[0m[0m
+  [31m-[0m[0m internet_gateway_id     = "igw-0e2759167863d03d4" [90m-> null[0m[0m
+  [31m-[0m[0m nat_gateway_id          = "nat-03bca8009e3be7321" [90m-> null[0m[0m
+  [31m-[0m[0m node_role_arn           = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-node" [90m-> null[0m[0m
+  [31m-[0m[0m private_subnet_ids      = [
+      [31m-[0m[0m "subnet-0ead8b8cbb846cccc",
+      [31m-[0m[0m "subnet-0a650ea0d5b785709",
+    ] [90m-> null[0m[0m
+  [31m-[0m[0m public_subnet_ids       = [
+      [31m-[0m[0m "subnet-0834f0f062fc645cb",
+      [31m-[0m[0m "subnet-02fce02cb4d99ba6d",
+    ] [90m-> null[0m[0m
+  [31m-[0m[0m vpc_id                  = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+[0m[1mmodule.vpc.terraform_data.validate: Destroying... [id=58ffe518-899d-92b2-7773-50404bc22c0a][0m[0m
+[0m[1mmodule.vpc.terraform_data.validate: Destruction complete after 0s[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Destroying... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy][0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.public["1"]: Destroying... [id=rtbassoc-095c514291019ad40][0m[0m
+[0m[1mmodule.iam.aws_iam_role_policy_attachment.alb_controller: Destroying... [id=aws-eks-gitops-platform-alb-controller/arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller][0m[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Destroying... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly][0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.private["1"]: Destroying... [id=rtbassoc-0526689727ad61533][0m[0m
+[0m[1mmodule.vpc.aws_route.public_internet[0]: Destroying... [id=r-rtb-0bd5b9f4734ee40821080289494][0m[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Destroying... [id=aws-eks-gitops-platform-eks-node/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy][0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.private["0"]: Destroying... [id=rtbassoc-0a62d73229dc02ba3][0m[0m
+[0m[1mmodule.vpc.aws_route.private_nat[0]: Destroying... [id=r-rtb-0d37b6cae5e3012241080289494][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Destroying... [id=aws-eks-gitops-platform][0m[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Destruction complete after 1s[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_route_table_association.public["0"]: Destroying... [id=rtbassoc-05afb2a13765b9175][0m[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Destruction complete after 1s[0m
+[0m[1mmodule.eks.aws_iam_role.node: Destroying... [id=aws-eks-gitops-platform-eks-node][0m[0m
+[0m[1mmodule.iam.aws_iam_role_policy_attachment.alb_controller: Destruction complete after 1s[0m
+[0m[1mmodule.iam.aws_iam_role.alb_controller: Destroying... [id=aws-eks-gitops-platform-alb-controller][0m[0m
+[0m[1mmodule.iam.aws_iam_policy.alb_controller: Destroying... [id=arn:aws:iam::934614086600:policy/aws-eks-gitops-platform-alb-controller][0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.private["0"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_route_table_association.private["1"]: Destruction complete after 2s[0m
+[0m[1mmodule.vpc.aws_route_table_association.public["1"]: Destruction complete after 2s[0m
+[0m[1mmodule.iam.aws_iam_policy.alb_controller: Destruction complete after 1s[0m
+[0m[1mmodule.iam.aws_iam_role.alb_controller: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_route_table_association.public["0"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_route.public_internet[0]: Destruction complete after 2s[0m
+[0m[1mmodule.vpc.aws_route_table.public: Destroying... [id=rtb-0bd5b9f4734ee4082][0m[0m
+[0m[1mmodule.vpc.aws_route.private_nat[0]: Destruction complete after 2s[0m
+[0m[1mmodule.vpc.aws_route_table.private: Destroying... [id=rtb-0d37b6cae5e301224][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Destroying... [id=nat-03bca8009e3be7321][0m[0m
+[0m[1mmodule.eks.aws_iam_role.node: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_route_table.private: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_route_table.public: Destruction complete after 1s[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m10s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-03bca8009e3be7321, 00m10s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m20s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-03bca8009e3be7321, 00m20s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m30s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-03bca8009e3be7321, 00m30s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-03bca8009e3be7321, 00m40s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-03bca8009e3be7321, 00m50s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Destruction complete after 51s[0m
+[0m[1mmodule.vpc.aws_internet_gateway.this[0]: Destroying... [id=igw-0e2759167863d03d4][0m[0m
+[0m[1mmodule.vpc.aws_eip.nat[0]: Destroying... [id=eipalloc-06eb1118a383d4c85][0m[0m
+[0m[1mmodule.vpc.aws_subnet.public["1"]: Destroying... [id=subnet-02fce02cb4d99ba6d][0m[0m
+[0m[1mmodule.vpc.aws_subnet.public["0"]: Destroying... [id=subnet-0834f0f062fc645cb][0m[0m
+[0m[1mmodule.vpc.aws_subnet.public["0"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_subnet.public["1"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_internet_gateway.this[0]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_eip.nat[0]: Destruction complete after 2s[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mdeleting EKS Cluster (aws-eks-gitops-platform): operation error EKS: DeleteCluster, https response error StatusCode: 409, RequestID: 8d489020-3d03-440c-b73e-e2ef48b39ffb, ResourceInUseException: Cluster has nodegroups attached[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m
+[31m╵[0m[0m
+[0m[1mmodule.eks.aws_iam_role.cluster: Refreshing state... [id=aws-eks-gitops-platform-eks-cluster][0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-0695ff2da6134d1ba][0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.cluster: Refreshing state... [id=aws-eks-gitops-platform-eks-cluster/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy][0m
+[0m[1mmodule.vpc.aws_subnet.private["0"]: Refreshing state... [id=subnet-0ead8b8cbb846cccc][0m
+[0m[1mmodule.vpc.aws_subnet.private["1"]: Refreshing state... [id=subnet-0a650ea0d5b785709][0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Refreshing state... [id=aws-eks-gitops-platform][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [31m-[0m destroy[0m
+
+Terraform will perform the following actions:
+
+[1m  # module.eks.aws_eks_cluster.this[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_eks_cluster" "this" {
+      [31m-[0m[0m arn                           = "arn:aws:eks:us-east-1:934614086600:cluster/aws-eks-gitops-platform" [90m-> null[0m[0m
+      [31m-[0m[0m bootstrap_self_managed_addons = false [90m-> null[0m[0m
+      [31m-[0m[0m certificate_authority         = [
+          [31m-[0m[0m {
+              [31m-[0m[0m data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURNVENDQWhtZ0F3SUJBZ0lRVFVHRHVJR1pBc2puQ3d3WGFhMXMxakFOQmdrcWhraUc5dzBCQVFzRkFEQW4KTVJBd0RnWURWUVFLRXdkQlYxTWdSVXRUTVJNd0VRWURWUVFERXdwcmRXSmxjbTVsZEdWek1CNFhEVEkyTURreQpNVEUwTURJME1Wb1hEVE14TURreU1ERTBNREkwTVZvd0p6RVFNQTRHQTFVRUNoTUhRVmRUSUVWTFV6RVRNQkVHCkExVUVBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUIKQUx4T01XVkd2Sm52TFpXakQwL0ZYUTFXQWxhKzJkbUkyR1Z0eXFwakQ1SGNXQjBBclF2S0RxL3ZhMjAvRnFSMQpkeEpXYit3bWJ3RXZ0NVJkTUw2SEVYYlNqTVh4VWFPMnhYdjExeVRzQThkaWcrWU54U0hSdGh0RmJwRElEbExYCmhjUmc5ZzVpZm5JdVRLZUNlSGgxVHJSK0pQN0hUcEZVTGNlb1ZyNWt4eFh0czhJTTErcGUrUUVCQ2VvTHV4U3kKSkE3M0YxTlhGU0JWWjR4UEdXQ1IrM2JPWXI0M3pLNWtHWitlK2lkc2dIZXBSQTFBWEtabHFsSkQ2SW5lVi9HWAorUnNFeG1TTXFGVDg2VmQwMVdWM1JYYzRxVitVRTY5UDgyZzBieVZzcUdYblQ1R1g0eWh5VzRyTGNiNHlpMk44CkZpS3l3eERMcStnU2FVUExtdUNLMFlVQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWQKRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZMSGFTcXpqc0gxUDFBZUdYeWRUR1RyVVQ1SnRNQlVHQTFVZApFUVFPTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBTGx5ZXlzcVBNMm1YamJCCkY0eUNDN3RMT09Vb21uRThTVUs5Mjkvd0E2VjBsdWRJTDE2NWNDTmE1VGQ0eUIvQU10Tlluek5SSWV0Zi9ZckQKd290cGdPNmFyUGVSVGNibTlZczdFbDBReFpMZ3NMTXpYK25GajJzajhuY1RtUXdzSzdUejRLYVdBMXZFSjdTcApwcE9FNTlZMlhmVjltN01IdC8xOTJBZndBRW9od2hWQTVna1lMTnd6V0lCb3cza1B6ckt6dk5JUU8vRnZBaVJRClFxVm5ERFZWbkJIU1V3RGYrNk81YlpZTkViQjhIWVYyNVFZNnhTTEFOcVdWSzFHOE5oOS9EWGJWeXRxd1VaTXoKa1lNWlBTV0xpSWhlZDRMTzhOVWpPVVpiRytDMW4zbjNlZnZwQk91OVFDT200TzB2MnNPZ2tEMnVzN2Y3dlJUdQo5blJLaFRNPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m created_at                    = "2026-09-21T14:02:22Z" [90m-> null[0m[0m
+      [31m-[0m[0m deletion_protection           = false [90m-> null[0m[0m
+      [31m-[0m[0m enabled_cluster_log_types     = [] [90m-> null[0m[0m
+      [31m-[0m[0m endpoint                      = "https://9A80E35D6B6211621B9B1EC56873A9EA.gr7.us-east-1.eks.amazonaws.com" [90m-> null[0m[0m
+      [31m-[0m[0m id                            = "aws-eks-gitops-platform" [90m-> null[0m[0m
+      [31m-[0m[0m identity                      = [
+          [31m-[0m[0m {
+              [31m-[0m[0m oidc = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m issuer = "https://oidc.eks.us-east-1.amazonaws.com/id/9A80E35D6B6211621B9B1EC56873A9EA"
+                    },
+                ]
+            },
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m name                          = "aws-eks-gitops-platform" [90m-> null[0m[0m
+      [31m-[0m[0m platform_version              = "eks.13" [90m-> null[0m[0m
+      [31m-[0m[0m region                        = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m role_arn                      = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m status                        = "ACTIVE" [90m-> null[0m[0m
+      [31m-[0m[0m tags                          = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                      = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m version                       = "1.36" [90m-> null[0m[0m
+
+      [31m-[0m[0m access_config {
+          [31m-[0m[0m authentication_mode                         = "API_AND_CONFIG_MAP" [90m-> null[0m[0m
+          [31m-[0m[0m bootstrap_cluster_creator_admin_permissions = false [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m compute_config {
+          [31m-[0m[0m enabled       = false [90m-> null[0m[0m
+          [31m-[0m[0m node_pools    = [] [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+        }
+
+      [31m-[0m[0m control_plane_scaling_config {
+          [31m-[0m[0m tier = "standard" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m kube_api_server_config {
+          [31m-[0m[0m event_ttl = "60m" [90m-> null[0m[0m
+
+          [31m-[0m[0m service_node_port_range {
+              [31m-[0m[0m max_port = 32767 [90m-> null[0m[0m
+              [31m-[0m[0m min_port = 30000 [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m kube_controller_manager_config {
+          [31m-[0m[0m horizontal_pod_autoscaler_controller_config {
+              [31m-[0m[0m horizontal_pod_autoscaler_sync_period = "15s" [90m-> null[0m[0m
+            }
+          [31m-[0m[0m pod_gc_controller_config {
+              [31m-[0m[0m terminated_pod_gc_threshold = 12500 [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m kube_scheduler_config {
+          [31m-[0m[0m node_resources_fit {
+              [31m-[0m[0m scoring_strategy {
+                  [31m-[0m[0m type = "LeastAllocated" [90m-> null[0m[0m
+
+                  [31m-[0m[0m resource {
+                      [31m-[0m[0m name   = "cpu" [90m-> null[0m[0m
+                      [31m-[0m[0m weight = 1 [90m-> null[0m[0m
+                    }
+                  [31m-[0m[0m resource {
+                      [31m-[0m[0m name   = "memory" [90m-> null[0m[0m
+                      [31m-[0m[0m weight = 1 [90m-> null[0m[0m
+                    }
+                }
+            }
+        }
+
+      [31m-[0m[0m kubernetes_network_config {
+          [31m-[0m[0m ip_family         = "ipv4" [90m-> null[0m[0m
+          [31m-[0m[0m service_ipv4_cidr = "172.20.0.0/16" [90m-> null[0m[0m
+            [90m# (1 unchanged attribute hidden)[0m[0m
+
+          [31m-[0m[0m elastic_load_balancing {
+              [31m-[0m[0m enabled = false [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m storage_config {
+          [31m-[0m[0m block_storage {
+              [31m-[0m[0m enabled = false [90m-> null[0m[0m
+            }
+        }
+
+      [31m-[0m[0m upgrade_policy {
+          [31m-[0m[0m support_type = "EXTENDED" [90m-> null[0m[0m
+        }
+
+      [31m-[0m[0m vpc_config {
+          [31m-[0m[0m cluster_security_group_id = "sg-0418dc3d780e874de" [90m-> null[0m[0m
+          [31m-[0m[0m control_plane_egress_mode = "AWS_MANAGED" [90m-> null[0m[0m
+          [31m-[0m[0m endpoint_private_access   = true [90m-> null[0m[0m
+          [31m-[0m[0m endpoint_public_access    = true [90m-> null[0m[0m
+          [31m-[0m[0m public_access_cidrs       = [
+              [31m-[0m[0m "179.222.235.62/32",
+            ] [90m-> null[0m[0m
+          [31m-[0m[0m security_group_ids        = [] [90m-> null[0m[0m
+          [31m-[0m[0m subnet_ids                = [
+              [31m-[0m[0m "subnet-0a650ea0d5b785709",
+              [31m-[0m[0m "subnet-0ead8b8cbb846cccc",
+            ] [90m-> null[0m[0m
+          [31m-[0m[0m vpc_id                    = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        }
+    }
+
+[1m  # module.eks.aws_iam_role.cluster[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role" "cluster" {
+      [31m-[0m[0m arn                   = "arn:aws:iam::934614086600:role/aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m assume_role_policy    = jsonencode(
+            {
+              [31m-[0m[0m Statement = [
+                  [31m-[0m[0m {
+                      [31m-[0m[0m Action    = "sts:AssumeRole"
+                      [31m-[0m[0m Effect    = "Allow"
+                      [31m-[0m[0m Principal = {
+                          [31m-[0m[0m Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [31m-[0m[0m Version   = "2012-10-17"
+            }
+        ) [90m-> null[0m[0m
+      [31m-[0m[0m create_date           = "2026-09-21T14:02:12Z" [90m-> null[0m[0m
+      [31m-[0m[0m force_detach_policies = false [90m-> null[0m[0m
+      [31m-[0m[0m id                    = "aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m managed_policy_arns   = [
+          [31m-[0m[0m "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+        ] [90m-> null[0m[0m
+      [31m-[0m[0m max_session_duration  = 3600 [90m-> null[0m[0m
+      [31m-[0m[0m name                  = "aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+      [31m-[0m[0m path                  = "/" [90m-> null[0m[0m
+      [31m-[0m[0m tags                  = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all              = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m unique_id             = "AROA5TG2XGPEOHU3P7ARR" [90m-> null[0m[0m
+        [90m# (3 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.cluster[0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_iam_role_policy_attachment" "cluster" {
+      [31m-[0m[0m id         = "aws-eks-gitops-platform-eks-cluster/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" [90m-> null[0m[0m
+      [31m-[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" [90m-> null[0m[0m
+      [31m-[0m[0m role       = "aws-eks-gitops-platform-eks-cluster" [90m-> null[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.private["0"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "private" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-1:934614086600:subnet/subnet-0ead8b8cbb846cccc" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-1a" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use1-az1" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.12.23.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-0ead8b8cbb846cccc" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = false [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m region                                         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1a"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1a"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.private["1"][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_subnet" "private" {
+      [31m-[0m[0m arn                                            = "arn:aws:ec2:us-east-1:934614086600:subnet/subnet-0a650ea0d5b785709" [90m-> null[0m[0m
+      [31m-[0m[0m assign_ipv6_address_on_creation                = false [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone                              = "us-east-1b" [90m-> null[0m[0m
+      [31m-[0m[0m availability_zone_id                           = "use1-az2" [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                                     = "10.12.24.0/24" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns64                                   = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_lni_at_device_index                     = 0 [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_a_record_on_launch    = false [90m-> null[0m[0m
+      [31m-[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                             = "subnet-0a650ea0d5b785709" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_native                                    = false [90m-> null[0m[0m
+      [31m-[0m[0m map_customer_owned_ip_on_launch                = false [90m-> null[0m[0m
+      [31m-[0m[0m map_public_ip_on_launch                        = false [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                                       = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m private_dns_hostname_type_on_launch            = "ip-name" [90m-> null[0m[0m
+      [31m-[0m[0m region                                         = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                           = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1b"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                                       = {
+          [31m-[0m[0m "AutoDelete"                      = "true"
+          [31m-[0m[0m "Environment"                     = "dev"
+          [31m-[0m[0m "ManagedBy"                       = "Terraform"
+          [31m-[0m[0m "Name"                            = "aws-eks-gitops-platform-dev-private-us-east-1b"
+          [31m-[0m[0m "Owner"                           = "Cristiano"
+          [31m-[0m[0m "Project"                         = "aws-eks-gitops-platform"
+          [31m-[0m[0m "Tier"                            = "private"
+          [31m-[0m[0m "kubernetes.io/role/internal-elb" = "1"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m vpc_id                                         = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_vpc.this[0][0m will be [1m[31mdestroyed[0m
+[0m  [31m-[0m[0m resource "aws_vpc" "this" {
+      [31m-[0m[0m arn                                  = "arn:aws:ec2:us-east-1:934614086600:vpc/vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+      [31m-[0m[0m assign_generated_ipv6_cidr_block     = false [90m-> null[0m[0m
+      [31m-[0m[0m cidr_block                           = "10.12.0.0/16" [90m-> null[0m[0m
+      [31m-[0m[0m default_network_acl_id               = "acl-0e4fd9cc346cb0cdc" [90m-> null[0m[0m
+      [31m-[0m[0m default_route_table_id               = "rtb-07d876be199d4609a" [90m-> null[0m[0m
+      [31m-[0m[0m default_security_group_id            = "sg-0be720a4afe19543f" [90m-> null[0m[0m
+      [31m-[0m[0m dhcp_options_id                      = "dopt-0850acbd180c327f1" [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns_hostnames                 = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_dns_support                   = true [90m-> null[0m[0m
+      [31m-[0m[0m enable_network_address_usage_metrics = false [90m-> null[0m[0m
+      [31m-[0m[0m id                                   = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+      [31m-[0m[0m instance_tenancy                     = "default" [90m-> null[0m[0m
+      [31m-[0m[0m ipv6_netmask_length                  = 0 [90m-> null[0m[0m
+      [31m-[0m[0m main_route_table_id                  = "rtb-07d876be199d4609a" [90m-> null[0m[0m
+      [31m-[0m[0m owner_id                             = "934614086600" [90m-> null[0m[0m
+      [31m-[0m[0m region                               = "us-east-1" [90m-> null[0m[0m
+      [31m-[0m[0m tags                                 = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-vpc"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+      [31m-[0m[0m tags_all                             = {
+          [31m-[0m[0m "AutoDelete"  = "true"
+          [31m-[0m[0m "Environment" = "dev"
+          [31m-[0m[0m "ManagedBy"   = "Terraform"
+          [31m-[0m[0m "Name"        = "aws-eks-gitops-platform-dev-vpc"
+          [31m-[0m[0m "Owner"       = "Cristiano"
+          [31m-[0m[0m "Project"     = "aws-eks-gitops-platform"
+        } [90m-> null[0m[0m
+        [90m# (4 unchanged attributes hidden)[0m[0m
+    }
+
+[1mPlan:[0m [0m0 to add, 0 to change, 6 to destroy.
+
+Changes to Outputs:
+  [31m-[0m[0m cluster_endpoint   = "https://9A80E35D6B6211621B9B1EC56873A9EA.gr7.us-east-1.eks.amazonaws.com" [90m-> null[0m[0m
+  [31m-[0m[0m cluster_name       = "aws-eks-gitops-platform" [90m-> null[0m[0m
+  [31m-[0m[0m cluster_version    = "1.36" [90m-> null[0m[0m
+  [31m-[0m[0m private_subnet_ids = [
+      [31m-[0m[0m "subnet-0ead8b8cbb846cccc",
+      [31m-[0m[0m "subnet-0a650ea0d5b785709",
+    ] [90m-> null[0m[0m
+  [31m-[0m[0m vpc_id             = "vpc-0695ff2da6134d1ba" [90m-> null[0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Destroying... [id=aws-eks-gitops-platform][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m10s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m20s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m30s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m40s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 00m50s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 01m00s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 01m10s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 01m20s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 01m30s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 01m40s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 01m50s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 02m00s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 02m10s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 02m20s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 02m30s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 02m40s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 02m50s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 03m00s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 03m10s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 03m20s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 03m30s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 03m40s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 03m50s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 04m00s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Still destroying... [id=aws-eks-gitops-platform, 04m10s elapsed][0m[0m
+[0m[1mmodule.eks.aws_eks_cluster.this: Destruction complete after 4m13s[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.cluster: Destroying... [id=aws-eks-gitops-platform-eks-cluster/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy][0m[0m
+[0m[1mmodule.vpc.aws_subnet.private["0"]: Destroying... [id=subnet-0ead8b8cbb846cccc][0m[0m
+[0m[1mmodule.vpc.aws_subnet.private["1"]: Destroying... [id=subnet-0a650ea0d5b785709][0m[0m
+[0m[1mmodule.eks.aws_iam_role_policy_attachment.cluster: Destruction complete after 1s[0m
+[0m[1mmodule.eks.aws_iam_role.cluster: Destroying... [id=aws-eks-gitops-platform-eks-cluster][0m[0m
+[0m[1mmodule.eks.aws_iam_role.cluster: Destruction complete after 0s[0m
+[0m[1mmodule.vpc.aws_subnet.private["1"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_subnet.private["0"]: Destruction complete after 1s[0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Destroying... [id=vpc-0695ff2da6134d1ba][0m[0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Destruction complete after 1s[0m
+[0m[1m[32m
+Destroy complete! Resources: 6 destroyed.[0m

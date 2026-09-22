@@ -1,0 +1,10 @@
+=== 05-argocd-status ===
+NAME                           SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
+app-dev                        OutOfSync     Missing                                                    default
+app-prd                        OutOfSync     Missing                                                    default
+aws-load-balancer-controller   OutOfSync     Healthy         3.5.0                                      default
+root                           Synced        Healthy         0b9af096fb02a0e2b9a110b024d184d23de77e7d   default
+NAME                                           READY   STATUS    RESTARTS   AGE     IP             NODE                           NOMINATED NODE   READINESS GATES
+aws-load-balancer-controller-79f67f7f9-2zqbv   1/1     Running   0          3m16s   10.12.24.132   ip-10-12-24-245.ec2.internal   <none>           <none>
+aws-load-balancer-controller-79f67f7f9-jc9ms   1/1     Running   0          3m16s   10.12.24.50    ip-10-12-24-245.ec2.internal   <none>           <none>
+arn:aws:iam::934614086600:role/aws-eks-gitops-platform-alb-controller      42

@@ -28,6 +28,11 @@ output "cluster_oidc_issuer_url" {
   value       = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
 
+output "cluster_security_group_id_eks_managed" {
+  description = "EKS-managed default cluster security group."
+  value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+}
+
 output "node_role_arn" {
   description = "IAM role ARN assumed by the managed nodes."
   value       = aws_iam_role.node.arn
