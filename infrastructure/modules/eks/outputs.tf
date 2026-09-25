@@ -42,3 +42,18 @@ output "node_group_name" {
   description = "Name of the managed node group."
   value       = aws_eks_node_group.this.node_group_name
 }
+
+output "alb_security_group_id" {
+  description = "Id of the dedicated ALB security group."
+  value       = aws_security_group.alb.id
+}
+
+output "node_security_group_id" {
+  description = "Id of the dedicated node security group."
+  value       = aws_security_group.node.id
+}
+
+output "cluster_security_group_id" {
+  description = "Id of the dedicated cluster security group."
+  value       = aws_security_group.cluster.id
+}

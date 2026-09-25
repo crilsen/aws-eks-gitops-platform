@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `0f012a5` (ACM path fix, apply-tested: 43 resources, cert ISSUED, cluster ACTIVE).
+- Repo state: branch `dev`; working tree dirty with dedicated SGs per resource (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-25
-- Last goal: Import the user-supplied Let's Encrypt certificate into ACM for the ALB HTTPS listener.
-- Exact next action: Prepare Phase 3 — present the Terraform plan, resources, and qualitative cost estimate, and request authorization to apply. After apply, install Argo CD and bootstrap the App of Apps.
-- Blocked by: `terraform apply` (Phase 3) blocked on explicit authorization and a cost review.
+- Last goal: Create one tagged, least-privilege SG per resource (ALB, nodes, cluster) and pin the ALB to its SG.
+- Exact next action: Apply (needs explicit authorization — touches running cluster: in-place cluster/node-group update + rolling node replacement), then commit the rendered `alb-sg.yaml` files so ArgoCD picks up the annotation.
+- Blocked by: `terraform apply` blocked on explicit authorization.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -63,6 +63,7 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 - Environment isolation: one shared cluster, `dev`/`prd` namespaces, documented trade-off (ADR-022).
 - GitHub Actions OIDC deferred until CI needs AWS (ADR-023).
 - User-supplied TLS certificate imported into ACM (ADR-024, amends ADR-016).
+- Dedicated SG per resource with only necessary ports (ADR-025); ALB pinned via rendered override values.
 
 ## Problems / Risks
 

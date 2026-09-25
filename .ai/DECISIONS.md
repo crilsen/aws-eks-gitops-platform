@@ -432,6 +432,26 @@ Consequences:
 - Let's Encrypt certs are short-lived: renew out-of-band before expiry (current: Dec 2026) and re-apply; `create_before_destroy` avoids downtime.
 - Fresh clones must drop their own `fullchain.pem`/`privkey.pem` into `cert/`; missing files fail `plan` with a clear precondition message, while `validate` still passes.
 
+## ADR-025 — Dedicated security groups per resource (ALB, nodes, cluster)
+
+Status: Accepted
+
+Context:
+The EKS module created no `aws_security_group` resources: nodes relied solely on the EKS-managed SG and the ALB would get an auto-created, untagged SG. The author requires one tagged SG per resource (ALB, EKS, EC2) with only the necessary ports.
+
+Decision:
+Create three dedicated SGs in `modules/eks`, all additive — the EKS-managed SG keeps working untouched:
+- `alb`: ingress 80/443 from `0.0.0.0/0`, egress only app port (8000) to the node SG. Pinned to every Ingress via `alb.ingress.kubernetes.io/security-groups`, rendered by Terraform into per-env override files (`gitops/environments/<env>/alb-sg.yaml`) so the CI-owned `image.tag` values are never touched.
+- `node`: attached via the launch template (additive to the managed SG). Ingress only app port from the ALB SG and 443 from the managed cluster SG. No egress rules on purpose — outbound stays covered by the managed SG.
+- `cluster`: attached via `vpc_config.security_group_ids` (additive to endpoint ENIs). Ingress only 443, egress only 443/10250 toward the managed SG.
+
+Reasoning:
+Least privilege where it counts (internet-facing ALB, node ingress) without taking ownership of anything EKS manages. `plan` proved the cluster and node-group changes apply in place — no replacement.
+
+Consequences:
+- Applying replaces nodes on a rolling basis (`max_unavailable = 1`); the rendered `alb-sg.yaml` files must be committed for ArgoCD to pick up the annotation.
+- An earlier incident blamed custom SGs for node registration failures; the actual root causes were IMDS hop limit 1 and missing CNI bootstrap (see README lessons). Additive SGs are safe.
+
 Use this ADR format for durable, meaningful decisions:
 
 ```text

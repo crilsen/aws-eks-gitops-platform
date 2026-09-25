@@ -1,0 +1,5 @@
+# Managed by Terraform — do not edit manually.
+# Pins the application ALB to the dedicated security group (ADR-025).
+ingress:
+  annotations:
+    alb.ingress.kubernetes.io/security-groups: "${alb_security_group_id}"

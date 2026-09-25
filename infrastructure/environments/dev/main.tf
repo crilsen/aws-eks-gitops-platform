@@ -128,3 +128,16 @@ resource "local_file" "alb_controller_app" {
 
   file_permission = "0644"
 }
+
+# Pin each environment's ALB to the dedicated security group (ADR-025).
+# Separate override files so CI-owned image.tag values are never touched.
+resource "local_file" "alb_sg_values" {
+  for_each = toset(["dev", "prd"])
+
+  filename = abspath("${path.module}/../../../gitops/environments/${each.value}/alb-sg.yaml")
+  content = templatefile("${path.module}/templates/alb-sg-values.yaml.tftpl", {
+    alb_security_group_id = module.eks.alb_security_group_id
+  })
+
+  file_permission = "0644"
+}

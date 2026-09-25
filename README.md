@@ -137,6 +137,7 @@ Full decisions: `.ai/DECISIONS.md`
 
 - Public API endpoint restricted to specific CIDRs (rejects `0.0.0.0/0`)
 - IRSA with least-privilege IAM policy (official ALB controller policy)
+- Dedicated SG per resource (ADR-025): ALB (80/443 in, app port out), nodes (app port from ALB + 443 in), cluster (443/10250) — all additive, EKS-managed SG untouched
 - Multi-stage Dockerfile with non-root user
 - `readOnlyRootFilesystem`, `drop ALL` capabilities in deployment
 - `readinessProbe` and `livenessProbe` on `/health`
@@ -162,7 +163,7 @@ Estimated cost when running:
 ## Lessons Learned
 
 1. **IMDS hop limit must be 2** for IRSA to work (EKS defaults to 1)
-2. **EKS manages its own security groups** — custom cluster SGs cause node registration failures
+2. **Additive SGs are safe on EKS** — the earlier node registration failure was IMDS hop limit 1 + missing CNI, not custom SGs; attaching extra SGs (cluster endpoint, launch template) applies in place
 3. **`bootstrap_self_managed_addons = true`** needed for VPC CNI to install automatically
 4. **ArgoCD reads from git, not filesystem** — Terraform `local_file` must be committed for ArgoCD to pick up changes
 5. **macOS `sed` differs from Linux** — use `python3` or `perl` for cross-platform string replacement

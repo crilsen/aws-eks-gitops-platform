@@ -43,6 +43,7 @@ resource "aws_eks_cluster" "this" {
     endpoint_private_access = var.endpoint_private_access
     endpoint_public_access  = var.endpoint_public_access
     public_access_cidrs     = var.endpoint_public_access ? var.public_access_cidrs : null
+    security_group_ids      = [aws_security_group.cluster.id]
   }
 
   access_config {
@@ -80,10 +81,123 @@ resource "aws_iam_role_policy_attachment" "node" {
   policy_arn = each.value
 }
 
+# --- Dedicated security groups (ADR-025) ---
+# Least-privilege and additive: the EKS-managed SG keeps owning cluster/node
+# traffic, so these SGs only open what each resource strictly needs.
+
+resource "aws_security_group" "alb" {
+  name        = "${var.name}-alb"
+  description = "Dedicated SG for the application ALB (internet-facing)."
+  vpc_id      = var.vpc_id
+
+  tags = merge(var.tags, { Name = "${var.name}-alb-sg" })
+}
+
+resource "aws_security_group_rule" "alb_ingress_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  security_group_id = aws_security_group.alb.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow HTTP from the internet."
+}
+
+resource "aws_security_group_rule" "alb_ingress_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.alb.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow HTTPS from the internet."
+}
+
+resource "aws_security_group_rule" "alb_egress_app" {
+  type                     = "egress"
+  from_port                = var.app_port
+  to_port                  = var.app_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.alb.id
+  source_security_group_id = aws_security_group.node.id
+  description              = "Allow app traffic and health checks to the nodes."
+}
+
+resource "aws_security_group" "node" {
+  name        = "${var.name}-node"
+  description = "Dedicated SG for the EKS managed nodes (additive to the EKS-managed SG)."
+  vpc_id      = var.vpc_id
+
+  tags = merge(var.tags, { Name = "${var.name}-node-sg" })
+}
+
+resource "aws_security_group_rule" "node_ingress_app" {
+  type                     = "ingress"
+  from_port                = var.app_port
+  to_port                  = var.app_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.node.id
+  source_security_group_id = aws_security_group.alb.id
+  description              = "Allow app traffic from the ALB only."
+}
+
+resource "aws_security_group_rule" "node_ingress_api" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.node.id
+  source_security_group_id = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+  description              = "Allow control-plane HTTPS to the nodes."
+}
+
+# No egress rules here on purpose: outbound is covered by the EKS-managed SG
+# attached to the same instances. This SG only restricts ingress.
+
+resource "aws_security_group" "cluster" {
+  name        = "${var.name}-cluster"
+  description = "Dedicated SG for the EKS control plane (additive to the EKS-managed SG)."
+  vpc_id      = var.vpc_id
+
+  tags = merge(var.tags, { Name = "${var.name}-cluster-sg" })
+}
+
+resource "aws_security_group_rule" "cluster_ingress_api" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cluster.id
+  source_security_group_id = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+  description              = "Allow API traffic from cluster workloads."
+}
+
+resource "aws_security_group_rule" "cluster_egress_kubelet" {
+  type                     = "egress"
+  from_port                = 10250
+  to_port                  = 10250
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cluster.id
+  source_security_group_id = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+  description              = "Allow control-plane to kubelet."
+}
+
+resource "aws_security_group_rule" "cluster_egress_api" {
+  type                     = "egress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cluster.id
+  source_security_group_id = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+  description              = "Allow control-plane HTTPS to workloads."
+}
+
 # --- Launch template (IMDS hop limit 2 for IRSA + tags) ---
 
 resource "aws_launch_template" "node" {
   name_prefix = "${var.name}-node-"
+
+  vpc_security_group_ids = [aws_security_group.node.id]
 
   metadata_options {
     http_endpoint               = "enabled"

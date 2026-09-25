@@ -22,6 +22,7 @@ spec:
         releaseName: app
         valueFiles:
           - $values/gitops/environments/prd/values.yaml
+          - $values/gitops/environments/prd/alb-sg.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: prd
