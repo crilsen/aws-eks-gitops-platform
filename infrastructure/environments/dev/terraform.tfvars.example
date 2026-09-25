@@ -20,5 +20,5 @@ public_access_cidrs = ["203.0.113.10/32"]
 #   cert/privkey.pem    (private key matching the leaf)
 # The defaults below already point there; uncomment to override.
 # enable_acm_certificate = true
-# acm_fullchain_path     = "../../cert/fullchain.pem"
-# acm_private_key_path   = "../../cert/privkey.pem"
+# acm_fullchain_path     = "../../../cert/fullchain.pem"
+# acm_private_key_path   = "../../../cert/privkey.pem"

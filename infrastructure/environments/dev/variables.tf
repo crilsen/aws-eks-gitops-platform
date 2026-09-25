@@ -105,11 +105,11 @@ variable "enable_acm_certificate" {
 variable "acm_fullchain_path" {
   description = "Path to the full-chain PEM (leaf + intermediates, e.g. Let's Encrypt fullchain.pem). Relative paths resolve from the environment root."
   type        = string
-  default     = "../../cert/fullchain.pem"
+  default     = "../../../cert/fullchain.pem"
 }
 
 variable "acm_private_key_path" {
   description = "Path to the private key PEM matching the leaf certificate. Never commit this file."
   type        = string
-  default     = "../../cert/privkey.pem"
+  default     = "../../../cert/privkey.pem"
 }
