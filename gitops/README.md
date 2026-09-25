@@ -56,4 +56,4 @@ Child Applications use sync waves so platform (`-1`) is reconciled before worklo
 ## Notes
 
 - Branch: `dev` for now (`targetRevision: dev`); switch to `main` once promotion is established.
-- TLS: the ALB discovers the ACM certificate for the ingress host; no certificate ARN is committed.
+- TLS: Terraform imports the user-supplied cert into ACM; the ALB discovers it for the ingress host, so no certificate ARN is committed.

@@ -22,7 +22,7 @@ AWS (us-east-1)
 External
 ├── GHCR (ghcr.io/crilsen/aws-eks-gitops-platform) — immutable SHA tags
 ├── Cloudflare DNS (crilsen.com) — app-dev / app CNAMEs → ALB
-└── ACM — TLS certificate for ALB HTTPS
+└── ACM — imported Let's Encrypt cert (`*.crilsen.com`, user-supplied, gitignored) for ALB HTTPS
 ```
 
 ## Tech Stack

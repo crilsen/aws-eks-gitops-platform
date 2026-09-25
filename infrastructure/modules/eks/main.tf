@@ -4,7 +4,7 @@ locals {
 }
 
 data "aws_eks_addon_version" "this" {
-  for_each = local.addons
+  for_each           = local.addons
   addon_name         = each.value
   kubernetes_version = aws_eks_cluster.this.version
   most_recent        = true
@@ -50,7 +50,7 @@ resource "aws_eks_cluster" "this" {
   }
 
   enabled_cluster_log_types = var.cluster_enabled_log_types
-  tags = merge(var.tags, { Name = "${var.name}-eks-cluster" })
+  tags                      = merge(var.tags, { Name = "${var.name}-eks-cluster" })
 
   depends_on = [aws_iam_role_policy_attachment.cluster]
 }
@@ -93,12 +93,12 @@ resource "aws_launch_template" "node" {
 
   tag_specifications {
     resource_type = "instance"
-    tags = merge(var.tags, { Name = "${var.name}-node" })
+    tags          = merge(var.tags, { Name = "${var.name}-node" })
   }
 
   tag_specifications {
     resource_type = "volume"
-    tags = merge(var.tags, { Name = "${var.name}-node-volume" })
+    tags          = merge(var.tags, { Name = "${var.name}-node-volume" })
   }
 
   tags = merge(var.tags, { Name = "${var.name}-node-lt" })
@@ -128,19 +128,19 @@ resource "aws_eks_node_group" "this" {
   }
 
   update_config { max_unavailable = 1 }
-  tags = merge(var.tags, { Name = "${var.name}-node-group" })
+  tags       = merge(var.tags, { Name = "${var.name}-node-group" })
   depends_on = [aws_iam_role_policy_attachment.node]
 }
 
 # --- Add-ons ---
 
 resource "aws_eks_addon" "this" {
-  for_each = local.addons
-  cluster_name  = aws_eks_cluster.this.name
-  addon_name    = each.value
-  addon_version = data.aws_eks_addon_version.this[each.key].version
+  for_each                    = local.addons
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = each.value
+  addon_version               = data.aws_eks_addon_version.this[each.key].version
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
-  tags = merge(var.tags, { Name = "${var.name}-addon-${each.value}" })
-  depends_on = [aws_eks_node_group.this]
+  tags                        = merge(var.tags, { Name = "${var.name}-addon-${each.value}" })
+  depends_on                  = [aws_eks_node_group.this]
 }

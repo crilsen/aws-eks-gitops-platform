@@ -17,7 +17,8 @@ ingress:
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: "443"
-    # No certificate-arn: the controller discovers the ACM certificate for the host.
+    # No certificate-arn: Terraform imports the cert into ACM
+    # (environments/dev) and the controller discovers it for the host.
   hosts:
     - host: app.crilsen.com
       paths:

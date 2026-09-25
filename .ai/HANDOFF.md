@@ -2,11 +2,11 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `b475f4b` (CI workflows).
+- Repo state: branch `dev`; working tree dirty with the ACM certificate import (commit pending).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
-- Checkpoint updated: 2026-09-15
-- Last goal: Add CI at the repository root (`ci.yml` + `promote.yml`) using GHCR with immutable SHA tags.
+- Checkpoint updated: 2026-09-25
+- Last goal: Import the user-supplied Let's Encrypt certificate into ACM for the ALB HTTPS listener.
 - Exact next action: Prepare Phase 3 — present the Terraform plan, resources, and qualitative cost estimate, and request authorization to apply. After apply, install Argo CD and bootstrap the App of Apps.
 - Blocked by: `terraform apply` (Phase 3) blocked on explicit authorization and a cost review.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
@@ -17,7 +17,7 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root), the Phase 1 application, the `gitops/` definitions, and the CI workflows exist and pass local validation. Registry chosen: GHCR. Nothing has been provisioned on AWS.
+All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root, including the ACM certificate import), the Phase 1 application, the `gitops/` definitions, and the CI workflows exist and pass local validation. Registry chosen: GHCR. Nothing has been provisioned on AWS.
 
 ## What Was Done
 
@@ -28,6 +28,7 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 - Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, adopted network, subnet CIDRs, EKS module, IAM module) and restricted the public API endpoint to specific CIDRs via `terraform.tfvars` (validation rejects `0.0.0.0/0`).
 - Implemented `gitops/` (Argo CD 10.9.1 values, App of Apps root, AWS Load Balancer Controller 3.5.0 Application, `app-dev`/`app-prd` Applications, dev/prd values with ALB Ingress and Cloudflare hosts).
 - Implemented CI at the repository root: `.github/workflows/ci.yml` (pytest, docker build, Trivy, GHCR push with immutable SHA, GitOps dev tag update) and `.github/workflows/promote.yml` (manual PR to promote to prd).
+- Imported the user-supplied Let's Encrypt certificate into ACM (`aws_acm_certificate.app`, ADR-024); the ALB discovers it by hostname and the private key stays gitignored.
 - Validated: `terraform fmt`/`validate`; pytest (2 passed), `docker build`, container smoke test, `helm lint`/`template` (including with the dev values), YAML parsing of `gitops/`, and actionlint for the workflows.
 
 ## Files Changed
@@ -61,6 +62,7 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 - GitHub Actions workflows at the repository root (ADR-021).
 - Environment isolation: one shared cluster, `dev`/`prd` namespaces, documented trade-off (ADR-022).
 - GitHub Actions OIDC deferred until CI needs AWS (ADR-023).
+- User-supplied TLS certificate imported into ACM (ADR-024, amends ADR-016).
 
 ## Problems / Risks
 

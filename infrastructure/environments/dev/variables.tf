@@ -93,3 +93,23 @@ variable "public_access_cidrs" {
     error_message = "Set at least one specific CIDR; do not use 0.0.0.0/0 for the public API endpoint."
   }
 }
+
+# ACM — import a user-supplied certificate for the ALB HTTPS listener.
+
+variable "enable_acm_certificate" {
+  description = "Import the application TLS certificate into ACM for the ALB HTTPS listener."
+  type        = bool
+  default     = true
+}
+
+variable "acm_fullchain_path" {
+  description = "Path to the full-chain PEM (leaf + intermediates, e.g. Let's Encrypt fullchain.pem). Relative paths resolve from the environment root."
+  type        = string
+  default     = "../../cert/fullchain.pem"
+}
+
+variable "acm_private_key_path" {
+  description = "Path to the private key PEM matching the leaf certificate. Never commit this file."
+  type        = string
+  default     = "../../cert/privkey.pem"
+}

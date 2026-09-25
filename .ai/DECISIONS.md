@@ -270,20 +270,21 @@ Consequences:
 
 ## ADR-016 — DNS via Cloudflare with ACM TLS
 
-Status: Accepted
+Status: Accepted (amended by ADR-024 — certificate import replaces DNS validation)
 
 Context:
 The author will manage DNS in Cloudflare for the zone `crilsen.com`, replacing the earlier "no domain / no Route 53" scope, and wants TLS via ACM.
 
 Decision:
-Point Cloudflare CNAME records in `crilsen.com` at the ALB: `app-dev.crilsen.com` for `dev` and `app.crilsen.com` for prod. Use an ACM certificate (free, region `us-east-1`) for the ALB HTTPS listener, validated by DNS CNAMEs added in Cloudflare. Route 53 is not used.
+Point Cloudflare CNAME records in `crilsen.com` at the ALB: `app-dev.crilsen.com` for `dev` and `app.crilsen.com` for prod. Use an ACM certificate (free, region `us-east-1`) for the ALB HTTPS listener. Per ADR-024, the certificate is a user-supplied Let's Encrypt certificate imported by Terraform instead of an ACM DNS-validated one. Route 53 is not used.
 
 Reasoning:
 Cloudflare is the author's DNS provider and adds no AWS cost; ACM keeps TLS free.
 
 Consequences:
 - Hostnames: `app-dev.crilsen.com` (dev) and `app.crilsen.com` (prod), both CNAMEs to the ALB.
-- ACM DNS validation requires adding the validation CNAMEs to Cloudflare; document the exact records.
+- No ACM DNS-validation CNAMEs needed; the imported cert must be renewed out-of-band before expiry and re-applied.
+- The private key stays in gitignored `cert/` files; never commit it.
 - ADR-010's single-ALB and no-extra-LB rules still apply.
 
 ## ADR-017 — Terraform state in S3
@@ -412,6 +413,24 @@ Least privilege and least surface: no unused AWS trust or permissions. The decis
 Consequences:
 - CI (beyond infrastructure) stays AWS-free for now; the image flow is GHCR-only.
 - When added, the trust policy must be scoped to this repository/ref and the role must be least-privilege.
+
+## ADR-024 — Import the user-supplied TLS certificate into ACM
+
+Status: Accepted
+
+Context:
+The author supplied a Let's Encrypt certificate (`CN=crilsen.com`, SAN `*.crilsen.com`) as `cert/fullchain.pem` + `cert/privkey.pem`. The ALB needs TLS, but ACM DNS validation was never set up; importing a user-supplied cert is faster and keeps Route 53 out of scope.
+
+Decision:
+Terraform imports the certificate via `aws_acm_certificate` in `environments/dev`, splitting the fullchain into leaf (`certificate_body`) and intermediates (`certificate_chain`). The files stay gitignored and are referenced by path variables. The ALB keeps working through certificate discovery (no ARN committed in GitOps); the ARN is exposed as the `acm_certificate_arn` output.
+
+Reasoning:
+Reuses the author's existing certificate with zero DNS changes; discovery keeps the GitOps values static and the private key out of version control.
+
+Consequences:
+- The leaf covers `app-dev.crilsen.com` and `app.crilsen.com`; verify before apply.
+- Let's Encrypt certs are short-lived: renew out-of-band before expiry (current: Dec 2026) and re-apply; `create_before_destroy` avoids downtime.
+- Fresh clones must drop their own `fullchain.pem`/`privkey.pem` into `cert/`; missing files fail `plan` with a clear precondition message, while `validate` still passes.
 
 Use this ADR format for durable, meaningful decisions:
 

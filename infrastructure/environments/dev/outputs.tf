@@ -37,3 +37,8 @@ output "alb_controller_role_arn" {
   description = "IAM role ARN used by the AWS Load Balancer Controller (IRSA)."
   value       = module.iam.alb_controller_role_arn
 }
+
+output "acm_certificate_arn" {
+  description = "ARN of the imported application TLS certificate in ACM (null when disabled)."
+  value       = try(aws_acm_certificate.app[0].arn, null)
+}

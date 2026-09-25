@@ -13,3 +13,12 @@
 # Required: your IP(s) for the Kubernetes API public endpoint.
 # Replace with your own IP. Do not use 0.0.0.0/0.
 public_access_cidrs = ["203.0.113.10/32"]
+
+# TLS certificate for the ALB HTTPS listener (imported into ACM).
+# Place your files in cert/ (gitignored, never committed):
+#   cert/fullchain.pem  (leaf certificate + intermediates)
+#   cert/privkey.pem    (private key matching the leaf)
+# The defaults below already point there; uncomment to override.
+# enable_acm_certificate = true
+# acm_fullchain_path     = "../../cert/fullchain.pem"
+# acm_private_key_path   = "../../cert/privkey.pem"

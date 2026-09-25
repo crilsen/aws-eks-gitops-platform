@@ -43,11 +43,11 @@ AWS (account supplied privately, us-east-1)
     │   ├── namespace dev     - app + Ingress (ALB), automated prune/selfHeal
     │   └── namespace prod    - app + Ingress (ALB), PR-gated sync
     ├── IAM                   - least privilege; ALB controller via IRSA or EKS Pod Identity
-    └── ACM                   - certificate for the ALB HTTPS listener, DNS-validated in Cloudflare
+    └── ACM                   - imported user-supplied Let's Encrypt cert (`*.crilsen.com`, gitignored files) for the ALB HTTPS listener
 
 External
 ├── container registry        - images with immutable SHA tags (ECR removed; GHCR proposed)
-└── Cloudflare DNS (crilsen.com) - CNAME app-dev.crilsen.com (dev) and app.crilsen.com (prod); ACM DNS validation
+└── Cloudflare DNS (crilsen.com) - CNAME app-dev.crilsen.com (dev) and app.crilsen.com (prod); no ACM DNS validation, no Route 53
 
 Terraform state: S3 `cn-terraform-state-us-east-1`, keys `aws-eks-gitops-platform/<env>/terraform.tfstate` with native S3 locking.
 ```
