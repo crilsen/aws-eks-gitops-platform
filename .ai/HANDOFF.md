@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`; working tree dirty with the ACM certificate import (commit pending).
+- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `bcec843` (ACM certificate import).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-25
