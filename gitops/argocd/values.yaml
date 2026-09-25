@@ -46,6 +46,16 @@ repoServer:
     limits:
       cpu: 500m
       memory: 512Mi
+  # Relaxed probes for t3.small nodes: the 1s default timeout kills the pod
+  # under CPU throttling before it can answer.
+  readinessProbe:
+    failureThreshold: 5
+    periodSeconds: 20
+    timeoutSeconds: 10
+  livenessProbe:
+    failureThreshold: 5
+    periodSeconds: 30
+    timeoutSeconds: 10
 
 server:
   resources:

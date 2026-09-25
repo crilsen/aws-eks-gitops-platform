@@ -147,6 +147,12 @@ resource "aws_route_table_association" "private" {
 
 # --- Network ACLs ---
 
+# VPC CIDR scopes the DNS rules to intra-VPC traffic (works in both
+# create and adopt modes).
+data "aws_vpc" "this" {
+  id = local.vpc_id
+}
+
 resource "aws_network_acl" "public" {
   vpc_id     = local.vpc_id
   subnet_ids = [for s in aws_subnet.public : s.id]
@@ -187,6 +193,39 @@ resource "aws_network_acl_rule" "public_ingress_ephemeral" {
   to_port        = 65535
 }
 
+resource "aws_network_acl_rule" "public_ingress_dns_udp" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 130
+  egress         = false
+  protocol       = "udp"
+  rule_action    = "allow"
+  cidr_block     = data.aws_vpc.this.cidr_block
+  from_port      = 53
+  to_port        = 53
+}
+
+resource "aws_network_acl_rule" "public_ingress_dns_tcp" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 140
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = data.aws_vpc.this.cidr_block
+  from_port      = 53
+  to_port        = 53
+}
+
+resource "aws_network_acl_rule" "public_ingress_ephemeral_udp" {
+  network_acl_id = aws_network_acl.public.id
+  rule_number    = 150
+  egress         = false
+  protocol       = "udp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
 resource "aws_network_acl_rule" "public_egress_all" {
   network_acl_id = aws_network_acl.public.id
   rule_number    = 100
@@ -219,6 +258,39 @@ resource "aws_network_acl_rule" "private_ingress_ephemeral" {
   rule_number    = 110
   egress         = false
   protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "private_ingress_dns_udp" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 120
+  egress         = false
+  protocol       = "udp"
+  rule_action    = "allow"
+  cidr_block     = data.aws_vpc.this.cidr_block
+  from_port      = 53
+  to_port        = 53
+}
+
+resource "aws_network_acl_rule" "private_ingress_dns_tcp" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 130
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = data.aws_vpc.this.cidr_block
+  from_port      = 53
+  to_port        = 53
+}
+
+resource "aws_network_acl_rule" "private_ingress_ephemeral_udp" {
+  network_acl_id = aws_network_acl.private.id
+  rule_number    = 140
+  egress         = false
+  protocol       = "udp"
   rule_action    = "allow"
   cidr_block     = "0.0.0.0/0"
   from_port      = 1024
