@@ -2,7 +2,7 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`; working tree dirty with dedicated SGs per resource (commit pending).
+- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `9f065ef` (dedicated SGs, plan: 13 add + 4 in-place, apply pending authorization).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-25
