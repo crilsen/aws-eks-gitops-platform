@@ -94,11 +94,17 @@ This runs Terraform apply, configures kubeconfig, creates the access entry, inst
 
 ### Access Argo CD
 
+The Argo CD dashboard is accessible only via port-forward (no ALB — single ALB rule, app only):
+
 ```bash
 kubectl -n argocd port-forward svc/argocd-server 8080:443
+# Open: https://localhost:8080
+# Username: admin
 # Password:
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
 ```
+
+This is intentional: exposing Argo CD through the ALB would require a second load balancer and increase cost. Port-forward is sufficient for a portfolio demo and demonstrates Kubernetes networking knowledge.
 
 ### Check Status
 
