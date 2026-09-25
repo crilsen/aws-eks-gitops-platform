@@ -197,7 +197,13 @@ resource "aws_security_group_rule" "cluster_egress_api" {
 resource "aws_launch_template" "node" {
   name_prefix = "${var.name}-node-"
 
-  vpc_security_group_ids = [aws_security_group.node.id]
+  # Both SGs explicit: EKS does not reliably re-attach its managed SG when a
+  # custom launch template sets its own list, and without it new nodes get no
+  # egress and never join (NodeCreationFailure).
+  vpc_security_group_ids = [
+    aws_security_group.node.id,
+    aws_eks_cluster.this.vpc_config[0].cluster_security_group_id,
+  ]
 
   metadata_options {
     http_endpoint               = "enabled"
