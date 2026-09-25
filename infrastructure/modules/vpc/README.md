@@ -23,8 +23,8 @@ module "vpc" {
   vpc_id     = var.vpc_id
 
   azs                  = ["us-east-1a", "us-east-1b"]
-  public_subnet_cidrs  = ["10.11.21.0/24", "10.11.22.0/24"]
-  private_subnet_cidrs = ["10.11.23.0/24", "10.11.24.0/24"]
+  public_subnet_cidrs  = ["10.12.21.0/24", "10.12.22.0/24"]
+  private_subnet_cidrs = ["10.12.23.0/24", "10.12.24.0/24"]
 
   internet_gateway_id = var.internet_gateway_id
   nat_gateway_id      = var.nat_gateway_id
@@ -41,11 +41,11 @@ module "vpc" {
   tags = local.tags
 
   create_vpc = true
-  vpc_cidr   = "10.11.0.0/16"
+  vpc_cidr   = "10.12.0.0/16"
 
   azs                  = ["us-east-1a", "us-east-1b"]
-  public_subnet_cidrs  = ["10.11.21.0/24", "10.11.22.0/24"]
-  private_subnet_cidrs = ["10.11.23.0/24", "10.11.24.0/24"]
+  public_subnet_cidrs  = ["10.12.21.0/24", "10.12.22.0/24"]
+  private_subnet_cidrs = ["10.12.23.0/24", "10.12.24.0/24"]
 }
 ```
 

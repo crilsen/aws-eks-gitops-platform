@@ -18,7 +18,7 @@ terraform plan     # requires authorization before apply
 
 - The VPC/IGW/NAT ids are private inputs and are never committed.
 - Subnets: public `10.12.21.0/24` and `10.12.22.0/24`; private `10.12.23.0/24` and `10.12.24.0/24` (ADR-019).
-- EKS, IAM, and the remaining platform resources are added in later phases.
+- EKS 1.36 + OIDC provider, IAM role for the controller, ACM import, and dedicated SGs are all wired here; `environments/prd` (state root) is still to come.
 
 ## TLS (ALB HTTPS)
 

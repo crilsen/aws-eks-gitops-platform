@@ -21,7 +21,7 @@ AWS (us-east-1)
 
 External
 ├── GHCR (ghcr.io/crilsen/aws-eks-gitops-platform) — immutable SHA tags
-├── Cloudflare DNS (crilsen.com) — app-dev / app CNAMEs → ALB
+├── Cloudflare DNS (crilsen.com) — app-dev CNAME live; app CNAME pending prod deploy
 └── ACM — imported Let's Encrypt cert (`*.crilsen.com`, user-supplied, gitignored) for ALB HTTPS
 ```
 
@@ -128,7 +128,7 @@ This is intentional: exposing Argo CD through the ALB would require a second loa
 | ADR-014 | GHCR (parameterizable registry) | Free for public repos, no AWS credentials needed |
 | ADR-015 | ALB (not Envoy) | ALB is AWS-native, simpler for a single cluster |
 | ADR-017 | S3 backend with native locking | No DynamoDB needed |
-| ADR-019 | Subnets /24 from 10.11.21.0 | Clean CIDR allocation inside 10.12.0.0/16 |
+| ADR-019 | Subnets /24 from 10.12.21.0 | Clean CIDR allocation inside 10.12.0.0/16 |
 | ADR-022 | One shared cluster | Lab constraint; documented trade-off |
 
 Full decisions: `.ai/DECISIONS.md`
@@ -170,7 +170,7 @@ Estimated cost when running:
 
 ## Demo Checklist (for interviews)
 
-- [ ] `terraform apply` — 50+ resources provisioned
+- [ ] `terraform apply` — 60+ resources provisioned
 - [ ] Cluster active, 2 nodes Ready
 - [ ] Argo CD root app Synced
 - [ ] ALB controller running with IRSA

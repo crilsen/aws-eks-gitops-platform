@@ -13,13 +13,13 @@
 
 - Terraform-managed AWS infrastructure.
 - Amazon EKS for the platform and workloads.
-- Container registry for application images: **ECR removed**; GHCR (proposed) or Docker Hub to be confirmed.
+- Container registry for application images: **GHCR** (`ghcr.io/crilsen/aws-eks-gitops-platform`), immutable SHA tags (ECR removed; ADR-014).
 - Argo CD open source installed on the cluster via Helm.
 - AWS Load Balancer Controller installed via Helm.
-- DNS via Cloudflare; ingress via AWS Load Balancer Controller + ALB (proposed, pending confirmation of the Envoy question).
+- DNS via Cloudflare; ingress via AWS Load Balancer Controller + ALB (ADR-015).
 - Small example API application with `/` and `/health`.
 - Dockerfile and Helm chart for the application.
-- `dev` and `prod` environments, initially separated by namespaces in one cluster.
+- `dev` and `prd` environments, separated by namespaces in one cluster.
 - GitHub Actions for CI.
 - GitOps flow: pipeline validates and pushes the image to the registry, then updates the image tag in the GitOps directory; Argo CD detects the change and deploys.
 - Argo CD auto-sync with `prune` and `selfHeal` for `dev`.
@@ -34,7 +34,7 @@
 
 - Only US$ 100 in AWS credits is available; avoid accidental cost.
 - One temporary EKS cluster only.
-- No NAT Gateway.
+- NAT Gateway is created for private-subnet egress (~US$ 0.05/h, tracked in the README cost table); can be replaced with an existing one via tfvars.
 - No Route 53 (DNS is Cloudflare), RDS, OpenSearch, ElastiCache, or other expensive managed services. ACM is allowed (free) if needed for ALB HTTPS.
 - No EKS Auto Mode.
 - No AWS-managed EKS Capabilities for Argo CD.
@@ -47,4 +47,4 @@
 
 ## Status
 
-**Work in progress — not functional.** Context adopted from an approved project brief (2026-09-15). Implemented so far: the `vpc` Terraform module, the `dev` environment root, and the Phase 1 application (FastAPI, Dockerfile, Helm chart). Nothing has been provisioned on AWS. AWS region is `us-east-1`; the AWS account id is known to the author but must stay out of versioned context and be supplied privately. Open decisions are tracked in `TASKS.md`.
+**Live and provisioned.** Context adopted from an approved project brief (2026-09-15). Working: created VPC (`10.12.0.0/16`), EKS 1.36 with 2× `t3.small` nodes, Argo CD + App of Apps synced, AWS Load Balancer Controller healthy, ALB active with the dedicated SG. The app deploys but is waiting on the GHCR package visibility flip (private → 401 on pull). AWS region is `us-east-1`; the AWS account id is known to the author but must stay out of versioned context and be supplied privately. Open work is tracked in `TASKS.md`.

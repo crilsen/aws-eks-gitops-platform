@@ -2,7 +2,7 @@
 
 ## Current availability
 
-Project tooling is expected but not yet verified as installed on this machine: `terraform`, `tflint`, `checkov`, `trivy`, `aws`, `kubectl`, `helm`, `docker`, and `git`. Verify presence before relying on a check. AWS credentials, region, and account id are **Unknown / not determined from repository** and must be supplied by the author. Never store secrets in this file.
+Project tooling verified on this machine: `terraform` 1.16.1, `aws` CLI, `kubectl`, `helm` (`~/bin/helm`), `docker`, `git`, and `gh`. Not installed: `tflint`, `checkov`, `trivy`. AWS credentials and region are configured in the environment; the account id is known to the author but must stay out of versioned context and secrets. Never store secrets in this file.
 
 ## Allowed without additional authorization
 

@@ -2,14 +2,14 @@
 
 ## Status
 
-This is the **approved target architecture** from the project brief, not observed implementation. No artifacts exist yet.
+This is the **observed live architecture** (verified against AWS on 2026-09-25), evolved from the approved target in the project brief.
 
 ## Repository layout
 
 ```text
 aws-eks-gitops-platform/
 ├── infrastructure/
-│   ├── modules/            # vpc, eks, ecr, iam
+│   ├── modules/            # vpc, eks, iam
 │   └── environments/dev/   # lab environment root
 ├── application/
 │   ├── src/                # FastAPI app (/, /health)
@@ -23,8 +23,10 @@ aws-eks-gitops-platform/
 │   ├── applications/       # Application / ApplicationSet
 │   └── environments/
 │       ├── dev/
-│       └── prod/
-├── docs/
+│       └── prd/
+├── cert/                   # user-supplied TLS files (gitignored, never committed)
+├── skills/                 # infra-up, collect-evidence, teardown scripts
+├── evidence/               # plan/apply/status outputs
 ├── README.md
 └── .gitignore
 ```
@@ -33,42 +35,42 @@ aws-eks-gitops-platform/
 
 ```text
 AWS (account supplied privately, us-east-1)
-└── Existing VPC (adopted; VPC block 10.11.0.0/16)
-    ├── Existing Internet Gateway   - reused
-    ├── Existing NAT Gateway        - reused for private-subnet egress
-    ├── Created subnets /24         - public + private, from the agreed CIDR scheme
+└── Created VPC (10.12.0.0/16, Terraform-managed)
+    ├── Created Internet Gateway
+    ├── Created NAT Gateway + EIP - private-subnet egress
+    ├── Created subnets /24         - public 10.12.21.0/24, 10.12.22.0/24; private 10.12.23.0/24, 10.12.24.0/24
     ├── Created route tables        - always module-owned (public -> IGW, private -> NAT)
-    ├── EKS cluster                 - latest version, single small managed node
+    ├── EKS cluster 1.36            - 2× t3.small managed nodes
     │   ├── namespace argocd  - Argo CD (Helm), App of Apps
     │   ├── namespace dev     - app + Ingress (ALB), automated prune/selfHeal
-    │   └── namespace prod    - app + Ingress (ALB), PR-gated sync
-    ├── IAM                   - least privilege; ALB controller via IRSA or EKS Pod Identity
+    │   └── namespace prd     - app + Ingress (ALB), PR-gated sync (not deployed yet)
+    ├── IAM                   - least privilege; ALB controller via IRSA (ADR-026)
     └── ACM                   - imported user-supplied Let's Encrypt cert (`*.crilsen.com`, gitignored files) for the ALB HTTPS listener
 
 External
-├── container registry        - images with immutable SHA tags (ECR removed; GHCR proposed)
-└── Cloudflare DNS (crilsen.com) - CNAME app-dev.crilsen.com (dev) and app.crilsen.com (prod); no ACM DNS validation, no Route 53
+├── container registry        - GHCR images with immutable SHA tags (ECR removed)
+└── Cloudflare DNS (crilsen.com) - CNAME app-dev.crilsen.com (dev, live); app.crilsen.com (prod, pending prod deploy); no ACM DNS validation, no Route 53
 
 Terraform state: S3 `cn-terraform-state-us-east-1`, keys `aws-eks-gitops-platform/<env>/terraform.tfstate` with native S3 locking.
 ```
 
 ## Decisions already made (from the author)
 
-- Adopt the existing VPC, IGW, and NAT (IDs supplied privately, not versioned).
-- Subnets are `/24` inside `10.11.0.0/16`: public `10.11.21.0/24` and `10.11.22.0/24`, private `10.11.23.0/24` and `10.11.24.0/24` (ADR-019).
+- Created VPC `10.12.0.0/16` with created IGW and NAT (ADR-012 as amended).
+- Subnets are `/24` inside `10.12.0.0/16`: public `10.12.21.0/24` and `10.12.22.0/24`, private `10.12.23.0/24` and `10.12.24.0/24` (ADR-019 as amended).
 - Container registry is a parameter (ADR-014): GHCR default, Docker Hub supported.
 - Terraform state in S3.
 - Ingress via ALB; TLS via ACM; DNS zone `crilsen.com` on Cloudflare (dev `app-dev.crilsen.com`, prod `app.crilsen.com`).
-- EKS: 1.36 (latest), a single `t3.small` managed node (ADR-018).
+- EKS: 1.36, 2× `t3.small` managed nodes (ADR-018 as amended: scaled from 1, one node could not schedule Argo CD + controller + workload).
 
 ## GitOps flow
 
 ```text
-git push ─► GitHub Actions (test, lint, trivy, build)
-          ─► push image :<git-sha> to the registry (GHCR proposed; no ECR)
+git push ─► GitHub Actions (test, build, trivy, push)
+          ─► push image :<git-sha> to GHCR (no ECR)
           ─► update tag in gitops/environments/dev  ─► commit
           ─► Argo CD detects change ─► sync dev (prune + selfHeal)
-prod:     open PR against gitops/environments/prod ─► review + manual sync
+prd:      open PR against gitops/environments/prd ─► review + manual sync
 ```
 
 ## Deployment boundary
@@ -89,10 +91,10 @@ The `infrastructure/modules/vpc` module must be usable in both a fresh lab accou
 
 ## Constraints shaping the design
 
-- `dev` and `prod` share one cluster as namespaces; `prod` is not a separate account or cluster in this lab.
+- `dev` and `prd` share one cluster as namespaces; `prd` is not a separate account or cluster in this lab.
 - A shared ALB is acceptable only when technically safe and clearly documented; avoid multiple ALBs.
 - Drift and rollback are Git-driven; no `kubectl` fix as the documented recovery path.
 
 ## Open architectural decisions
 
-Tracked in `TASKS.md` and `DECISIONS.md`: ALB controller identity IRSA vs Pod Identity (ADR-011), the S3 bucket name (ADR-017), the Cloudflare record name, and the exact EKS version. Decided: adopt existing VPC/IGW/NAT (ADR-012), flexible VPC module (ADR-013), registry parameterizable with GHCR default (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM (ADR-016), S3 state (ADR-017), EKS latest + 1 `t3.small` node (ADR-018), subnet scheme (ADR-019). Region `us-east-1` and the account are known to the author; ids stay in private config.
+Remaining work (not decisions): flip the GHCR package to public (owner action in the package settings — no working API endpoint found), create the `app.crilsen.com` record on prod deploy, run the drift/promotion/rollback demos, and tear down. Decided and implemented: IRSA for the controller (ADR-026), S3 state (ADR-017), created VPC/IGW/NAT (ADR-012 as amended), flexible VPC module (ADR-013), GHCR registry (ADR-014), ALB ingress (ADR-015), Cloudflare DNS + ACM import (ADR-016/024), EKS 1.36 + 2× `t3.small` (ADR-018), subnet scheme 10.12 (ADR-019 as amended), dedicated SGs (ADR-025). Region `us-east-1` and the account are known to the author; ids stay in private config.

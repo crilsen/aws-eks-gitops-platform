@@ -2,7 +2,7 @@
 
 ## Observed
 
-No implementation artifacts exist yet, so no historical naming, Terraform, Kubernetes, CI/CD, or scripting conventions can be observed. The items below are **approved project conventions** taken from the brief and the template.
+Implementation exists and is live (EKS 1.36, 2 nodes, ArgoCD synced). The items below mix observed practice with the approved conventions they evolved from.
 
 ## Naming and layout
 
@@ -14,8 +14,8 @@ No implementation artifacts exist yet, so no historical naming, Terraform, Kuber
 
 - Tag every taggable resource with: `Project = aws-eks-gitops-platform`, `Environment`, `Owner = Cristiano`, `ManagedBy = Terraform`, `AutoDelete = true`.
 - The VPC module must support creating or adopting a VPC, configurable subnet CIDRs, supplied IGW/NAT, and must always create and own its route tables (ADR-013).
-- Terraform state lives in S3 with per-state keys (ADR-017); adopted resource ids (VPC/IGW/NAT/subnets) and the bucket name are supplied privately and never versioned.
-- Apply least privilege in IAM; never create long-lived access keys for CI (use GitHub OIDC).
+- Terraform state lives in S3 with per-state keys (ADR-017); private inputs (`public_access_cidrs`, `cert/` paths) and the bucket name are supplied privately and never versioned.
+- Apply least privilege in IAM; never store static AWS credentials — CI pushes to GHCR with `GITHUB_TOKEN` (GitHub OIDC for AWS stays deferred per ADR-023).
 - Pin Terraform providers, modules, and Helm chart versions; avoid floating ranges.
 - Keep account id, region, credentials, and other sensitive values out of docs and context; use `.tfvars`/`.example` files.
 - Never commit `.tfstate`, credentials, tokens, or secrets; `.gitignore` covers state, plans, provider dirs, and secrets.
@@ -23,7 +23,7 @@ No implementation artifacts exist yet, so no historical naming, Terraform, Kuber
 
 ## Kubernetes and application
 
-- Namespaces: `argocd`, `dev`, `prod`.
+- Namespaces: `argocd`, `dev`, `prd`.
 - Application containers define `readinessProbe`, `livenessProbe`, `requests`, and `limits`; the ALB health check targets `/health`.
 - Use `ingressClassName: alb`; DNS is managed in Cloudflare (no Route 53). ACM is allowed for ALB TLS.
 - `dev` uses `syncPolicy.automated` with `prune: true` and `selfHeal: true`; `prod` is not auto-synced and is promoted by PR.

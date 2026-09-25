@@ -17,16 +17,16 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root, including the ACM certificate import), the Phase 1 application, the `gitops/` definitions, and the CI workflows exist and pass local validation. Registry chosen: GHCR. Nothing has been provisioned on AWS.
+All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root, including the ACM certificate import and dedicated SGs), the Phase 1 application, the `gitops/` definitions, and the CI workflows are implemented and live: cluster ACTIVE, 2 nodes Ready, ArgoCD root + controller `Synced`/`Healthy`, ALB active with the dedicated SG, `app-dev` `Synced`/`Degraded` waiting on the GHCR visibility flip. Registry: GHCR (package still private).
 
 ## What Was Done
 
 - Adopted `.ai/` context with real project facts and recorded the phased roadmap.
-- Recorded ADRs 004–023; resolved all open inputs and deferred GitHub OIDC (ADR-023).
-- Implemented `infrastructure/modules/vpc`, `infrastructure/modules/eks`, and `infrastructure/modules/iam` (ALB controller policy + role + Pod Identity association) with READMEs.
+- Recorded ADRs 004–026; resolved all open inputs and deferred GitHub OIDC (ADR-023).
+- Implemented `infrastructure/modules/vpc`, `infrastructure/modules/eks`, and `infrastructure/modules/iam` (ALB controller policy + IRSA role trusting the cluster OIDC provider) with READMEs.
 - Implemented the Phase 1 application.
-- Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, adopted network, subnet CIDRs, EKS module, IAM module) and restricted the public API endpoint to specific CIDRs via `terraform.tfvars` (validation rejects `0.0.0.0/0`).
-- Implemented `gitops/` (Argo CD 10.9.1 values, App of Apps root, AWS Load Balancer Controller 3.5.0 Application, `app-dev`/`app-prd` Applications, dev/prd values with ALB Ingress and Cloudflare hosts).
+- Created `infrastructure/environments/dev` (S3 backend, provider `default_tags`, created network `10.12.0.0/16`, EKS 1.36 + OIDC provider, IAM role, ACM import) and restricted the public API endpoint to specific CIDRs via `terraform.tfvars` (validation rejects `0.0.0.0/0`). Applied (authorized): 64 managed resources live.
+- Implemented `gitops/` (Argo CD 10.9.1 values, App of Apps root, AWS Load Balancer Controller 3.5.0 Application with IRSA annotation, `app-dev`/`app-prd` Applications, dev/prd values with ALB Ingress and Cloudflare hosts).
 - Implemented CI at the repository root: `.github/workflows/ci.yml` (pytest, docker build, Trivy, GHCR push with immutable SHA, GitOps dev tag update) and `.github/workflows/promote.yml` (manual PR to promote to prd).
 - Imported the user-supplied Let's Encrypt certificate into ACM (`aws_acm_certificate.app`, ADR-024); the ALB discovers it by hostname and the private key stays gitignored.
 - Validated: `terraform fmt`/`validate`; pytest (2 passed), `docker build`, container smoke test, `helm lint`/`template` (including with the dev values), YAML parsing of `gitops/`, and actionlint for the workflows.
@@ -43,21 +43,21 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 ## Decisions Made
 
 - Single monorepo with area-separated directories (ADR-004).
-- `dev` and `prod` as namespaces in one temporary cluster (ADR-005).
-- No NAT Gateway creation or secondary managed services (ADR-006); reused NAT is allowed.
+- `dev` and `prd` as namespaces in one temporary cluster (ADR-005).
+- NAT Gateway created for private-subnet egress (ADR-006 as amended, ADR-012 as amended); no RDS/OpenSearch/ElastiCache, no Route 53, no EKS Auto Mode.
 - GitHub OIDC instead of static credentials (ADR-007).
 - Immutable SHA image tags only (ADR-008).
 - `dev` auto-syncs with prune/selfHeal; `prod` is PR-gated (ADR-009).
 - Single temporary ALB via the controller (ADR-010, amended by ADR-016).
-- EKS Pod Identity for the ALB controller (ADR-011).
+- EKS IRSA for the ALB controller (ADR-026, superseding ADR-011 Pod Identity).
 - Adopt existing VPC/IGW/NAT; private egress via reused NAT (ADR-012).
 - Flexible create-or-adopt VPC module, always-created route tables (ADR-013).
 - Parameterizable registry, GHCR default, Docker Hub supported (ADR-014).
 - Ingress via AWS Load Balancer Controller + ALB (ADR-015).
 - Cloudflare DNS zone `crilsen.com` + ACM TLS (ADR-016).
 - S3 Terraform state (ADR-017).
-- EKS latest version, single `t3.small` node (ADR-018).
-- Subnets `/24` inside `10.11.0.0/16`, `10.11.21.0/24` onward (ADR-019).
+- EKS 1.36, 2× `t3.small` nodes (ADR-018 as amended).
+- Subnets `/24` inside created `10.12.0.0/16`, `10.12.21.0/24` onward (ADR-019 as amended).
 - Application stack: Python + FastAPI (ADR-020).
 - GitHub Actions workflows at the repository root (ADR-021).
 - Environment isolation: one shared cluster, `dev`/`prd` namespaces, documented trade-off (ADR-022).
@@ -69,7 +69,7 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 
 - AWS phases consume credits and require explicit authorization and a plan first; the EKS control plane is the dominant cost.
 - `tflint`, `checkov`, and `trivy` are not installed, so those checks are pending.
-- The adopted VPC/IGW/NAT/ids are private inputs (`terraform.tfvars`, gitignored); the subnet CIDRs must not overlap existing subnets.
+- Private inputs (`terraform.tfvars`, gitignored): `public_access_cidrs` and the `cert/` paths; the subnet CIDRs must not overlap anything in the VPC.
 - `dev` and `prd` are namespaces in one cluster; `prd` (state folder) will mirror `dev` later.
 
 ## Validation Performed
@@ -84,6 +84,6 @@ All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root
 
 ## Next Actions
 
-- Phase 3: prepare the apply plan and cost estimate, and request authorization.
-- Phase 4/5: after apply, install Argo CD, bootstrap the App of Apps, add the Cloudflare CNAMEs, and verify sync.
-- Phase 7/8: demonstrations (drift, promotion, rollback), teardown, and final README.
+- Owner flips GHCR package `aws-eks-gitops-platform` to public (package settings; API has no working endpoint), then verify `app-dev` Healthy and `/health` via `app-dev.crilsen.com`.
+- Phase 7: drift/selfHeal demo, prod promotion PR (+ `app.crilsen.com` record), rollback demo, screenshots/GIFs.
+- Phase 8: `terraform destroy` with verification, final README pass.

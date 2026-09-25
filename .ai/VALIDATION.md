@@ -30,15 +30,15 @@ Run in the same base image as the Dockerfile (local Python may differ):
 
 ## Helm chart (`application/helm`)
 
-Helm is not installed locally; use the container:
+Helm is installed at `~/bin/helm` (also usable via container):
 
-1. `docker run --rm -v "$PWD:/apps" -w /apps alpine/helm:3.16.3 lint application/helm`.
-2. `docker run --rm -v "$PWD:/apps" -w /apps alpine/helm:3.16.3 template app application/helm --set ingress.enabled=true --set 'ingress.hosts[0].host=app.crilsen.com'`.
+1. `helm lint application/helm`.
+2. `helm template app application/helm --set ingress.enabled=true --set 'ingress.hosts[0].host=app-dev.crilsen.com'` and diff against expected manifests.
 
 ## CI (GitHub Actions)
 
-1. Confirm workflows use OIDC (`id-token: write`) and no static AWS credentials.
-2. Confirm Trivy scan and immutable SHA image tag.
+1. Confirm workflows use `GITHUB_TOKEN` with minimal permissions (`contents: write`, `packages: write`) and no static AWS credentials or OIDC (deferred per ADR-023).
+2. Confirm Trivy scan (fails on CRITICAL/HIGH) and immutable SHA image tag.
 
 ## Security
 
@@ -48,4 +48,4 @@ Helm is not installed locally; use the container:
 
 ## Per-phase expectation
 
-Exact commands become concrete as each phase lands. Validated so far: `modules/vpc` (`terraform fmt`, `terraform validate`) and the application (`pytest`, `docker build`, container smoke test, `helm lint`, `helm template`). `tflint`, `checkov`, and `trivy` are not installed.
+Exact commands become concrete as each phase lands. Validated so far: `modules/vpc`, `modules/eks`, `modules/iam`, `environments/dev` (`terraform fmt`, `validate`, authorized `plan`/`apply` — 64 managed resources live), the application (`pytest`, `docker build`, container smoke test, `helm lint`, `helm template`), `gitops/` YAML, and workflows (`actionlint`). `tflint`, `checkov`, and `trivy` are not installed.

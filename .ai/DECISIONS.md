@@ -71,7 +71,7 @@ Consequences:
 - Cross-area changes are visible in one PR.
 - Directory boundaries must stay honest, or extraction becomes costly.
 
-## ADR-005 — dev and prod as namespaces in one temporary cluster
+## ADR-005 — dev and prd as namespaces in one temporary cluster
 
 Status: Accepted
 
@@ -79,7 +79,7 @@ Context:
 Marketing a second cluster or account would double cost and time, which the US$ 100 budget does not justify.
 
 Decision:
-Run `dev` and `prod` as separate namespaces in a single temporary EKS cluster. `dev` is auto-synced; `prod` changes only through reviewed, manually synced Git changes.
+Run `dev` and `prd` as separate namespaces in a single temporary EKS cluster. `dev` is auto-synced; `prd` changes only through reviewed, manually synced Git changes.
 
 Reasoning:
 Demonstrates environment separation and promotion discipline at minimal cost.
@@ -97,6 +97,8 @@ The lab runs on limited credits and must not create surprise cost.
 
 Decision:
 No NAT Gateway, Route 53, domain, ACM, RDS, OpenSearch, ElastiCache, EKS Auto Mode, or AWS-managed Argo CD capabilities. Step EKS, EC2, EBS, ALB, and Elastic IP after the demo. Network egress without NAT must be solved with VPC endpoints or an equivalent documented approach.
+
+Amendment: the author later explicitly authorized creating the VPC, IGW, and NAT Gateway from scratch (ADR-012) plus an ACM import (ADR-024) for a self-contained lab. The cost impact (NAT ~US$ 0.05/h) is tracked in the README cost table; Route 53, RDS, OpenSearch, ElastiCache, and EKS Auto Mode remain out of scope.
 
 Reasoning:
 NAT and managed data services dominate cost; the learning goals are reachable without them.
@@ -175,7 +177,7 @@ Consequences:
 
 ## ADR-011 — ALB controller identity: EKS Pod Identity
 
-Status: Accepted
+Status: Superseded by ADR-026 (implementation moved to IRSA after Pod Identity crashes)
 
 Context:
 The brief allows IRSA or EKS Pod Identity for the AWS Load Balancer Controller. EKS Pod Identity is the current AWS-recommended mechanism and is simpler to operate.
@@ -189,16 +191,19 @@ Fewer moving parts than IRSA trust wiring and aligns with current AWS guidance.
 Consequences:
 - Requires the EKS Pod Identity agent on nodes and a Pod Identity association in Terraform.
 - The EKS add-on/agent must be available for the chosen EKS version.
+- Amendment: the controller CrashLoopBackOff'd under Pod Identity (IMDS hop limit 1; see README lessons). The working implementation uses IRSA per ADR-026; the pod-identity-agent addon remains installed but unused by the controller.
 
-## ADR-012 — Adopt the existing network; reuse IGW and NAT for egress
+## ADR-012 — Create the network fresh (amended: was adopt-and-reuse)
 
-Status: Accepted
+Status: Accepted (amended — the author later directed creating everything with a `10.12.0.0/16` block)
 
 Context:
 The author supplies an existing VPC, an existing Internet Gateway, and an existing NAT Gateway in `us-east-1`. NAT creation is prohibited by ADR-006, but reusing an already-provisioned NAT is allowed and removes the egress problem that the ECR removal introduced (image registry and GitHub are internet destinations).
 
 Decision:
 Adopt the existing VPC/IGW/NAT (ids supplied privately, not versioned). The node group runs in private subnets and egresses through the reused NAT; public subnets host the ALB. The module still creates and owns all route tables (ADR-013) and creates the subnets from the agreed CIDR scheme (ADR-019).
+
+Amendment: the author later directed creating the whole network from scratch (`create_vpc = true`, `10.12.0.0/16`, created IGW and NAT) for a self-contained lab. The module keeps the adopt-or-create flexibility, but the live environment creates everything; NAT cost (~US$ 0.05/h) is tracked in the README.
 
 Reasoning:
 Reusing existing networking satisfies the no-new-NAT cost rule while keeping private nodes, image pulls, and GitOps sync functional.
@@ -305,7 +310,7 @@ Consequences:
 - Each environment root sets its own key (`dev` or `prd`) in the committed backend block.
 - The account id stays out of versioned files; the bucket name is not sensitive.
 
-## ADR-018 — EKS: latest version, single small managed node
+## ADR-018 — EKS: latest version, small managed nodes
 
 Status: Accepted
 
@@ -313,7 +318,7 @@ Context:
 The author wants the newest EKS version with a single node on the smallest viable instance, within cost limits.
 
 Decision:
-Use EKS **1.36** (latest supported in `us-east-1`, confirmed via `aws eks describe-cluster-versions`) and one managed node group with a single `t3.small` node (2 vCPU / 2 GiB), confirmed by the author as the practical minimum for Argo CD plus the AWS Load Balancer Controller. Document the size and cost.
+Use EKS **1.36** (latest supported in `us-east-1`, confirmed via `aws eks describe-cluster-versions`) and one managed node group of `t3.small` nodes (2 vCPU / 2 GiB), confirmed by the author as the practical minimum for Argo CD plus the AWS Load Balancer Controller. The group runs desired 2 / min 1 / max 3 (scaled from 1 to 2: a single node could not schedule Argo CD, the controller, and the workload together). Document the size and cost.
 
 Reasoning:
 Keeps the lab minimal and current while remaining functional; free-tier `t3.micro` (~1 GiB) is too small.
@@ -323,17 +328,17 @@ Consequences:
 - The EKS control plane is the dominant cost (~US$ 0.10/hour); destroy promptly after the demo.
 - Re-confirm the latest version at apply time; `cluster_version` remains a variable.
 
-## ADR-019 — Subnet CIDR scheme (/24 inside 10.11.0.0/16)
+## ADR-019 — Subnet CIDR scheme (/24 inside 10.12.0.0/16)
 
 Status: Accepted
 
 Context:
-The author specified a VPC block of `10.11.0.0/16`, `/24` subnets "starting at `10.21`", and confirmed the intended reading: `10.11.21.0/24` onward, inside the adopted VPC.
+The author first specified a VPC block of `10.11.0.0/16` with `/24` subnets "starting at `10.21`", then directed a fresh `10.12.0.0/16` block for the created VPC.
 
 Decision:
-Create `/24` subnets inside the adopted VPC starting at `10.11.21.0/24`. Two AZs are required (EKS needs at least two; the ALB needs two public subnets). Initial allocation:
-- public: `10.11.21.0/24`, `10.11.22.0/24`
-- private: `10.11.23.0/24`, `10.11.24.0/24`
+Create `/24` subnets inside the created VPC starting at `10.12.21.0/24`. Two AZs are required (EKS needs at least two; the ALB needs two public subnets). Current allocation:
+- public: `10.12.21.0/24`, `10.12.22.0/24`
+- private: `10.12.23.0/24`, `10.12.24.0/24`
 
 CIDRs remain variables so the environment can override them.
 
@@ -341,7 +346,7 @@ Reasoning:
 Keeps subnets inside the VPC block and leaves room to grow; satisfies EKS and ALB multi-AZ requirements.
 
 Consequences:
-- Must not overlap existing subnets in the adopted VPC; verify before apply.
+- Must not overlap anything already in the VPC; verify before apply.
 - The values are defaults in the environment root, not hardcoded in the module.
 
 ## ADR-020 — Example application: Python + FastAPI
@@ -451,6 +456,23 @@ Least privilege where it counts (internet-facing ALB, node ingress) without taki
 Consequences:
 - Applying replaces nodes on a rolling basis (`max_unavailable = 1`); the rendered `alb-sg.yaml` files must be committed for ArgoCD to pick up the annotation.
 - An earlier incident blamed custom SGs for node registration failures; the actual root causes were IMDS hop limit 1 and missing CNI bootstrap (see README lessons). Additive SGs are safe.
+
+## ADR-026 — ALB controller identity: IRSA (supersedes ADR-011)
+
+Status: Accepted
+
+Context:
+ADR-011 chose EKS Pod Identity, but the controller CrashLoopBackOff'd in this environment and the root cause pointed at IMDS/token delivery on the small nodes. IRSA (OIDC + service-account annotation) is battle-tested for the AWS Load Balancer Controller.
+
+Decision:
+Use IRSA for the AWS Load Balancer Controller. `environments/dev` creates the cluster OIDC provider (`aws_iam_openid_connect_provider`); `modules/iam` creates the controller role trusting that provider for the `kube-system/aws-load-balancer-controller` service account (no Pod Identity association). The role ARN is rendered into the ArgoCD Application by Terraform; the controller is `Synced`/`Healthy` with this setup.
+
+Reasoning:
+Removes the Pod Identity agent/token path from the controller's startup; OIDC trust is explicit, least-privilege, and observable in both Terraform and the service-account annotation.
+
+Consequences:
+- The `eks-pod-identity-agent` addon stays installed (harmless, available for future use) but nothing consumes it today.
+- If Pod Identity is revisited, ADR-011's cautions (IMDS hop limit, agent availability per version) still apply.
 
 Use this ADR format for durable, meaningful decisions:
 

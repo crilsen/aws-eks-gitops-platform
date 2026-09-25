@@ -1,32 +1,26 @@
-=== Evidence Summary ===
+# Evidence
 
-## 01-terraform-plan.txt
-- 28 resources to add, 3 to change, 0 to destroy
+Current live state (verified 2026-09-25; historical logs below are from earlier runs).
 
-## 02-terraform-apply.txt
-- 59 resources created successfully
+## Live status
 
-## 03-cluster-status.txt
-- EKS cluster ACTIVE, version 1.36
-- 1 node Ready (t3.small)
-- All kube-system pods Running
+- Cluster `aws-eks-gitops-platform` (EKS 1.36): ACTIVE, 2× `t3.small` nodes Ready.
+- ArgoCD: root `Synced`/`Healthy`, `aws-load-balancer-controller` `Synced`/`Healthy`.
+- ALB `k8s-dev-appawsek-c0aa531d7f` active with the dedicated SG; serves `app-dev.crilsen.com` (HTTP 301 → HTTPS; HTTPS 503 until the app image pulls).
+- `app-dev`: `Synced`/`Degraded` — pod `ImagePullBackOff` (GHCR package is private → kubelet 401; flip to public in package settings).
+- `app-prd`: `OutOfSync`/`Missing` (manual, PR-gated — expected).
+- Terraform state: 64 managed resources.
 
-## 05-argocd-status.txt
-- Argo CD installed (chart 10.9.1)
-- App of Apps root: Synced
-- app-dev: OutOfSync (image not in GHCR)
-- app-prd: OutOfSync
-- aws-load-balancer-controller: Healthy but CrashLoopBackOff
+## Historical logs
 
-## 09-terraform-destroy.txt
-- Not yet collected
+- `01-terraform-plan.txt` — earlier plan (28 add / 3 change).
+- `02-terraform-apply.txt` — earlier apply (59 resources at the time).
+- `03-cluster-status.txt` — earlier cluster snapshot.
+- `05-argocd-status.txt` — earlier ArgoCD snapshot.
+- `09-terraform-destroy.txt` — earlier destroy run (kept as teardown evidence pattern).
 
-## Issues Found
-1. GHCR package not public or image 0.1.0 not pushed
-2. ALB controller CrashLoopBackOff (IAM or security group issue)
-3. App pod ImagePullBackOff (depends on GHCR)
+## Still to collect
 
-## Next Steps
-1. Push image to GHCR (run CI)
-2. Fix ALB controller permissions
-3. Collect remaining evidence (drift, promotion, rollback, destroy)
+- `/health` 200 via `app-dev.crilsen.com` (after GHCR flip).
+- Drift/selfHeal demo, prod promotion PR, rollback demo, screenshots/GIFs.
+- Final `terraform destroy` verification.
