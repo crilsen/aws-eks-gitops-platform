@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; tree clean after `9f065ef` (dedicated SGs, plan: 13 add + 4 in-place, apply pending authorization).
+- Repo state: branch `dev`, synced with `origin/dev`; SGs applied, ALB active with dedicated SG, app blocked on GHCR visibility (private).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-25
-- Last goal: Create one tagged, least-privilege SG per resource (ALB, nodes, cluster) and pin the ALB to its SG.
-- Exact next action: Apply (needs explicit authorization — touches running cluster: in-place cluster/node-group update + rolling node replacement), then commit the rendered `alb-sg.yaml` files so ArgoCD picks up the annotation.
-- Blocked by: `terraform apply` blocked on explicit authorization.
+- Last goal: Apply dedicated SGs, diagnose ArgoCD sync (NACL DNS bug), get the ALB provisioned.
+- Exact next action: Flip GHCR package `aws-eks-gitops-platform` to public (needs repo owner in UI), then verify app-dev goes Healthy and `/health` responds via the ALB.
+- Blocked by: GHCR package visibility (private → anonymous pull 401).
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
