@@ -2,8 +2,8 @@
 
 ## Active
 
-- App live end-to-end (`app-dev.crilsen.com/health` → 200).
-- Next: drift/selfHeal demo, prod promotion PR, rollback demo, screenshots/GIFs, `terraform destroy`, final README.
+- Infra destroyed 2026-09-26 (61 resources, state empty, verified: no cluster/VPC/ALB/NAT; app was live end-to-end before teardown).
+- Next (needs fresh `apply`): drift/selfHeal demo, prod promotion PR, rollback demo, screenshots/GIFs, final README.
 
 ## Roadmap
 

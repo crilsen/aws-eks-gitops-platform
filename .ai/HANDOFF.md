@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; app live end-to-end (`app-dev.crilsen.com/health` → 200).
+- Repo state: branch `dev`, synced with `origin/dev`; infra DESTROYED 2026-09-26 (61 resources, state empty, billing stopped).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
 - Checkpoint updated: 2026-09-26
-- Last goal: Unblock the app deploy (GHCR visibility + multi-arch image) and verify end-to-end.
-- Exact next action: Drift/selfHeal demo, prod promotion PR (+ `app.crilsen.com` record), rollback demo, screenshots/GIFs, `terraform destroy`, final README.
-- Blocked by: nothing technical. Infra is running and billing (~US$0.21/h) — tear down when done.
+- Last goal: Tear down everything in the correct order (ArgoCD → ALB → nodes → destroy) and verify zero remaining billable resources.
+- Exact next action: Demos leftovers (drift, prod PR, rollback, screenshots) need a fresh `apply` when wanted; final README pass when closing the project.
+- Blocked by: nothing. No AWS costs accruing (2 unrelated pre-existing EIPs in the account were left untouched).
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal

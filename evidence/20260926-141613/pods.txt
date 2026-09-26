@@ -1,0 +1,18 @@
+NAMESPACE     NAME                                                READY   STATUS    RESTARTS      AGE   IP             NODE                          NOMINATED NODE   READINESS GATES
+argocd        argocd-application-controller-0                     1/1     Running   0             18h   10.12.24.107   ip-10-12-24-22.ec2.internal   <none>           <none>
+argocd        argocd-applicationset-controller-5cf7cfc64d-8stgr   1/1     Running   0             18h   10.12.23.135   ip-10-12-23-93.ec2.internal   <none>           <none>
+argocd        argocd-redis-7dd8fcc7df-6rrdt                       1/1     Running   0             18h   10.12.23.90    ip-10-12-23-93.ec2.internal   <none>           <none>
+argocd        argocd-repo-server-6554d5cf94-xttfl                 1/1     Running   3 (18h ago)   18h   10.12.23.163   ip-10-12-23-93.ec2.internal   <none>           <none>
+argocd        argocd-server-56c78f55b4-r6gs7                      1/1     Running   0             18h   10.12.23.130   ip-10-12-23-93.ec2.internal   <none>           <none>
+default       apitest                                             0/1     Error     0             18h   10.12.23.163   ip-10-12-23-93.ec2.internal   <none>           <none>
+dev           app-aws-eks-gitops-platform-68965dfd56-fklqh        1/1     Running   0             19m   10.12.24.134   ip-10-12-24-22.ec2.internal   <none>           <none>
+kube-system   aws-load-balancer-controller-79f67f7f9-45hrh        1/1     Running   0             18h   10.12.24.244   ip-10-12-24-22.ec2.internal   <none>           <none>
+kube-system   aws-load-balancer-controller-79f67f7f9-slgj7        1/1     Running   0             18h   10.12.23.56    ip-10-12-23-93.ec2.internal   <none>           <none>
+kube-system   aws-node-6zlnl                                      2/2     Running   0             18h   10.12.23.93    ip-10-12-23-93.ec2.internal   <none>           <none>
+kube-system   aws-node-p4r4x                                      2/2     Running   0             18h   10.12.24.22    ip-10-12-24-22.ec2.internal   <none>           <none>
+kube-system   coredns-b8cbb77dc-tgv7s                             1/1     Running   0             18h   10.12.23.188   ip-10-12-23-93.ec2.internal   <none>           <none>
+kube-system   coredns-b8cbb77dc-w7bxw                             1/1     Running   0             18h   10.12.24.60    ip-10-12-24-22.ec2.internal   <none>           <none>
+kube-system   eks-pod-identity-agent-58llc                        1/1     Running   0             18h   10.12.23.93    ip-10-12-23-93.ec2.internal   <none>           <none>
+kube-system   eks-pod-identity-agent-k59xv                        1/1     Running   0             18h   10.12.24.22    ip-10-12-24-22.ec2.internal   <none>           <none>
+kube-system   kube-proxy-hhrzx                                    1/1     Running   0             18h   10.12.23.93    ip-10-12-23-93.ec2.internal   <none>           <none>
+kube-system   kube-proxy-kj897                                    1/1     Running   0             18h   10.12.24.22    ip-10-12-24-22.ec2.internal   <none>           <none>

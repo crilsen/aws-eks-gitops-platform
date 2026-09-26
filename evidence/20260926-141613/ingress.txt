@@ -1,0 +1,2 @@
+NAMESPACE   NAME                          CLASS   HOSTS                 ADDRESS                                                            PORTS   AGE
+dev         app-aws-eks-gitops-platform   alb     app-dev.crilsen.com   k8s-dev-appawsek-c0aa531d7f-69114179.us-east-1.elb.amazonaws.com   80      18h

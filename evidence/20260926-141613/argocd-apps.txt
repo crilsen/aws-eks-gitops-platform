@@ -1,0 +1,5 @@
+NAME                           SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
+app-dev                        Synced        Healthy                                                    default
+app-prd                        OutOfSync     Missing                                                    default
+aws-load-balancer-controller   Synced        Healthy         3.5.0                                      default
+root                           Synced        Healthy         6f739bf23672a923d3e7d902b72d114ece039710   default
