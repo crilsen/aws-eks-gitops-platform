@@ -78,3 +78,13 @@ Context: App pod stuck in ImagePullBackOff with "no match for platform in manife
 Evidence: kubelet error `no match for platform in manifest`; fixed with `docker buildx build --platform linux/amd64,linux/arm64 --push`; pod went Running, ALB /health 200.
 Pattern / rule: Always build with `--platform linux/amd64,linux/arm64` (or at least the node arch) for any image targeting EKS; CI runners (ubuntu-latest) are amd64 so CI builds are unaffected.
 Promotion: none
+
+### L-006 — `terraform destroy` deletes `local_file`-rendered GitOps manifests
+Date: 2026-09-26
+Status: active
+Confidence: observed
+Scope: repo | infrastructure/environments/dev (local_file) + gitops/
+Context: After `terraform destroy`, the Terraform-rendered ArgoCD manifests (`aws-load-balancer-controller.yaml`, `alb-sg.yaml`) were gone from disk and the deletion got committed, leaving `gitops/` structurally incomplete.
+Evidence: `git status` showed `D gitops/...` after destroy; restored via `git checkout HEAD~1 -- <files>`.
+Pattern / rule: Treat `local_file` outputs as generated artifacts that destroy removes: after every destroy, restore them from git so the repo stays complete; every apply overwrites them with fresh values before bootstrap.
+Promotion: none
