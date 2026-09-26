@@ -2,7 +2,7 @@
 
 ## Active
 
-- Unblock the app deploy: flip the GHCR package `aws-eks-gitops-platform` to public (owner action in package settings; no working API endpoint), then verify `app-dev` goes Healthy and `/health` responds via the ALB (`app-dev.crilsen.com`).
+- App live end-to-end (`app-dev.crilsen.com/health` → 200).
 - Next: drift/selfHeal demo, prod promotion PR, rollback demo, screenshots/GIFs, `terraform destroy`, final README.
 
 ## Roadmap
@@ -86,3 +86,4 @@ Resolved: ALB controller identity (IRSA, ADR-026 superseding ADR-011), S3 bucket
 - Created one tagged, least-privilege SG per resource in `modules/eks` (ALB 80/443 in + app port out; nodes app port + 443 in; cluster 443/10250), all additive to the EKS-managed SG; ALB pinned via Terraform-rendered `alb-sg.yaml` overrides (ADR-025). Applied: nodes rolled with both SGs, ALB `k8s-dev-appawsek-c0aa531d7f` active with the dedicated SG.
 - Fixed cross-subnet DNS: NACLs only allowed TCP, so UDP replies never crossed subnet boundaries. Added DNS UDP/TCP 53 (scoped to VPC CIDR) + UDP ephemeral rules; verified 4/4 node×DNS combinations. Relaxed ArgoCD repo-server probes for t3.small throttling.
 - Blocker: GHCR package `aws-eks-gitops-platform` is private → kubelet gets 401. Flip to public in the package settings (ADR-014 already prescribes public).
+- App live: package flipped to public by the owner; rebuilt the image multi-arch (`linux/amd64,linux/arm64` — local ARM build didn't match x86 nodes) and pushed; pod `Running`, ALB targets healthy, `/health` returns 200 via `app-dev.crilsen.com` end-to-end.

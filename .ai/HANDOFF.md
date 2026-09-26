@@ -2,13 +2,13 @@
 
 ## Resume block (read first)
 
-- Repo state: branch `dev`, synced with `origin/dev`; SGs applied, ALB active with dedicated SG, app blocked on GHCR visibility (private).
+- Repo state: branch `dev`, synced with `origin/dev`; app live end-to-end (`app-dev.crilsen.com/health` → 200).
 - Source of truth: `AGENTS.md` → `.ai/`
 - Budget / usage observed: unknown
-- Checkpoint updated: 2026-09-25
-- Last goal: Apply dedicated SGs, diagnose ArgoCD sync (NACL DNS bug), get the ALB provisioned.
-- Exact next action: Flip GHCR package `aws-eks-gitops-platform` to public (needs repo owner in UI), then verify app-dev goes Healthy and `/health` responds via the ALB.
-- Blocked by: GHCR package visibility (private → anonymous pull 401).
+- Checkpoint updated: 2026-09-26
+- Last goal: Unblock the app deploy (GHCR visibility + multi-arch image) and verify end-to-end.
+- Exact next action: Drift/selfHeal demo, prod promotion PR (+ `app.crilsen.com` record), rollback demo, screenshots/GIFs, `terraform destroy`, final README.
+- Blocked by: nothing technical. Infra is running and billing (~US$0.21/h) — tear down when done.
 - Resume prompt: `Read AGENTS.md and .ai/HANDOFF.md. Continue from the Resume block. Do not rediscover context.`
 
 ## Goal
@@ -17,7 +17,7 @@ Build a public portfolio GitOps platform on AWS EKS demonstrating Platform Engin
 
 ## Current State
 
-All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root, including the ACM certificate import and dedicated SGs), the Phase 1 application, the `gitops/` definitions, and the CI workflows are implemented and live: cluster ACTIVE, 2 nodes Ready, ArgoCD root + controller `Synced`/`Healthy`, ALB active with the dedicated SG, `app-dev` `Synced`/`Degraded` waiting on the GHCR visibility flip. Registry: GHCR (package still private).
+All planning inputs are resolved. Infrastructure (vpc/eks/iam modules + dev root, including the ACM certificate import and dedicated SGs), the Phase 1 application, the `gitops/` definitions, and the CI workflows are implemented and live: cluster ACTIVE, 2 nodes Ready, ArgoCD root + controller `Synced`/`Healthy`, ALB active with the dedicated SG, `app-dev` `Synced`/`Healthy` serving 200 on `/health` via `app-dev.crilsen.com`. Registry: GHCR, package public.
 
 ## What Was Done
 

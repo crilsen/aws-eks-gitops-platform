@@ -68,3 +68,13 @@ Context: Designing an automatic warning near provider usage limits.
 Evidence: Providers meter usage differently and do not expose a uniform quota API; OpenCode Go documents usage only in the web console.
 Pattern / rule: Combine reported usage when available with a work-volume proxy, and keep a continuously current Resume block; never state a remaining quota that was not observed.
 Promotion: none
+
+### L-005 — Build multi-arch images when developing on ARM Mac for x86 nodes
+Date: 2026-09-26
+Status: active
+Confidence: observed
+Scope: repo | application/Dockerfile
+Context: App pod stuck in ImagePullBackOff with "no match for platform in manifest" after the GHCR package went public; local `docker build` on Apple Silicon produced arm64-only, nodes are x86_64 (t3.small).
+Evidence: kubelet error `no match for platform in manifest`; fixed with `docker buildx build --platform linux/amd64,linux/arm64 --push`; pod went Running, ALB /health 200.
+Pattern / rule: Always build with `--platform linux/amd64,linux/arm64` (or at least the node arch) for any image targeting EKS; CI runners (ubuntu-latest) are amd64 so CI builds are unaffected.
+Promotion: none

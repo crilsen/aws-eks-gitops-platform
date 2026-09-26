@@ -7,7 +7,7 @@ Current live state (verified 2026-09-25; historical logs below are from earlier 
 - Cluster `aws-eks-gitops-platform` (EKS 1.36): ACTIVE, 2× `t3.small` nodes Ready.
 - ArgoCD: root `Synced`/`Healthy`, `aws-load-balancer-controller` `Synced`/`Healthy`.
 - ALB `k8s-dev-appawsek-c0aa531d7f` active with the dedicated SG; serves `app-dev.crilsen.com` (HTTP 301 → HTTPS; HTTPS 503 until the app image pulls).
-- `app-dev`: `Synced`/`Degraded` — pod `ImagePullBackOff` (GHCR package is private → kubelet 401; flip to public in package settings).
+- `app-dev`: `Synced`/`Healthy` — pod `Running`, targets healthy, `/health` → 200 via `app-dev.crilsen.com` (after GHCR flip + multi-arch rebuild).
 - `app-prd`: `OutOfSync`/`Missing` (manual, PR-gated — expected).
 - Terraform state: 64 managed resources.
 
